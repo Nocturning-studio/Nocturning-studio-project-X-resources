@@ -1,0 +1,117 @@
+#include "common.h"
+#include "gbuffer.h"
+#include "fog.h"
+
+struct vf
+{
+        vector4 hpos: POSITION;
+		vector2 tbase: TEXCOORD0; // base
+        vector2 tnorm0: TEXCOORD1; // nm0
+        vector2 tnorm1: TEXCOORD2; // nm1
+        vector3 M1: TEXCOORD3;
+        vector3 M2: TEXCOORD4;
+        vector3 M3: TEXCOORD5;
+        vector3 v2point: TEXCOORD6;
+		vector4 tctexgen: TEXCOORD7;
+		vector3 position: TEXCOORD8;
+        vector4 c0: COLOR0;
+};
+
+struct PixelShaderOutputStruct
+{
+	vector4 Generic_0: COLOR0;
+	vector4 Position: COLOR1;
+};
+
+uniform sampler2D s_nmap;
+uniform samplerCUBE s_env0;
+uniform samplerCUBE s_env1;
+uniform sampler2D s_leaves;
+
+uniform vector3 sun_dir;
+uniform vector3 sun_color;
+
+#if defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
+vector3	water_intensity;
+#endif	//	defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
+
+////////////////////////////////////////////////////////////////////////////////
+PixelShaderOutputStruct main (vf I)
+{
+	vector4 base = tex2D (s_base, I.tbase);
+	vector3 n0 = tex2D (s_nmap, I.tnorm0);
+	vector3 n1 = tex2D (s_nmap, I.tnorm1);
+	vector3 Navg = n0 + n1 - 1;
+
+	vector3 Nw = mul (matrix3x3 (I.M1, I.M2, I.M3), Navg);
+    Nw = normalize (Nw);
+	vector3 v2point = normalize (I.v2point);
+	vector3 vreflect = reflect (v2point, Nw);
+#ifndef USE_SOFT_WATER // fake remapping
+    vreflect.y = vreflect.y * 2 - 1;
+#else	//	true remapping. Slow.
+	vector3 vreflectabs = abs(vreflect);
+	vector vreflectmax = max( vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
+	vreflect /= vreflectmax;
+	if (vreflect.y<0.99)
+		vreflect.y = vreflect.y*2-1;
+#endif
+
+	vector3 env0 = texCUBE (s_env0, vreflect);
+	vector3 env1 = texCUBE (s_env1, vreflect);
+	vector3 env = lerp (env0, env1, L_ambient.w);
+    env *= env * 2;
+
+    vector fresnel = saturate (dot (vreflect, v2point));
+    vector power = pow (fresnel, 9);
+    vector amount = 0.15h + 0.25h * power; // 1=full env, 0=no env
+	
+	vector3 c_reflection = env * amount;
+	vector3 final = lerp (c_reflection, base.rgb, base.a);
+
+    final *= I.c0 * 2;
+	
+#ifdef	NEED_SOFT_WATER
+
+	vector	alpha	= 0.75h+0.25h*power;                        // 1=full env, 0=no env
+
+#ifdef	USE_SOFT_WATER
+	//	Igor: additional depth test
+	vector Depth = GetPositionProjected(I.tctexgen).z;
+	vector waterDepth = Depth-I.tctexgen.z;
+
+	//	water fog
+	vector  fog_exp_intens = -4.0h;
+	vector fog	= 1-exp(fog_exp_intens*waterDepth);
+	vector3 Fc  	= vector3( 0.1h, 0.1h, 0.1h) * water_intensity.r;
+	final 		= lerp (Fc, final, alpha);
+
+	alpha 		= min(alpha, saturate(waterDepth));
+
+	alpha 		= max (fog, alpha);
+
+	//	Leaves
+	vector4	leaves	= tex2D(s_leaves, I.tbase);
+			leaves.rgb *= water_intensity.r;
+	vector	calc_cos = dot ( I.M3,  v2point);
+	vector	calc_depth = saturate(waterDepth*calc_cos);
+	vector	fLeavesFactor = smoothstep(0.025, 0.05, calc_depth );
+			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth );
+	final		= lerp(final, leaves, leaves.a*fLeavesFactor);
+	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
+	vector OpacityMultiplier = alpha;
+#else	//	USE_SOFT_WATER	
+	vector OpacityMultiplier = 1.0h;
+#endif	//	USE_SOFT_WATER	
+#endif	//	NEED_SOFT_WATER
+	
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    FogComponents Fog = CalcFog (I.position);
+    final = lerp (final, Fog.Color, Fog.Fogness);
+    vector Opacity = (1.0h - pow (Fog.Fogness, 2)) * OpacityMultiplier;
+	
+    PixelShaderOutputStruct Output;
+    Output.Generic_0 = vector4 (final.rgb, Opacity);
+    Output.Position = vector4 (I.position, xmaterial);
+    return Output;
+}

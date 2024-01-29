@@ -1,0 +1,62 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Created: 15.11.2023
+// Authors: 
+//      DLAA author - ForserX
+//      Edge detecting method by GSC Gameworld
+//      Combine and integrated by - Deathman
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "dlaa.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+  vector2 TexCoords0: TEXCOORD0; // Center
+  vector2 TexCoords1: TEXCOORD1; // LT 		 
+  vector2 TexCoords2: TEXCOORD2; // RB
+  vector2 TexCoords3: TEXCOORD3; // RT 
+  vector2 TexCoords4: TEXCOORD4; // LB
+  vector4 TexCoords5: TEXCOORD5; // Left / Right	
+  vector4 TexCoords6: TEXCOORD6; // Top / Bottom 
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+uniform vector4 e_barrier; // x=norm(.8f), y=depth(.1f), z=clr
+uniform vector4 e_weights; // x=norm, y=depth, z=clr
+uniform vector4 e_kernel; // x=norm, y=depth, z=clr
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+vector4 main (Interpolators Input): COLOR
+{
+	// Normal discontinuety filter
+	vector3 nc = tex2D(s_gbuffer_normal, Input.TexCoords0);
+	vector4 nd;
+    nd.x = dot(nc, (vector3)tex2D(s_gbuffer_normal, Input.TexCoords1));
+    nd.y = dot(nc, (vector3)tex2D(s_gbuffer_normal, Input.TexCoords2));
+    nd.z = dot(nc, (vector3)tex2D(s_gbuffer_normal, Input.TexCoords3));
+    nd.w = dot(nc, (vector3)tex2D(s_gbuffer_normal, Input.TexCoords4));
+    nd -= e_barrier.x;
+    nd = step(0, nd);
+    vector ne = saturate(dot(nd, e_weights.x));
+
+	// Opposite coords
+	vector4 tc5r = Input.TexCoords5.wzyx;
+ 	vector4 tc6r = Input.TexCoords6.wzyx;
+
+ 	// Depth filter : compute gradiental difference: (c - sample1) + (c - sample1_opposite)
+	vector4 dc = tex2D(s_gbuffer_position, Input.TexCoords0);
+	vector4 dd;
+    dd.x = (vector)tex2D(s_gbuffer_position, Input.TexCoords1).z + (vector)tex2D(s_gbuffer_position, Input.TexCoords2).z;
+    dd.y = (vector)tex2D(s_gbuffer_position, Input.TexCoords3).z + (vector)tex2D(s_gbuffer_position, Input.TexCoords4).z;
+    dd.z = (vector)tex2D(s_gbuffer_position, Input.TexCoords5.xy).z + (vector)tex2D(s_gbuffer_position, tc5r).z;
+    dd.w = (vector)tex2D(s_gbuffer_position, Input.TexCoords6.xy).z + (vector)tex2D(s_gbuffer_position, tc6r).z;
+    dd = abs(2 * dc.z - dd) - e_barrier.y;
+    dd = step(dd, 0);
+    vector de = saturate(dot(dd, e_weights.y));
+
+    vector weight = (1.0h - de * ne) * e_kernel.x; // 0 - no aa, 1=full aa
+
+	vector2 center = Input.TexCoords0;
+
+	vector2 texcoords = (center * (1.0h - weight)) + center * weight;
+
+    return vector4 (texcoords, 0.0h, 0.0h);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

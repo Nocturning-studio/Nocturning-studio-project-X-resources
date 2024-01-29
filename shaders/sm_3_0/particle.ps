@@ -1,0 +1,32 @@
+#include "common.h"
+#include "gbuffer.h"
+
+struct v2p
+{
+ 	vector2 tc0: TEXCOORD0; // base
+	vector4 c: COLOR0; // diffuse
+
+#ifdef	USE_SOFT_PARTICLES
+//	Igor: for additional depth dest
+	vector4 tctexgen	: TEXCOORD1;
+#endif	//	USE_SOFT_PARTICLES
+};
+
+//	Must be less than view near
+#define	DEPTH_EPSILON	0.1h
+//////////////////////////////////////////////////////////////////////////////////////////
+// Pixel
+vector4 main (v2p I): COLOR
+{
+	vector4 result = I.c * tex2D (s_base, I.tc0);
+
+	//	Igor: additional depth test
+#ifdef	USE_SOFT_PARTICLES
+	vector Depth = GetPositionProjected(I.tctexgen).z;
+	vector spaceDepth = Depth-I.tctexgen.z-DEPTH_EPSILON;
+	result.a *= Contrast( saturate(spaceDepth*1.3h), 2);
+	result.rgb *= Contrast( saturate(spaceDepth*1.3h), 2);
+#endif	//	USE_SOFT_PARTICLES
+	
+    return result;
+}

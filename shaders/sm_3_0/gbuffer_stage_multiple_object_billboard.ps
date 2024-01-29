@@ -1,0 +1,58 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 25.10.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition: POSITION;
+	vector3 Position: TEXCOORD0;
+	vector2 TexCoords0: TEXCOORD1;
+	vector2 TexCoords1: TEXCOORD2;
+    vector TransitionFactor: TEXCOORD3;
+    vector Ambient: TEXCOORD4;
+    vector SunOcclusion: TEXCOORD5;
+    vector OpacityFactor: TEXCOORD6;
+};
+///////////////////////////////////////////////////////////////////////////////////
+GBuffer main (Interpolators Input)
+{
+	vector4 Albedo0 = tex2D (s_base, Input.TexCoords0);
+	vector4 Albedo1 = tex2D (s_base, Input.TexCoords1);
+	vector4 Albedo = lerp (Albedo0, Albedo1, Input.TransitionFactor);
+
+    Albedo.a *= Input.OpacityFactor;
+
+    clip (Albedo.a - 0.8f);
+
+	vector4 NormalAndAO0 = tex2D (s_hemi, Input.TexCoords0);
+	vector4 NormalAndAO1 = tex2D (s_hemi, Input.TexCoords1);
+	vector4 NormalAndAO = lerp (NormalAndAO0, NormalAndAO1, Input.TransitionFactor);
+
+    vector AO = NormalAndAO.a * (AO_BRIGHTNESS - 0.1f);
+
+	vector3 Normal = -normalize (NormalAndAO.rgb);
+
+	vector3 Position = Input.Position;
+
+#ifdef USE_POSITION_WITH_NORMALS_BIAS
+	Position += Normal * def_virtualh * 0.015f;
+#endif
+	
+#ifdef USE_R2_STATIC_SUN
+	vector MaterialID = Input.SunOcclusion;
+#else
+    vector MaterialID = xmaterial;
+#endif
+
+    vector Glossiness = def_gloss;
+
+    GBuffer Output = PackGBuffer (Position, MaterialID,
+								 Normal, AO,
+								 Albedo.rgb, Glossiness);
+    return Output;
+}
+///////////////////////////////////////////////////////////////////////////////////

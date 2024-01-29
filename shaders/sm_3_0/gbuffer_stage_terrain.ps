@@ -1,0 +1,107 @@
+////////////////////////////////////////////////////////////////////////////////
+// Created: 07.08.2023
+// Autor: Deathman
+// Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "height_map_to_normal.h"
+#include "terrain_helper.h"
+#include "gbuffer.h"
+////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition: POSITION;
+	vector3 Position: TEXCOORD0;
+	vector3 TBN0: TEXCOORD1;
+	vector3 TBN1: TEXCOORD2;
+	vector3 TBN2: TEXCOORD3;
+	vector2 UV: TEXCOORD4;
+	vector2 DetailUV: TEXCOORD5;
+};
+////////////////////////////////////////////////////////////////////////////////
+GBuffer main (Interpolators Input)
+{
+	// Get detail textures map (4 channels = 4 textures)
+	vector4 Mask = GetDetailMask (Input.UV);
+
+	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
+	vector3 DiffuseTextureData = tex2D (s_base, Input.UV);
+
+	// Combine transform matrix for displacement and normal mapping
+	matrix3x3 TBN = matrix3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
+
+	// Choose displacement type and calculate UV displacement
+	vector2 DetailUV = GetDisplacement (Input.Position, TBN, Input.DetailUV, Mask);
+
+	// details albedo data, multiplicated by detail map
+	vector3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
+	vector3 Albedo = 2.0h * DiffuseTextureData.rgb * DetailAlbedo;
+
+	// Get DXT comressed normals + AO + glossmap for all details in 4 textures set
+	vector4 DetailBumpData = GetDetailBump (Mask, DetailUV);
+
+	// Get DXT decompressing data + heightmap for all details in 4 textures set
+	vector4 DetailBumpDecompressionData = GetDetailBumpDecompression (Mask, DetailUV);
+
+	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
+	vector3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0h);
+
+	 // Reconstruct z component for normals (actually z component used for Baked AO)
+    NormalMap.z = sqrt (1.0h - dot (NormalMap.xy, NormalMap.xy));
+
+    vector HeightMap = DetailBumpDecompressionData.a;
+
+	// If we have good material quality - create MORE relief by convertation height to normal map
+#if BUMP_QUALITY == ULTRA_QUALITY
+	vector3 NormalMapFromHeight = convert_height_to_normal(HeightMap);
+	NormalMap /= NormalMapFromHeight;
+#endif
+
+	// Transformate height map from [0; 1] space to [1; 2] and make normals more power
+    NormalMap.xy *= HeightMap + 1.0h;
+
+	// Make normals more power with inverted heightmap
+    NormalMap.z *= invert (HeightMap);
+
+	// Out normal for Geometry buffer
+	vector3 Normal = normalize (mul (TBN, NormalMap));
+
+	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
+	vector3 Position = Input.Position;
+
+#ifdef USE_POSITION_WITH_NORMALS_BIAS
+	Position += Normal * HeightMap * 0.015f;
+#endif
+
+	// Get and smooth light map ambient
+    vector LightMapAO = tex2D (s_base, Input.UV).a * (AO_BRIGHTNESS + 0.1h);
+
+	// Get baked ao from details
+    vector BakedAO = DetailBumpData.g;
+
+	// Combine all light data
+    vector Lighting = LightMapAO * BakedAO;
+
+	// Control brightness
+    Lighting *= AO_BRIGHTNESS;
+
+	// Create glossiness from details
+    vector Glossiness = DetailBumpData.r;
+
+	// Material or direct sun lighting
+#ifdef USE_R2_STATIC_SUN
+	// Get and smooth local lights
+    vector LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
+
+	vector MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
+#else
+    vector MaterialID = xmaterial;
+#endif
+
+	// Pack geometry buffer
+    GBuffer Output = PackGBuffer (Position, MaterialID,
+								  Normal, Lighting,
+								  Albedo, Glossiness);
+    return Output;
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,46 @@
+#include "common.h"
+#include "skinning.h"
+
+struct vf
+{
+  vector4 hpos: POSITION;
+  vector2 tc0: TEXCOORD0; // base
+  vector3 position0: TEXCOORD1;
+  vector3 position1: TEXCOORD2;
+  vector4 c0: COLOR0; // color
+};
+
+vf _main (v_model v)
+{
+    vf o;
+
+    o.hpos = mul (m_WVP, v.P); // xform, input in world coords
+    o.position0 = mul (m_WV, v.P);
+    o.position1 = mul (m_WV, v.P);
+    o.tc0 = v.tc.xy; // copy tc
+
+    // calculate fade
+    vector3 dir_v = normalize (mul (m_WV, v.P));
+    vector3 norm_v = normalize (mul (m_WV, v.N));
+    vector fade = 0.9 * abs (dot (dir_v, norm_v));
+    o.c0 = fade;
+
+    return o;
+}
+
+/////////////////////////////////////////////////////////////////////////
+#ifdef   SKIN_NONE
+vf  main(v_model v)     { return _main(v);     }
+#endif
+
+#ifdef   SKIN_0
+vf  main(v_model_skinned_0 v)   { return _main(skinning_0(v)); }
+#endif
+
+#ifdef  SKIN_1
+vf  main(v_model_skinned_1 v)   { return _main(skinning_1(v)); }
+#endif
+
+#ifdef  SKIN_2
+vf  main(v_model_skinned_2 v)   { return _main(skinning_2(v)); }
+#endif

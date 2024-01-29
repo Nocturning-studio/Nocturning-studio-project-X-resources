@@ -1,0 +1,50 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 25.10.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "fxaa_atoc.h"
+#include "alpha_test.h"
+#include "contrast_adaptive_sharpening.h"
+////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+    vector4 HomogeniousPosition: POSITION;
+    vector2 UV: TEXCOORD0;
+    vector3 Position: TEXCOORD1;
+    vector3 Normal: TEXCOORD2;
+	vector4 Color: COLOR0;
+};
+///////////////////////////////////////////////////////////////////////////////////
+GBuffer main (Interpolators Input)
+{
+	vector3 Albedo;
+    vector Opacity;
+	
+#if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
+    calc_fxaa_atoc(Input.UV, Albedo, Opacity);
+#else//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
+    Albedo = tex2D(s_base, Input.UV).rgb;
+    Opacity = tex2D(s_base, Input.UV).a;
+#endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
+
+    calc_alpha_test (Input.UV, Albedo, Opacity);
+
+    Albedo *= Input.Color;
+    
+	vector3 Normal = normalize (Input.Normal);
+
+	vector3 Position = Input.Position;
+
+#ifdef USE_POSITION_WITH_NORMALS_BIAS
+	Position += Normal * def_virtualh * 0.015f;
+#endif
+    
+    GBuffer Output = PackGBuffer (Position, xmaterial,
+								 Normal, 0.5h,
+								 Albedo.rgb, def_gloss);
+    return Output;
+}
+///////////////////////////////////////////////////////////////////////////////////

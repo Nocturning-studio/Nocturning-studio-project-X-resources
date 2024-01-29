@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 21.12.2022
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#ifndef DOF_COMMON_H_INCLUDED
+#define DOF_COMMON_H_INCLUDED
+////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+////////////////////////////////////////////////////////////////////////////
+vector GetDepth(vector2 TexCoords)
+{
+    vector3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
+
+    // Check skybox intersection
+    if (all(Position <= 0.00001h))
+        Position.z = dof_params.w;
+
+    return Position.z;
+}
+///////////////////////////////////////////////////////////////////////////////////
+vector DOFFactor(vector2 TexCoords)
+{
+    vector depth = GetDepth(TexCoords);
+    vector dist_to_focus = depth - dof_params.y;
+    vector blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
+    vector blur_near = saturate(dist_to_focus / (dof_params.x - dof_params.y));
+    vector blur = blur_near + blur_far;
+    blur = pow(blur, 2.0h);
+    return blur;
+}
+////////////////////////////////////////////////////////////////////////////
+#endif // DOF_COMMON_H_INCLUDED
+////////////////////////////////////////////////////////////////////////////

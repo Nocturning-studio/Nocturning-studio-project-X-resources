@@ -1,0 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 15.01.2024
+//	Author		: Mihan323
+//	NSProjectX Nocturning Studio - 2024
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+vector4 main(vector2 TexCoords : TEXCOORD0) : COLOR
+{
+    // We are use D3DFMT_A8 for ao texture - sample alpha channel only
+    vector ao = tex2D (s_ao, TexCoords + screen_res.zw * vector2 (1.5h, -0.5h)).r;
+    ao += tex2D (s_ao, TexCoords + screen_res.zw * vector2 (1.5h, 1.5h)).r;
+    ao += tex2D (s_ao, TexCoords + screen_res.zw * vector2 (-0.5h, -0.5h)).r;
+    ao += tex2D (s_ao, TexCoords + screen_res.zw * vector2 (-0.5h, 1.5h)).r;
+    return ao * 0.25h;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

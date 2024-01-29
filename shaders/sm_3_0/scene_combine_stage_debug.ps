@@ -1,0 +1,40 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 26.11.2023
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "accumulation_helper.h"
+////////////////////////////////////////////////////////////////////////////
+uniform int debug_mode;
+////////////////////////////////////////////////////////////////////////////
+vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+{
+    GBufferData GBuffer = UnpackGBuffer (TexCoords);
+    LightingData Light = UnpackLightingAccumulator (TexCoords);
+    
+	vector3 OutputColor = NULL;
+    
+    if (debug_mode == GBUFFER_ALBEDO)
+        OutputColor = GBuffer.Albedo;
+    else if (debug_mode == GBUFFER_POSITION)
+        OutputColor = GBuffer.Position;
+    else if (debug_mode == GBUFFER_NORMAL)
+        OutputColor = normalize (GBuffer.Normal * 0.5f + 0.5f);
+    else if (debug_mode == GBUFFER_GLOSSINESS)
+        OutputColor = GBuffer.Glossiness;
+    else if (debug_mode == GBUFFER_LIGHTMAP_AO)
+        OutputColor = GBuffer.AO;
+    else if (debug_mode == GBUFFER_MATERIAL)
+        OutputColor = GBuffer.Material;
+    else if (debug_mode == ACCUMULATOR_DIFFUSE)
+        OutputColor = Light.Diffuse;
+    else if (debug_mode == ACCUMULATOR_SPECULAR)
+        OutputColor = Light.Specular;
+    else if (debug_mode == REAL_TIME_AO)
+        OutputColor = tex2D (s_ao, TexCoords).rrr;
+    
+    return vector4 (OutputColor, 0.0h);
+}
+////////////////////////////////////////////////////////////////////////////

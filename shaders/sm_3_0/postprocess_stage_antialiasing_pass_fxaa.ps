@@ -1,0 +1,70 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Created: 13.01.2024
+// Authors: 
+//      FXAA - Nvidia
+//      Integrate to S.T.A.L.K.E.R: Call of Pripyat - Zackin5 (https://github.com/Zackin5/StalkerCop-FxaaShaders)
+//      Integrate to Nocturning studio for NS Project X - Deathman
+//
+//      FXAA_BRIGHTNESS_AS_LUMA - Deathman
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+uniform vector3 fxaa_params;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if AA_QUALITY == UNDEFINED_QUALITY
+#define FXAA_QUALITY__PRESET 10
+#elif AA_QUALITY == LOW_QUALITY
+#define FXAA_QUALITY__PRESET 13
+#elif AA_QUALITY == MIDDLE_QUALITY
+#define FXAA_QUALITY__PRESET 20
+#elif AA_QUALITY == HIGHT_QUALITY
+#define FXAA_QUALITY__PRESET 25
+#elif AA_QUALITY == ULTRA_QUALITY
+#define FXAA_QUALITY__PRESET 39
+#endif
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FXAA settings
+
+// Choose the amount of sub-pixel aliasing removal.
+// This can effect sharpness.
+//   1.00 - upper limit (softer)
+//   0.75 - default amount of filtering
+//   0.50 - lower limit (sharper, less sub-pixel aliasing removal)
+//   0.25 - almost off
+//   0.00 - completely off
+#define FXAA_Subpix fxaa_params.x
+
+// The minimum amount of local contrast required to apply algorithm.
+//   0.333 - too little (faster)
+//   0.250 - low quality
+//   0.166 - default
+//   0.125 - high quality 
+//   0.063 - overkill (slower)
+#define FXAA_EdgeThreshold fxaa_params.y
+
+// Trims the algorithm from processing darks.
+//   0.0833 - upper limit (default, the start of visible unfiltered edges)
+//   0.0625 - high quality (faster)
+//   0.0312 - visible limit (slower)
+// Special notes when using FXAA_GREEN_AS_LUMA,
+//   Likely want to set this to zero.
+//   As colors that are mostly not-green
+//   will appear very dark in the green channel!
+//   Tune by looking at mostly non-green content,
+//   then start at zero and increase until aliasing is a problem.
+#define FXAA_EdgeThresholdMin fxaa_params.z
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#define FXAA_BRIGHTNESS_AS_LUMA 1
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "fxaa.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Pixel
+vector4 main (vector2 TexCoords : TEXCOORD0): COLOR
+{
+#if AA_TYPE == FXAA
+    return FxaaPixelShader(TexCoords, s_image, screen_res.zw, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
+#else
+    return tex2D(s_image, TexCoords);
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

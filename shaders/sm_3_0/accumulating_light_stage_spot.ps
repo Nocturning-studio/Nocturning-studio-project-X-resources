@@ -1,0 +1,57 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 22.11.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "BRDF.h"
+#include "accumulation_helper.h"
+#include "shadow_filtering.h"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition: POSITION;
+    vector4 TexCoords: TEXCOORD0;
+};
+///////////////////////////////////////////////////////////////////////////////////
+Accumulator main (Interpolators Input)
+{
+    GBufferData GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
+    
+    vector AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
+    
+    vector3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
+    vector4 LightingModel = Calculate_Lighting_Model (GBuffer.Material, GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
+    
+    vector3 Diffuse = LightingModel.rgb;
+    vector3 Specular = LightingModel.aaa;
+    
+    vector4 Position = vector4 (GBuffer.Position, 1.0h);
+    vector4 ShadowMapTexCoords = mul (m_shadow, Position);
+  
+#ifdef USE_SHADOW_MAPPING
+    vector ShadowMap = get_shadow_map (ShadowMapTexCoords);
+#else
+    vector ShadowMap = 1.0h;
+#endif
+    
+#ifdef USE_LIGHT_MAPPING
+#ifdef  USE_LIGHT_MAP_XFORM
+    ShadowMapTexCoords.x = dot (Position, m_lmap[0]);
+    ShadowMapTexCoords.y = dot (Position, m_lmap[1]);
+#endif
+    vector3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
+#else
+    vector3 LightMap = vector3 (1.0h, 1.0h, 1.0h);
+#endif
+    
+    LightMap *= ShadowMap * AttenuationFactor;
+    
+    Diffuse *= Ldynamic_color.rgb * LightMap;
+    Specular *= Ldynamic_color.rgb * LightMap;
+    
+    Accumulator Output = PackLightingAccumulator (Diffuse, Specular);
+    return Output;
+}
+///////////////////////////////////////////////////////////////////////////////////

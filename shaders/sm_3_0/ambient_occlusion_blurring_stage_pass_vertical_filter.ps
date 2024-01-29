@@ -1,0 +1,34 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 19.12.2023
+//	Author		: Deathman
+//	NSProjectX Nocturning Studio - 2023
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+// Depth based ambient occlusion filter from X-Ray Engine 2.0
+//////////////////////////////////////////////////////////////////////////////////////////
+vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+{
+    vector center_depth = GetPosition (TexCoords).z;
+    vector ao_sum = 0.0h;
+    vector total_weight = 0.0h;
+
+    for (int i = -3; i < 3; i++)
+    {
+        vector2 sample_uv = TexCoords + vector2 (0.0h, i) / ao_resolution.xy;
+        
+        // We are use D3DFMT_A8 for ao texture - sample alpha channel only
+        vector sample_ao = tex2Dlod0 (s_ao, sample_uv).r;
+        vector sample_depth = GetPosition (sample_uv).z;
+
+        vector depth_result = 1.0h - saturate (pow ((sample_depth - center_depth), 2.0h) / (0.001h * center_depth)) + 0.2h;
+
+        total_weight += depth_result;
+
+        ao_sum += sample_ao * depth_result;
+    }
+
+    return ao_sum / total_weight;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

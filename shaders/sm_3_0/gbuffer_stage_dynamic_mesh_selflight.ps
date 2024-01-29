@@ -1,0 +1,41 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 25.10.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "material.h"
+#include "gbuffer.h"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition : POSITION;
+	vector3 Position 			: TEXCOORD0;
+	vector3 TBN0 				: TEXCOORD1;
+	vector3 TBN1				: TEXCOORD2;
+	vector3 TBN2 				: TEXCOORD3;
+	vector2 UV					: TEXCOORD4;
+};
+///////////////////////////////////////////////////////////////////////////////////
+#define EMISSIVE_POWER 2.0h
+///////////////////////////////////////////////////////////////////////////////////
+GBuffer main (Interpolators Input)
+{
+	matrix3x3 TBN = matrix3x3(Input.TBN0, Input.TBN1, Input.TBN2);
+
+	vector3 Albedo = tex2D(s_base, Input.UV) * EMISSIVE_POWER;
+
+	vector3 Normal = normalize(mul(TBN, vector3(0.5f, 0.5f, 1.0h)));
+
+	vector3 Position = Input.Position;
+	
+#ifdef USE_POSITION_WITH_NORMALS_BIAS
+	Position += Normal * def_virtualh * 0.015f;
+#endif
+
+	GBuffer Output = PackGBuffer(Position, 0.0h,
+								 Normal, EMISSIVE_POWER,
+								 Albedo.rgb, 0.0h);
+	return Output;
+}
+///////////////////////////////////////////////////////////////////////////////////

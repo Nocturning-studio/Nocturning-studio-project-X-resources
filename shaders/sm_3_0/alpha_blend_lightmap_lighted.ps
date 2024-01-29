@@ -1,0 +1,56 @@
+#include "common.h"
+#include "fxaa_atoc.h"
+#include "fog.h"
+
+struct v2p
+{
+ 	vector2 tc0: TEXCOORD0; // base
+ 	vector2 tc1: TEXCOORD1; // lmap
+	vector2 tc2: TEXCOORD2; // hemi
+	vector3 tc3: TEXCOORD3; // env
+	vector3 position: TEXCOORD4;
+  	vector3 c0: COLOR0;
+	vector3 c1: COLOR1;
+};
+
+struct PixelShaderOutputStruct
+{
+	vector4 Generic_0: COLOR0;
+	vector4 Position: COLOR1;
+};
+
+uniform samplerCUBE s_env;
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Pixel
+PixelShaderOutputStruct main (v2p I)
+{
+    vector3 Albedo = NULL;
+    vector Opacity = NULL;
+    
+#if ALPHA_TEST_AA == FXAA_ATOC
+    // Get Albedo and opacity with fxaa
+    calc_fxaa_atoc (I.tc0, Albedo, Opacity);
+#else
+    vector4 BaseTextureData = tex2D (s_base, I.tc0);
+    Albedo = BaseTextureData.rgb;
+    Opacity = BaseTextureData.a;
+#endif 
+
+	// lighting
+	vector3 l_hemi = I.c0 * tex2D (s_hemi, I.tc2).rgb;
+	vector3 light = L_ambient.rgb + l_hemi;
+	
+    Albedo = light * Albedo * 2;
+	
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    FogComponents Fog = CalcFog (I.position);
+    Albedo = lerp (Albedo, Fog.Color, Fog.Fogness);
+    Opacity = (1.0h - pow (Fog.Fogness, 2)) * Opacity;
+	
+	
+    PixelShaderOutputStruct Output;
+    Output.Generic_0 = vector4 (Albedo, Opacity);
+    Output.Position = vector4 (I.position, xmaterial);
+    return Output;
+}

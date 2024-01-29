@@ -1,0 +1,37 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 20.11.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "BRDF.h"
+#include "accumulation_helper.h"
+#include "shadow_filtering.h"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition: POSITION;
+    vector4 TexCoords: TEXCOORD0;
+};
+///////////////////////////////////////////////////////////////////////////////////
+Accumulator main (Interpolators Input)
+{
+    GBufferData GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
+    
+    vector4 LightingModel = Calculate_Lighting_Model (GBuffer.Material, GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
+    
+    vector3 Diffuse = LightingModel.rgb;
+    vector3 Specular = LightingModel.aaa;
+    
+    vector4 Position = vector4 (GBuffer.Position, 1.0h);
+    vector4 ShadowMapTexCoords = mul (m_shadow, Position);
+    vector ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    
+    Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;
+    Specular *= Ldynamic_color.rgb * ShadowMap.xxx;
+    
+    Accumulator Output = PackLightingAccumulator (Diffuse, Specular);
+    return Output;
+}
+///////////////////////////////////////////////////////////////////////////////////

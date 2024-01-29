@@ -1,0 +1,34 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Function from R.E.B.I.R.T.H. Shaders
+// Tweaked to NSPX by Deathman
+// Date: 29.01.2023
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#ifndef CHROMATIC_ABBERATION_INCLUDED
+#define CHROMATIC_ABBERATION_INCLUDED
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Contants table
+#define fvChroma vector3(1.000, 0.997, 1.007) // displacement scales of red, green and blue respectively
+#define fBaseRadius 0.9                       // below this radius the effect is less visible
+#define fFalloffRadius 1.8                    // over this radius the effects is maximal
+#define fChromaPower 0.5
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+vector3 ChromaticAberration(sampler2D image, vector2 tex)
+{
+    vector d = distance(tex, vector2(0.5, 0.5));
+    vector f = smoothstep(fBaseRadius, fFalloffRadius, d + 0.075 * d);
+    vector3 chroma = pow(f + fvChroma, fChromaPower);
+
+    vector2 tr = ((2.0 * tex - 1.0) * chroma.r) * 0.5 + 0.5;
+    vector2 tg = ((2.0 * tex - 1.0) * chroma.g) * 0.5 + 0.5;
+    vector2 tb = ((2.0 * tex - 1.0) * chroma.b) * 0.5 + 0.5;
+
+    vector3 color = vector3(tex2Dlod0(image, tr).r, tex2Dlod0(image, tg).g, tex2Dlod0(image, tb).b) * (1.0 - f);
+
+    vector3 ImageColor = tex2Dlod0(image, tex);
+    return lerp(ImageColor, vector3(color.r, color.g, color.b), 0.35);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#endif // CHROMATIC_ABBERATION_INCLUDED
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,41 @@
+#include "common.h"
+#include "fog.h"
+
+struct v2p
+{
+ 	vector2 tc0: TEXCOORD0; // base
+ 	vector3 tc1: TEXCOORD1; // environment
+	vector3 position: TEXCOORD2;
+  	vector3 c0: COLOR0; // sun
+};
+
+struct PixelShaderOutputStruct
+{
+	vector4 Generic_0: COLOR0;
+	vector4 Position: COLOR1;
+};
+
+uniform samplerCUBE s_env;
+//////////////////////////////////////////////////////////////////////////////////////////
+PixelShaderOutputStruct main (v2p I)
+{
+	vector4 t_base = tex2D (s_base, I.tc0);
+	//vector4	t_env 	= texCUBE	(s_env,	I.tc1);
+	vector3 t_env0 = texCUBE (sky_s0, I.tc1);
+    vector3 t_env1 = texCUBE (sky_s1, I.tc1);
+    vector3 t_env = env_color.xyz * lerp (t_env0, t_env1, env_color.w);
+
+	vector3 base = lerp (t_env, t_base, t_base.a);
+	vector3 light = I.c0;
+	vector3 final = light * base * 2;
+	
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    FogComponents Fog = CalcFog (I.position);
+    final = lerp (final, Fog.Color, Fog.Fogness);
+    vector Opacity = (1.0h - pow (Fog.Fogness, 2)) * t_base.a;
+
+    PixelShaderOutputStruct Output;
+    Output.Generic_0 = vector4 (final.rgb, Opacity);
+    Output.Position = vector4 (I.position, xmaterial);
+    return Output;
+}

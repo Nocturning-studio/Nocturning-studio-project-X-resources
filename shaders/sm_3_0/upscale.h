@@ -1,0 +1,30 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 17.12.2023
+// Upscale function by
+//https://www.shadertoy.com/view/sdy3WD
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+float dist(vector4 a, vector4 b)
+{
+    return abs((a.r + a.g + a.b) - (b.r + b.g + b.b)) / 3.0;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector4 tex2Dvcus(sampler2D s, vector2 uv)
+{
+    vector2 iuv = floor(uv * screen_res.xy - 0.5) + 0.5;
+
+    vector4 col = tex2D(s, uv);
+    vector4 col0 = vector4(1.0, 1.0, 1.0, 1.0);
+    for (int x = 0; x <= 1; x++)
+    {
+        for (int y = 0; y <= 1; y++)
+        {
+            vector4 coln = tex2Dlod0(s, (iuv + vector2(x, y)) / screen_res.xy);
+            if (dist(col, col0) > dist(col, coln))
+                col0 = coln;
+        }
+    }
+    return col0;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

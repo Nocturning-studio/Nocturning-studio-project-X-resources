@@ -1,0 +1,131 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Modified	: 03.02.2023 - 14.12.2023
+//	Author		: Mihan323
+//	From Stalker DWM
+//  *Some modified by Deathman*
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+// Options
+#define USE_ATTENUATION
+#define HBAO_ATTENUATION_DISTANCE 0.5h
+#define HBAO_NORMAL vector(0.0050)
+#define HBAO_POWER  vector(2.2)
+#define	HBAO_RADIUS vector(0.4)
+//////////////////////////////////////////////////////////////////////////////////////////
+// Presets
+#if AO_QUALITY == LOW_QUALITY
+#define HBAO_SAMPLES 4
+#define HBAO_RENDER_DISTANCE 20.0h
+#elif AO_QUALITY == MIDDLE_QUALITY
+#define HBAO_SAMPLES 6
+#define HBAO_RENDER_DISTANCE 30.0h
+#elif AO_QUALITY == HIGHT_QUALITY
+#define HBAO_SAMPLES 8
+#define HBAO_RENDER_DISTANCE 40.0h
+#elif AO_QUALITY == ULTRA_QUALITY
+#define HBAO_SAMPLES 8
+#define HBAO_RENDER_DISTANCE 50.0h
+#elif AO_QUALITY == UNDEFINED_QUALITY
+#define HBAO_SAMPLES 1
+#define HBAO_RENDER_DISTANCE 25.0h
+#endif
+//////////////////////////////////////////////////////////////////////////////////////////
+vector3 get_blue_noise (vector2 UV)
+{
+    return tex2Dlod0 (s_blue_noise, UV * screen_res.xy / 256.0h);
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector3 calc_sphere (vector3 hash)
+{
+    vector cos_theta = 1.0h - hash.x;
+    vector sin_theta = sqrt (1.0h - cos_theta * cos_theta);
+
+    vector phi = 2.0h * PI * hash.y;
+
+	vector3 sphere;
+    sphere.x = sin_theta * cosapprox (phi);
+    sphere.y = sin_theta * sinapprox (phi);
+    sphere.z = cos_theta;
+    sphere *= hash.z;
+
+    return sphere;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector3 SampleHemisphereDirection (vector3 Normal, vector3 hash)
+{
+	vector3 sphere = calc_sphere (hash);
+
+	vector3 Up = vector3 (1.0h, 0.0h, 0.0h);
+    
+    if (abs (Normal.z) < 0.999h)
+        Up = vector3 (0.0h, 0.0h, 1.0h);
+    
+	vector3 Tangent = normalize (cross (Up, Normal));
+	vector3 Binormal = cross (Normal, Tangent);
+
+    return vector3 ((Tangent * sphere.x) + (Binormal * sphere.y) + (Normal * sphere.z));
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector4 calc_proj (vector3 P)
+{
+    return mul (m_P, vector4 (P, 1.0h));
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector2 projection_to_screen (vector4 proj)
+{
+	vector2 screen = proj.xy / proj.w;
+    return (screen + vector2 (1.0h, -1.0h)) * vector2 (0.5h, -0.5h);
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+{
+    vector3 P = GetPosition (TexCoords);
+    
+    if (P.z > HBAO_RENDER_DISTANCE || P.z < HBAO_ATTENUATION_DISTANCE)
+    {
+        return vector4 (1.0h, 1.0h, 1.0h, 1.0h);
+    }
+    else
+    {
+	    vector3 N = tex2D (s_gbuffer_normal, TexCoords);
+		
+	    vector3 position = P + N * HBAO_NORMAL * P.z;
+
+        vector occ = 0.0h;
+        
+        for (int i = 0; i < HBAO_SAMPLES; i++)
+        {
+		    vector3 Noise = get_blue_noise (TexCoords + poissonDisk_16[i] * 2.0h);
+            
+            vector3 hemi = SampleHemisphereDirection (N, Noise);
+            
+		    vector3 position_tap = position + hemi * HBAO_RADIUS;
+
+		    vector4 sample_proj = calc_proj (position_tap);
+		    vector2 sample_tap = projection_to_screen (sample_proj);
+
+            vector depth_hit = GetPosition (sample_tap).z;
+
+            vector dist = position_tap.z - depth_hit;
+		
+            if (dist >= 0.0h && dist <= 1.0h)
+                occ += 1.0h - dist * dist;
+        }
+
+        occ = saturate (1.0h - occ / HBAO_SAMPLES);
+
+        // Create smooth render distance border
+        vector FarFadingFactor = smoothstep (HBAO_RENDER_DISTANCE * 0.75h, HBAO_RENDER_DISTANCE, length (P));
+        occ = lerp (1.0h, occ, 1.0h - FarFadingFactor);
+        
+#ifdef USE_ATTENUATION
+        vector attenuation = smoothstep (HBAO_ATTENUATION_DISTANCE, HBAO_ATTENUATION_DISTANCE * 1.75h, length (P));
+	    occ = lerp(1.0h, occ, attenuation);
+#endif
+
+        return pow (occ, HBAO_POWER).xxxx;
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////

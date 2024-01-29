@@ -1,0 +1,6 @@
+#include "common.h"
+
+half4 main (vector2 TexCoords: TEXCOORD0): COLOR
+{
+    return tex2D (s_base, TexCoords) * 8.0h;
+}

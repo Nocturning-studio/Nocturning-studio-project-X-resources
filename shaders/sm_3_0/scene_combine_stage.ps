@@ -1,0 +1,41 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 26.11.2023
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "accumulation_helper.h"
+#include "ambient_light.h"
+#include "fog.h"
+#include "reflection.h"
+#include "BRDF.h"
+////////////////////////////////////////////////////////////////////////////
+vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+{
+    GBufferData GBuffer = UnpackGBuffer (TexCoords);
+    LightingData Light = UnpackLightingAccumulator (TexCoords);
+    
+    vector3 AmbientLighting = CalculateAmbient (GBuffer.AO);
+    
+#ifdef AO_ENABLED
+    AmbientLighting *= tex2D(s_ao, TexCoords).r;
+#endif
+    
+    vector3 DiffuseLighting = AmbientLighting + Light.Diffuse;
+    
+    vector3 SkyReflections = BlurredSkyReflectionApproximated (GBuffer.Position, GBuffer.Normal, GBuffer.Glossiness);
+    
+    vector3 SpecularLighting = Light.Specular * SkyReflections * 2.0h;
+	
+    vector3 SceneColor = GBuffer.Albedo * DiffuseLighting + SpecularLighting;
+    
+    FogComponents Fog = CalcFog (GBuffer.Position);
+    
+    SceneColor = lerp (SceneColor, Fog.Color, Fog.Fogness);
+    
+    vector3 OutputColor = SceneColor;
+    vector Opacity = saturate (pow (Fog.Fogness, 2.0h));
+    return vector4 (OutputColor, Opacity);
+}
+////////////////////////////////////////////////////////////////////////////

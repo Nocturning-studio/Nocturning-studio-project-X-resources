@@ -1,0 +1,58 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 25.10.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+#include "fxaa_atoc.h"
+#include "alpha_test.h"
+#include "contrast_adaptive_sharpening.h"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	vector4 HomogeniousPosition: POSITION;
+	vector3 Position: TEXCOORD0;
+	vector3 Normal: TEXCOORD3;
+	vector2 UV: TEXCOORD4;
+	vector2 Lighting: TEXCOORD5;
+};
+///////////////////////////////////////////////////////////////////////////////////
+GBuffer main (Interpolators Input)
+{
+	vector3 Albedo;
+    vector Opacity;
+	
+#if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
+    calc_fxaa_atoc(Input.UV, Albedo, Opacity);
+#else//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
+    Albedo = tex2D (s_base, Input.UV).rgb;
+    Opacity = tex2D (s_base, Input.UV).a;
+#endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
+
+	calc_alpha_test(Input.UV, Albedo, Opacity);
+
+    vector Lighting = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
+
+#ifdef USE_R2_STATIC_SUN
+	vector MaterialID = Input.Lighting.y;
+#else
+    vector MaterialID = 0.0h;
+#endif
+
+	vector3 Normal = normalize (Input.Normal.xyz);
+
+	vector3 Position = Input.Position;
+
+#ifdef USE_POSITION_WITH_NORMALS_BIAS
+	Position += Normal * def_virtualh * 0.015f;
+#endif
+	
+    vector Glossiness = def_gloss;
+
+    GBuffer Out = PackGBuffer (Position, MaterialID,
+							  Normal, Lighting,
+							  Albedo.rgb, Glossiness);
+    return Out;
+}
+///////////////////////////////////////////////////////////////////////////////////

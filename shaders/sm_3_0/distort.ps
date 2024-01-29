@@ -1,0 +1,12 @@
+#include "common.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Pixel
+vector4 main (vector2 tc: TEXCOORD0): COLOR
+{
+	vector2 distort = tex2D (s_distort, tc);
+	vector2 offset = (distort.xy - .5h) * def_distort;
+	vector3 image = tex2D (s_base, tc + offset);
+
+    return vector4 (image, 1.0h);
+}
