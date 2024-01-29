@@ -1,0 +1,39 @@
+class "opt_sound" (CUIWindow)
+
+function opt_sound:__init() super()
+end
+
+function opt_sound:__finalize()
+
+end
+
+function opt_sound:InitControls(x, y, xml, handler)
+
+	self:Init(x,y, 738, 416)
+	self:SetAutoDelete(true)
+	
+	self.bk = xml:InitFrame("frame", self)
+
+	xml:InitStatic("tab_sound:cap_effvolume", self)
+	xml:InitTrackBar("tab_sound:track_effvolume", self)
+
+	xml:InitStatic("tab_sound:cap_mastervolume", self)
+	xml:InitTrackBar("tab_sound:track_mastervolume", self)
+
+	xml:InitStatic("tab_sound:cap_musicvolume", self)
+	xml:InitTrackBar("tab_sound:track_musicvolume", self)
+
+	xml:InitStatic("tab_sound:cap_weaponvolume", self)	
+	xml:InitTrackBar("tab_sound:track_weaponvolume", self)	
+
+	xml:InitStatic("tab_sound:cap_ambientvolume", self)	
+	xml:InitTrackBar("tab_sound:track_ambientvolume", self)	
+
+	xml:InitCheck("tab_sound:check_eax", self)
+
+	xml:InitStatic("tab_sound:cap_snd_device", self)
+	xml:InitComboBox("tab_sound:list_snd_device", self)
+
+	btn = xml:Init3tButton("tab_sound:btn_default_set",	self)	
+	handler:Register(btn, "btn_default_sound")
+end
