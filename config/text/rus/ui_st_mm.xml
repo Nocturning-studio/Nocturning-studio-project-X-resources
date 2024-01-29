@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+<!-- Главное меню -->
+	<string id="ui_mm_load_game">
+		<text>Загрузить игру</text>
+	</string>
+
+	<string id="ui_mm_last_save">
+		<text>Последн. сохран.</text>
+	</string>
+
+	<string id="ui_mm_credits">
+		<text>Титры</text>
+	</string>
+
+	<string id="ui_mm_disconnect">
+		<text>Отсоединиться</text>
+	</string>
+
+	<string id="ui_mm_newgame">
+		<text>Новая игра</text>
+	</string>
+
+	<string id="ui_mm_quit_game">
+		<text>Завершить игру</text>
+	</string>
+
+	<string id="ui_mm_quit2windows">
+		<text>Выйти в Windows</text>
+	</string>
+
+	<string id="ui_mm_return_game">
+		<text>Возврат к игре</text>
+	</string>
+
+	<string id="ui_mm_multiplayer">
+		<text>Сетевая игра</text>
+	</string>
+
+	<string id="ui_mm_save_game">
+		<text>Сохранить игру</text>
+	</string>
+
+	<!-- Окна сообщений -->
+	<string id="ui_mm_quit_game_message">
+		<text>Действительно ли вы желаете покинуть игру?</text>
+	</string>
+
+	<string id="ui_mm_quit_windows_message">
+		<text>Действительно ли вы хотите выйти в Windows?</text>
+	</string>
+
+	<string id="ui_mm_need_restart">
+		<text>Изменения вступят в силу только после перезагрузки игры.</text>
+	</string>
+
+	<string id="ui_mm_disconnect_message">
+		<text>Действительно ли вы желаете отсоединиться?</text>
+	</string>
+
+<!-- Раздел загрузки\сохранения -->
+	<string id="ui_mm_delete">
+		<text>Удалить</text>
+	</string>
+
+	<string id="ui_mm_load">
+		<text>Загрузить</text>
+	</string>
+
+	<string id="ui_mm_save">
+		<text>Сохранить</text>
+	</string>
+
+<!-- Сетевая игра -->
+	<!-- Локализация уровней -->
+	<string id="testers_mp_agroprom">
+		<text>Завод "Агропром"</text>
+	</string>
+	<string id="testers_mp_atp">
+		<text>АТП</text>
+	</string>
+	<string id="testers_mp_darkvalley">
+		<text>Темная долина</text>
+	</string>
+	<string id="testers_mp_factory">
+		<text>Завод "Янтарь"</text>
+	</string>
+	<string id="testers_mp_lost_village">
+		<text>Покинутая деревня</text>
+	</string>
+	<string id="testers_mp_military_1">
+		<text>Военные склады</text>
+	</string>
+	<string id="testers_mp_pool">
+		<text>Бассейн</text>
+	</string>
+	<string id="testers_mp_railroad">
+		<text>Ж/Д станция</text>
+	</string>
+	<string id="testers_mp_rostok">
+		<text>Завод "Росток"</text>
+	</string>
+	<string id="testers_mp_workshop">
+		<text>Брошенная фабрика</text>
+	</string>
+
+	<!-- Погода -->
+	<string id="Clear">
+		<text>ясная</text>
+	</string>
+	<string id="Cloudy">
+		<text>облачная</text>
+	</string>
+	<string id="Rain">
+		<text>дождь</text>
+	</string>
+
+	<!-- Время суток -->
+	<string id="Nigth">
+		<text>ночь</text>
+	</string>
+
+	<!-- Режим игры -->
+	<string id="st_artefacthunt">
+		<text>Охота за артефактом</text>
+	</string>
+	<string id="st_deathmatch">
+		<text>Все против всех</text>
+	</string>
+	<string id="st_team_deathmatch">
+		<text>Команда против команды</text>
+	</string>
+
+	<!-- Ранг игрока -->
+	<string id="st_rank_experienced">
+		<text>опытный</text>
+	</string>
+	<string id="st_rank_legend">
+		<text>легендарный сталкер</text>
+	</string>
+	<string id="st_rank_novice">
+		<text>новичок</text>
+	</string>
+	<string id="st_rank_professional">
+		<text>профессионал</text>
+	</string>
+	<string id="st_rank_veteran">
+		<text>ветеран</text>
+	</string>
+
+	<!-- Сложность игры -->
+	<string id="gd_novice">
+		<text>новичок</text>
+	</string>
+	<string id="gd_stalker">
+		<text>опытный</text>
+	</string>
+	<string id="gd_veteran">
+		<text>ветеран</text>
+	</string>
+	<string id="gd_master">
+		<text>мастер</text>
+	</string>
+
+
+	<string id="mm_mp_check_cdkey">
+		<text>проверять CD-Key</text>
+	</string>
+
+	<string id="ui_mm_multiplayer_n">
+		<text>Сетевая игра</text>
+	</string>
+
+	<string id="ui_st_last_set">
+		<text>Посл. набор</text>
+	</string>
+
+	<string id="ui_st_preset1">
+		<text>Набор 1</text>
+	</string>
+
+	<string id="ui_st_preset2">
+		<text>Набор 2</text>
+	</string>
+
+	<string id="ui_st_preset3">
+		<text>Набор 3</text>
+	</string>
+
+	<string id="ui_st_reset">
+		<text>Сбросить</text>
+	</string>
+
+	<string id="ui_st_sell_all">
+		<text>Продать все</text>
+	</string>
+
+<!-- Настройки -->
+	<string id="ui_mm_options">
+		<text>ОПЦИИ</text>
+	</string>
+
+	<string id="ui_mm_options_n">
+		<text>Опции</text>
+	</string>
+
+	<!-- Графика (Общая) -->
+	<string id="ui_mm_video">
+		<text>Видео</text>
+	</string>
+
+	<string id="ui_mm_resolution">
+		<text>Разрешение</text>
+	</string>
+
+	<!-- Типы рендера -->
+	<string id="ui_mm_renderer">
+		<text>Тип рендера</text>
+	</string>
+	<string id="ui_mm_renderer_hint">
+		<text>Тип рендера определяет тип используемого в игре освещения,\nнеобходимую версию API DirectX и набор доступных вам эффектов.\n
+			Требуется перезапуск игры.</text>
+	</string>
+	<string id="renderer_r1">
+		<text>Статичное освещение (DirectX 9.0a)</text>
+	</string>
+	<string id="renderer_r2a">
+		<text>Динамическое освещение (DirectX 9.0c)</text>
+	</string>
+	<string id="renderer_r2">
+		<text>Полное динамич. освещение (DirectX 9.0c)</text>
+	</string>
+	<string id="renderer_r2.5">
+		<text>Полное динамич. улучшенное освещение (DirectX 9.0c)</text>
+	</string>
+
+	<!-- Пресеты качества -->
+	<string id="ui_mm_quality_presets">
+		<text>Установки качества</text>
+	</string>
+	<string id="ui_mm_quality_presets_hint">
+		<text>Установки качества влияют на производительность,\nа также внешний вид игры.\n
+			Требуется перезапуск игры.</text>
+	</string>
+	<string id="Minimum">
+		<text>Минимальные</text>
+	</string>
+	<string id="Low">
+		<text>Низкие</text>
+	</string>
+	<string id="Default">
+		<text>Средние</text>
+	</string>
+	<string id="High">
+		<text>Высокие</text>
+	</string>
+	<string id="Maximum">
+		<text>Максимальные</text>
+	</string>
+	<string id="Extreme">
+		<text>Экстремальные</text>
+	</string>
+	<string id="Ultra">
+		<text>Ультра</text>
+	</string>
+
+	<!-- Установки визуальных эффектов -->
+	<string id="ui_mm_effects_presets">
+		<text>Установки эффектов</text>
+	</string>
+	<string id="ui_mm_effects_presets_hint">
+		<text>Предустановленные настройки для набора художественных эффектов,\nвлияющих на кинематографичность внешнего вида игры.</text>
+	</string>
+	<string id="st_opt_eff_disabled">
+		<text>Без эффектов</text>
+	</string>
+	<string id="st_opt_eff_default">
+		<text>Стандартные эффекты</text>
+	</string>
+	<string id="st_opt_eff_cinematic">
+		<text>Кинематографичные эффекты</text>
+	</string>
+
+	<!-- Локализация комбо листов -->
+	<string id="st_opt_off">
+		<text>Отключено</text>
+	</string>
+	<string id="st_opt_disabled">
+		<text>Отключено</text>
+	</string>
+	<string id="st_opt_low">
+		<text>Низкое</text>
+	</string>
+	<string id="st_opt_medium">
+		<text>Среднее</text>
+	</string>
+	<string id="st_opt_high">
+		<text>Высокое</text>
+	</string>
+	<string id="st_opt_extreme">
+		<text>Экстремальное</text>
+	</string>
+	<string id="st_opt_ultra">
+		<text>Ультра</text>
+	</string>
+
+	<string id="ui_mm_gamma">
+		<text>Гамма</text>
+	</string>
+
+	<string id="ui_mm_contrast">
+		<text>Контраст</text>
+	</string>
+
+	<string id="ui_mm_brightness">
+		<text>Яркость</text>
+	</string>
+
+	<string id="ui_mm_fov">
+		<text>Поле зрения</text>
+	</string>
+
+	<string id="ui_mm_vsync">
+		<text>Верт. синхронизация</text>
+	</string>
+	<string id="ui_mm_vsync_hint">
+		<text>Принудительное согласование максимального количества кадров,\nгенерируемого графическим ускорителем с частотой монитора,\nдля предотвращения эффекта разрыва кадра.</text>
+	</string>
+
+	<string id="ui_mm_fullscreen">
+		<text>Полный экран</text>
+	</string>
+
+	<!-- Кнопки -->
+	<string id="ui_mm_advanced">
+		<text>Расширенные</text>
+	</string>
+
+	<string id="ui_mm_simply">
+		<text>Базовые</text>
+	</string>
+
+	<string id="ui_mm_apply">
+		<text>Применить</text>
+	</string>
+
+	<string id="ui_mm_back">
+		<text>Назад</text>
+	</string>
+
+	<string id="ui_mm_cancel">
+		<text>Отмена</text>
+	</string>
+
+	<!-- Графика (расширенная) -->
+
+	<string id="ui_mm_r_sepia">
+		<text>Цветокоррекция</text>
+	</string>
+	<string id="ui_mm_r_sepia_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет изменения его оттенка.</text>
+	</string>
+
+	<string id="ui_mm_r2_bloom">
+		<text>Bloom</text>
+	</string>
+	<string id="ui_mm_r2_bloom_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет размытия источников света и ярких участков сцены.</text>
+	</string>
+
+	<string id="ui_mm_r2_bloom_quality">
+		<text>Качество Bloom</text>
+	</string>
+
+	<string id="ui_mm_r2_sharpen">
+		<text>Sharpen</text>
+	</string>
+
+	<string id="ui_mm_r_hdr">
+		<text>HDR</text>
+	</string>
+	<string id="ui_mm_r_hdr_hint">
+		<text>Технология обработки изображений и видео,\nпозволяющая получить более высокий цветовой диапазон между самой светлой\nи самой тёмной частью картинки.</text>
+	</string>
+	<string id="ui_mm_r_hdr_brightness">
+		<text>Яркость HDR</text>
+	</string>
+	<string id="ui_mm_r_hdr_gamma">
+		<text>Гамма коррекция</text>
+	</string>
+
+	<string id="ui_mm_r_lens_flares">
+		<text>Блики солнца</text>
+	</string>
+	<string id="ui_mm_r_lens_flares_hint">
+		<text>Эффект, имитирующий переотражение солнца между\nлинзами объектива виртуальной камеры.</text>
+	</string>
+
+	<string id="ui_mm_r2_soft_water">
+		<text>Мягкая вода</text>
+	</string>
+	<string id="ui_mm_r2_soft_water_hint">
+		<text>Использование более реалистичной воды,\nза счет изменения ее прозрачности по формуле Френеля,\nмягкого перехода от воды к берегу,\nа также использования отражений.</text>
+	</string>
+
+	<string id="ui_mm_r2_soft_particles">
+		<text>Мягкие частицы</text>
+	</string>
+	<string id="ui_mm_r2_soft_particles_hint">
+		<text>Использование более плавного перехода\nпри пересечении частицы с поверхностью.</text>
+	</string>
+
+	<string id="ui_mm_r2_fog_quality">
+		<text>Качество тумана</text>
+	</string>
+
+	<string id="ui_mm_r2_barrel_blur">
+		<text>Размытие по краям экрана</text>
+	</string>
+
+	<string id="ui_mm_anisotropic">
+		<text>Анизотропная фильтрация</text>
+	</string>
+	<string id="ui_mm_anisotropic_hint">
+		<text>Технология улучшения качества изображения текстур на поверхностях,\nсильно наклонённых относительно камеры.</text>
+	</string>
+
+	<string id="ui_mm_r_chromatic_abberation">
+		<text>Хроматическая абберация</text>
+	</string>
+	<string id="ui_mm_r_chromatic_abberation_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта дисперсии света из-за кривизны линзы камеры.</text>
+	</string>
+
+	<string id="ui_mm_particles_distance">
+		<text>Дальность отрисовки частиц</text>
+	</string>
+
+	<string id="ui_mm_switch_torch">
+		<text>Использование фонариков AI</text>
+	</string>
+
+	<string id="ui_mm_texture_quality">
+		<text>Качество текстур</text>
+	</string>
+
+	<string id="ui_mm_vis_distance">
+		<text>Дальность видимости</text>
+	</string>
+
+	<string id="ui_mm_60_hz">
+		<text>60 FPS Lock</text>
+	</string>
+	<string id="ui_mm_60_hz_hint">
+		<text>Принудительное ограничение частоты кадров, генерируемой\nграфическим процессором, до 60, для экономии мощности, если она больше.</text>
+	</string>
+
+	<string id="ui_mm_npc_torch">
+		<text>Свет фонариков НПС</text>
+	</string>
+
+	<string id="ui_mm_particles_distance">
+		<text>Дальность отрисовки частиц</text>
+	</string>
+
+	<string id="ui_mm_light_distance">
+		<text>Дальность освещения</text>
+	</string>
+
+	<!-- Размытие в движении -->
+	<string id="ui_mm_r2_mblur">
+		<text>Размытие в движении</text>
+	</string>
+	<string id="ui_mm_r2_mblur_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта размытости изображения при резком движении</text>
+	</string>
+	<string id="ui_mm_r2_mblur_scale">
+		<text>Сила размытия в движении</text>
+	</string>
+
+	<!-- Глубина резкости -->
+	<string id="ui_mm_r2_dof">
+		<text>Глубина резкости</text>
+	</string>
+	<string id="ui_mm_r2_dof_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта фокусировки.</text>
+	</string>
+	<string id="ui_mm_r2_dof_quality">
+		<text>Качество глубины резкости</text>
+	</string>
+
+	<string id="ui_mm_geometry_lod">
+		<text>Детализация растительности</text>
+	</string>
+
+	<string id="ui_mm_detalization_distance">
+		<text>Дальность детализации объектов</text>
+	</string>
+
+	<!-- Автоэкспозиция -->
+	<string id="ui_mm_r2_autoexposure">
+		<text>Автоэкспозиция</text>
+	</string>
+	<string id="ui_mm_r2_autoexposure_hint">
+		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта автоматической подстройки яркости кадра.</text>
+	</string>
+	<string id="ui_mm_r2_autoexposure_adaptation">
+		<text>Скорость изменения экспозиции</text>
+	</string>
+	<string id="ui_mm_r2_autoexposure_adaptation_hint">
+		<text>Регулировка эффекта имитации адаптации кинокамеры к освещению.\nЧем больше значение - тем быстрее виртуальная камера будет\nадаптироваться к освещенности сцены.</text>
+	</string>
+
+	<!-- AMD CAS -->
+	<string id="ui_mm_r2_cas">
+		<text>AMD CAS</text>
+	</string>
+	<string id="ui_mm_r2_cas_hint">
+		<text>Contrast Adaptive Sharpening (FidelityFX CAS) – технология, обеспечивающая максимальную\nдетализацию картинки и устраняющая потерю деталей после применения технологии сглаживания и при этом\nсохраняющая максимальную четкость графики с минимальным количеством визуальных дефектов.</text>
+	</string>
+
+	<string id="ui_mm_r2_cas_contrast">
+		<text>Контрастность CAS</text>
+	</string>
+
+	<string id="ui_mm_r2_cas_sharpening">
+		<text>Резкость CAS</text>
+	</string>
+
+	<string id="ui_mm_r2_cas_for_materials">
+		<text>CAS для материалов</text>
+	</string>
+	<string id="ui_mm_r2_cas_for_materials_hint">
+		<text>Эксперементальная настройка, позволяющая использовать Contrast Adaptive Sharpening\n(FidelityFX CAS) для улучшения четкости текстур игровых объектов.\nМожет давать спорные визуальные результаты, в зависимости от разных параметров текстуры.\nДля применения требуется перезапуск игры.</text>
+	</string>
+
+	<!-- Сглаживание -->
+	<string id="ui_mm_r_aa_type">
+		<text>Тип сглаживания</text>
+	</string>
+	<string id="ui_mm_r_aa_type_hint">
+		<text>Технология, используемая в обработке изображений\nс целью сделать границы кривых линий более гладкими,\nубирая возникающие «зубцы» на краях объектов.</text>
+	</string>
+	<string id="ui_mm_r2_aa_quality">
+		<text>Качество сглаживания</text>
+	</string>
+	<string id="ui_mm_r_aa_iterations">
+		<text>Сила сглаживания</text>
+	</string>
+	<string id="ui_mm_r_aa_iterations_hint">
+		<text>Количество проходов сглаживания, производимых при обработке кадра.\n Чем больше количество проходов - тем больше нагрузка на графический процессор.</text>
+	</string>
+	<string id="st_opt_ssaa">
+		<text>SSAA</text>
+	</string>
+	<string id="st_opt_rgaa">
+		<text>RGAA</text>
+	</string>
+	<string id="st_opt_dlaa">
+		<text>DLAA</text>
+	</string>
+	<string id="st_opt_fxaa">
+		<text>FXAA</text>
+	</string>
+	<string id="st_opt_x1">
+		<text>X1</text>
+	</string>
+	<string id="st_opt_x2">
+		<text>X2</text>
+	</string>
+	<string id="st_opt_x4">
+		<text>X4</text>
+	</string>
+	<string id="st_opt_x8">
+		<text>X8</text>
+	</string>
+
+	<!-- Сглаживание прозрачных поверхностей -->
+	<string id="ui_mm_r2_alpha_test_aa">
+		<text>Сглаживание прозрачных объектов</text>
+	</string>
+	<string id="ui_mm_r2_alpha_test_aa_hint">
+		<text>Применение технологии сглаживания для таких поверхностей как листва,\nтрава, металлические решетки, и другие использующие\nтекстуры с прозрачностью, для наилучшего их отображения.\nДля применения необходим перезапуск игры.</text>
+	</string>
+
+
+	<!-- Самозатенение -->
+	<string id="ui_mm_r2_ao_type">
+		<text>Тип ambient occlusion</text>
+	</string>
+	<string id="ui_mm_r2_ao_type_hint">
+		<text>Программная техника, являющаяся\nприближенной имитацией глобального освещения.\nДанный эффект предназначен для имитации рассеянного\nосвещения в сложных участках геометрии.</text>
+	</string>
+	<string id="ui_mm_r2_ao_quality">
+		<text>Качество ambient occlusion</text>
+	</string>
+	<string id="st_opt_ssao">
+		<text>SSAO</text>
+	</string>
+	<string id="st_opt_hbao">
+		<text>HBAO</text>
+	</string>
+	<string id="st_opt_hbao_plus">
+		<text>HBAO+</text>
+	</string>
+
+	<!-- Винъетирование -->
+	<string id="ui_mm_r_vignette_mode">
+		<text>Режим винъетирования</text>
+	</string>
+	<string id="ui_mm_r_vignette_mode_hint">
+		<text>Винъетирование - эффект изменения яркости изображения по мере приближения к его краям,\nиз-за особенностей объектива кинокамеры.\n
+			Статическое винъетирование - сила эффекта будет постоянной при любых условиях.\n
+			Динамическое винъетирование - сила эффекта будет изменяться по мере прохождения игры.\n</text>
+	</string>
+	<string id="st_opt_static">
+		<text>Статический</text>
+	</string>
+	<string id="st_opt_dynamic">
+		<text>Динамический</text>
+	</string>
+
+	<!-- Рельеф -->
+	<string id="ui_mm_r2_bump_quality">
+		<text>Качество рельефного текстурирования</text>
+	</string>
+	<string id="ui_mm_r2_bump_mode">
+		<text>Тип рельефного текстурирования</text>
+	</string>
+	<string id="ui_mm_r2_bump_mode_hint">
+		<text>Рельефное текстурирование — метод в компьютерной графике предназначенный для придания\nболее реалистичного и насыщенного вида поверхности объектов.</text>
+	</string>
+	<string id="st_opt_normal_mapping">
+		<text>Normal mapping</text>
+	</string>
+	<string id="st_opt_parallax_mapping">
+		<text>Parallax mapping</text>
+	</string>
+	<string id="st_opt_parallax_occlusion_mapping">
+		<text>Parallax occlusion mapping</text>
+	</string>
+
+	<!-- Солнце -->
+	<string id="ui_mm_r2_sun_quality">
+		<text>Качество солнца</text>
+	</string>
+	<string id="ui_mm_r2_shadow_filtering">
+		<text>Размытие теней</text>
+	</string>
+	<string id="st_opt_disable">
+		<text>Отключено</text>
+	</string>
+	<string id="st_opt_min">
+		<text>Слабое</text>
+	</string>
+	<string id="st_opt_mid">
+		<text>Среднее</text>
+	</string>
+	<string id="st_opt_max">
+		<text>Сильное</text>
+	</string>
+
+	<!-- Глубина цвета -->
+	<string id="ui_mm_r2_rt_format">
+		<text>Глубина цвета</text>
+	</string>
+	<string id="st_opt_rgba_32">
+		<text>32 бит на пиксель</text>
+	</string>
+	<string id="st_opt_rgba_64">
+		<text>64 бит на пиксель</text>
+	</string>
+	<string id="ui_mm_r2_rt_format_hint">
+		<text>Глубина цвета определяется количеством бит памяти на один пиксель изображения.\nСнижение количества бит на пиксель может снизить загрузку видеопамяти вашего\nграфического ускорителя и уменьшить время расчета кадра, в замен на снижение\nкачества изображения из-за появления грубых цветовых переходов.</text>
+	</string>
+
+	<!-- Звук -->
+	<string id="ui_mm_sound">
+		<text>Звук</text>
+	</string>
+
+	<string id="ui_mm_master_volume">
+		<text>Общая громкость</text>
+	</string>
+
+	<string id="ui_mm_effects_volume">
+		<text>Громкость звуков</text>
+	</string>
+
+	<string id="ui_mm_weapon_volume">
+		<text>Громкость оружия (эксперементально)</text>
+	</string>
+
+	<string id="ui_mm_music_volume">
+		<text>Громкость музыки</text>
+	</string>
+
+	<string id="ui_mm_ambient_volume">
+		<text>Громкость окружения</text>
+	</string>
+
+	<string id="ui_mm_snd_device">
+		<text>Звуковое устройство</text>
+	</string>
+
+	<string id="ui_mm_eax">
+		<text>EAX</text>
+	</string>
+
+	<!-- Игра -->
+	<string id="ui_mm_gameplay">
+		<text>Игра</text>
+	</string>
+
+	<!-- Сложность игры -->
+	<string id="ui_mm_difficulty">
+		<text>Сложность</text>
+	</string>
+
+	<string id="ui_mm_novice">
+		<text>Новичок</text>
+	</string>
+
+	<string id="ui_mm_stalker">
+		<text>Сталкер</text>
+	</string>
+
+	<string id="ui_mm_veteran">
+		<text>Ветеран</text>
+	</string>
+
+	<string id="ui_mm_master">
+		<text>Мастер</text>
+	</string>
+
+	<string id="ui_mm_weather_effects">
+		<text>Эффекты ветра и летящих листьев</text>
+	</string>
+
+	<string id="ui_mm_hud_draw">
+		<text>Отображение индикаторов</text>
+	</string>
+
+	<string id="ui_mm_cam_psp">
+		<text>Альтернативный вид от третьего лица</text>
+	</string>
+
+	<string id="ui_mm_crosshair_distance">
+		<text>Дистанция до цели</text>
+	</string>
+
+	<string id="ui_mm_show_crosshair">
+		<text>Показывать прицел</text>
+	</string>
+
+	<string id="ui_mm_show_weapon">
+		<text>Показывать оружие</text>
+	</string>
+
+	<string id="ui_mm_dyn_crosshair">
+		<text>Динамический прицел</text>
+	</string>
+
+	<string id="ui_mm_game_intro_enable">
+		<text>Воспроизводить интро при старте игры</text>
+	</string>
+
+	<string id="ui_mm_view_bobbing_enable">
+		<text>Покачивание камеры</text>
+	</string>
+
+	<string id="ui_mm_dynamic_fov_enable">
+		<text>Изменение поля зрения</text>
+	</string>
+
+	<string id="ui_mm_tips">
+		<text>Распознавание НПС</text>
+	</string>
+
+	<!-- Управление -->
+	<string id="ui_mm_controls">
+		<text>Управление</text>
+	</string>
+
+	<string id="ui_mm_action">
+		<text>Действие</text>
+	</string>
+
+	<string id="ui_mm_key">
+		<text>Кнопка</text>
+	</string>
+
+	<string id="ui_mm_keyboard_setup">
+		<text>Настройка клавиатуры</text>
+	</string>
+
+	<string id="ui_mm_invert_mouse">
+		<text>Инвертировать мышь</text>
+	</string>
+
+	<string id="ui_mm_mouse_sense">
+		<text>Чувствительность мыши</text>
+	</string>
+
+	<!-- Способ переключения зума -->
+	<string id="ui_mm_zoom_changing_type">
+		<text>Переключение в режим прицеливания</text>
+	</string>
+
+	<string id="st_opt_press">
+		<text>По нажатию кнопки</text>
+	</string>
+
+	<string id="st_opt_hold">
+		<text>По удержанию кнопки</text>
+	</string>
+</string_table>
