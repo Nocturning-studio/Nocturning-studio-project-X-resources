@@ -17,15 +17,15 @@ struct Interpolators
 ///////////////////////////////////////////////////////////////////////////////////
 Accumulator main (Interpolators Input)
 {
-    GBufferData GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
+    GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
     vector AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
     vector3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
-    vector4 LightingModel = Calculate_Lighting_Model (GBuffer.Material, GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
+    vector2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
     
-    vector3 Diffuse = LightingModel.rgb;
-    vector3 Specular = LightingModel.aaa;
+    vector3 Diffuse = LightingModel.xxx;
+    vector3 Specular = LightingModel.yyy;
     
     vector4 Position = vector4 (GBuffer.Position, 1.0h);
     vector4 ShadowMapTexCoords = mul (m_shadow, Position);

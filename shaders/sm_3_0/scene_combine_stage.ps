@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////
 vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
 {
-    GBufferData GBuffer = UnpackGBuffer (TexCoords);
+    GBuffer GBuffer = UnpackGBuffer (TexCoords);
     LightingData Light = UnpackLightingAccumulator (TexCoords);
     
     vector3 AmbientLighting = CalculateAmbient (GBuffer.AO);
@@ -22,13 +22,13 @@ vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
     AmbientLighting *= tex2D(s_ao, TexCoords).r;
 #endif
     
-    vector3 DiffuseLighting = AmbientLighting + Light.Diffuse;
+    vector3 DiffuseLighting = (AmbientLighting + Light.Diffuse);
     
     vector3 SkyReflections = BlurredSkyReflectionApproximated (GBuffer.Position, GBuffer.Normal, GBuffer.Glossiness);
     
     vector3 SpecularLighting = Light.Specular * SkyReflections * 2.0h;
 	
-    vector3 SceneColor = GBuffer.Albedo * DiffuseLighting + SpecularLighting;
+    vector3 SceneColor = (GBuffer.Albedo * DiffuseLighting + SpecularLighting) * GBuffer.BakedAO;
     
     FogComponents Fog = CalcFog (GBuffer.Position);
     

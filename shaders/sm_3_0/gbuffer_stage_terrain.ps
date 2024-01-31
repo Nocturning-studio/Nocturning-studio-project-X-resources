@@ -19,8 +19,10 @@ struct Interpolators
 	vector2 DetailUV: TEXCOORD5;
 };
 ////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	// Get detail textures map (4 channels = 4 textures)
 	vector4 Mask = GetDetailMask (Input.UV);
 
@@ -35,7 +37,7 @@ GBuffer main (Interpolators Input)
 
 	// details albedo data, multiplicated by detail map
 	vector3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
-	vector3 Albedo = 2.0h * DiffuseTextureData.rgb * DetailAlbedo;
+    GBuffer.Albedo = 2.0h * DiffuseTextureData.rgb * DetailAlbedo;
 
 	// Get DXT comressed normals + AO + glossmap for all details in 4 textures set
 	vector4 DetailBumpData = GetDetailBump (Mask, DetailUV);
@@ -64,44 +66,36 @@ GBuffer main (Interpolators Input)
     NormalMap.z *= invert (HeightMap);
 
 	// Out normal for Geometry buffer
-	vector3 Normal = normalize (mul (TBN, NormalMap));
+    GBuffer.Normal = normalize (mul (TBN, NormalMap));
 
 	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * HeightMap * 0.015f;
+    GBuffer.Position += GBuffer.Normal * HeightMap * 0.015f;
 #endif
 
-	// Get and smooth light map ambient
-    vector LightMapAO = tex2D (s_base, Input.UV).a * (AO_BRIGHTNESS + 0.1h);
+	// Get light map ambient
+    GBuffer.AO = tex2D (s_base, Input.UV).a * (AO_BRIGHTNESS - 0.2f);
 
 	// Get baked ao from details
-    vector BakedAO = DetailBumpData.g;
-
-	// Combine all light data
-    vector Lighting = LightMapAO * BakedAO;
-
-	// Control brightness
-    Lighting *= AO_BRIGHTNESS;
+    GBuffer.BakedAO = DetailBumpData.g;
 
 	// Create glossiness from details
-    vector Glossiness = DetailBumpData.r;
+    GBuffer.Glossiness = DetailBumpData.r;
 
 	// Material or direct sun lighting
-#ifdef USE_R2_STATIC_SUN
-	// Get and smooth local lights
-    vector LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
-
-	vector MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
-#else
-    vector MaterialID = xmaterial;
-#endif
+//#ifdef USE_R2_STATIC_SUN
+//	// Get and smooth local lights
+//    vector LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
+//
+//	vector MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
+//#else
+//    vector MaterialID = xmaterial;
+//#endif
 
 	// Pack geometry buffer
-    GBuffer Output = PackGBuffer (Position, MaterialID,
-								  Normal, Lighting,
-								  Albedo, Glossiness);
+    GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }
 ////////////////////////////////////////////////////////////////////////////////

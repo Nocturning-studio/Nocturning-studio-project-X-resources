@@ -18,8 +18,10 @@ struct Interpolators
 	vector2 Lighting: TEXCOORD5;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	vector3 Albedo;
     vector Opacity;
 	
@@ -30,29 +32,31 @@ GBuffer main (Interpolators Input)
     Opacity = tex2D (s_base, Input.UV).a;
 #endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
 
-	calc_alpha_test(Input.UV, Albedo, Opacity);
+	calc_alpha_test(Input.UV, Opacity);
 
-    vector Lighting = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
+    GBuffer.Albedo = Albedo;
+	
+    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
 
-#ifdef USE_R2_STATIC_SUN
-	vector MaterialID = Input.Lighting.y;
-#else
-    vector MaterialID = 0.0h;
-#endif
+    GBuffer.BakedAO = 1.0h;
+	
+//#ifdef USE_R2_STATIC_SUN
+//	vector MaterialID = Input.Lighting.y;
+//#else
+//    vector MaterialID = 0.0h;
+//#endif
 
-	vector3 Normal = normalize (Input.Normal.xyz);
+    GBuffer.Normal = normalize (Input.Normal.xyz);
 
-	vector3 Position = Input.Position;
+	GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * def_virtualh * 0.015f;
+    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
 #endif
 	
-    vector Glossiness = def_gloss;
-
-    GBuffer Out = PackGBuffer (Position, MaterialID,
-							  Normal, Lighting,
-							  Albedo.rgb, Glossiness);
-    return Out;
+    GBuffer.Glossiness = def_gloss;
+	
+    GBufferPacked Output = PackGBuffer (GBuffer);
+    return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

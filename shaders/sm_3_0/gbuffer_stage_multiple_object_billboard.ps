@@ -18,8 +18,10 @@ struct Interpolators
     vector OpacityFactor: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	vector4 Albedo0 = tex2D (s_base, Input.TexCoords0);
 	vector4 Albedo1 = tex2D (s_base, Input.TexCoords1);
 	vector4 Albedo = lerp (Albedo0, Albedo1, Input.TransitionFactor);
@@ -28,31 +30,33 @@ GBuffer main (Interpolators Input)
 
     clip (Albedo.a - 0.8f);
 
+    GBuffer.Albedo = Albedo;
+	
 	vector4 NormalAndAO0 = tex2D (s_hemi, Input.TexCoords0);
 	vector4 NormalAndAO1 = tex2D (s_hemi, Input.TexCoords1);
 	vector4 NormalAndAO = lerp (NormalAndAO0, NormalAndAO1, Input.TransitionFactor);
 
-    vector AO = NormalAndAO.a * (AO_BRIGHTNESS - 0.1f);
+    GBuffer.AO = NormalAndAO.a * (AO_BRIGHTNESS - 0.1f);
 
-	vector3 Normal = -normalize (NormalAndAO.rgb);
+    GBuffer.BakedAO = 1.0h;
+    
+    GBuffer.Normal = -normalize (NormalAndAO.rgb);
 
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * def_virtualh * 0.015f;
+    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
 #endif
 	
-#ifdef USE_R2_STATIC_SUN
-	vector MaterialID = Input.SunOcclusion;
-#else
-    vector MaterialID = xmaterial;
-#endif
+//#ifdef USE_R2_STATIC_SUN
+//	vector MaterialID = Input.SunOcclusion;
+//#else
+//    vector MaterialID = xmaterial;
+//#endif
 
-    vector Glossiness = def_gloss;
+    GBuffer.Glossiness = def_gloss;
 
-    GBuffer Output = PackGBuffer (Position, MaterialID,
-								 Normal, AO,
-								 Albedo.rgb, Glossiness);
+    GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

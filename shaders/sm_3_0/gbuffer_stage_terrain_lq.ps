@@ -16,38 +16,39 @@ struct Interpolators
 	vector2 Lighting: TEXCOORD4;
 };
 ////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	// Diffuse color
 	vector4 Albedo = tex2D (s_base, Input.UV);
-    Albedo.rgb *= 2 * tex2D (s_detail, Input.DetailUV);
+    GBuffer.Albedo = 2 * Albedo * tex2D (s_detail, Input.DetailUV);
 
-    vector Lighting = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
+    GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
 
-#ifdef USE_R2_STATIC_SUN
-	vector  MaterialID = tex2D(s_lmap, Input.UV).a;
-#else
-    vector MaterialID = xmaterial;
-#endif
+    GBuffer.BakedAO = 1.0h;
+	
+//#ifdef USE_R2_STATIC_SUN
+//	vector  MaterialID = tex2D(s_lmap, Input.UV).a;
+//#else
+//    vector MaterialID = xmaterial;
+//#endif
 
 	// Normal for Geometry Buffer
-	vector3 Normal = normalize (Input.Normal);
+    GBuffer.Normal = normalize (Input.Normal);
 
 	// Position for Geometry Buffer
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * def_virtualh * 0.015f;
+    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
 #endif
 	
 	// Out glossiness
-    vector Glossiness = def_gloss;
-
+    GBuffer.Glossiness = def_gloss;
+	
 	// Pack Geometry buffer
-    GBuffer Output = PackGBuffer (Position, MaterialID,
-								  Normal, Lighting,
-								  Albedo.rgb, Glossiness);
-
+    GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }
 ////////////////////////////////////////////////////////////////////////////////

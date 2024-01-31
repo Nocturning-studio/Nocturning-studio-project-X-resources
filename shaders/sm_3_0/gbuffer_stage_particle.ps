@@ -7,7 +7,6 @@
 #include "gbuffer.h"
 #include "fxaa_atoc.h"
 #include "alpha_test.h"
-#include "contrast_adaptive_sharpening.h"
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -18,8 +17,10 @@ struct Interpolators
 	vector4 Color: COLOR0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+    
 	vector3 Albedo;
     vector Opacity;
 	
@@ -30,21 +31,25 @@ GBuffer main (Interpolators Input)
     Opacity = tex2D(s_base, Input.UV).a;
 #endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
 
-    calc_alpha_test (Input.UV, Albedo, Opacity);
+    calc_alpha_test (Input.UV, Opacity);
 
-    Albedo *= Input.Color;
+    GBuffer.Albedo = Albedo * Input.Color.rgb;
     
-	vector3 Normal = normalize (Input.Normal);
+    GBuffer.Normal = normalize (Input.Normal);
 
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * def_virtualh * 0.015f;
+    GBuffer.Normal * def_virtualh * 0.015f;
 #endif
     
-    GBuffer Output = PackGBuffer (Position, xmaterial,
-								 Normal, 0.5h,
-								 Albedo.rgb, def_gloss);
+    GBuffer.AO = 0.5h;
+    
+    GBuffer.BakedAO = 1.0h;
+    
+    GBuffer.Glossiness = def_gloss;
+    
+    GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

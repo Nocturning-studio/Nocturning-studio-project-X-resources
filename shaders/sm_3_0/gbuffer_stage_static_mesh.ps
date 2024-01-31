@@ -21,8 +21,10 @@ struct Interpolators
 	vector2 Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	// Combine TBN for send to material loading
 	matrix3x3 TBN = matrix3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
 
@@ -30,16 +32,18 @@ GBuffer main (Interpolators Input)
     MaterialParams Material = GetMaterial (Input.UV, TBN, Input.Position);
 
 #ifdef USE_ALPHA_TEST
-	calc_alpha_test(Input.UV, Material.Albedo, Material.Opacity);
+	calc_alpha_test(Input.UV, Material.Opacity);
 #endif
 
-	vector3 Normal = normalize (mul (TBN, Material.Normal));
+    GBuffer.Albedo = Material.Albedo;
+	
+    GBuffer.Normal = normalize (mul (TBN, Material.Normal));
 
 	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * Material.Height * 0.015f;
+    GBuffer.Position += GBuffer.Normal * Material.Height * 0.015f;
 #endif
 	
 #ifdef USE_LIGHTMAP
@@ -47,27 +51,27 @@ GBuffer main (Interpolators Input)
 	LightMapData LightMap;
 	LightMap = Unpack_LightMap(Input.LightMapUV);
 
-	vector AO = LightMap.AO;
+	GBuffer.AO = LightMap.AO;
 #else//USE_LIGHTMAP
-    vector AO = Input.Lighting.x * (AO_BRIGHTNESS - 0.25f);
+    GBuffer.AO = Input.Lighting.x * (AO_BRIGHTNESS - 0.25f);
 #endif//USE_LIGHTMAP
 
-#ifdef USE_R2_STATIC_SUN
-#ifdef	USE_LIGHTMAP
-	vector MaterialID = LightMap.Sun;
-#else// USE_LIGHTMAP
-	vector MaterialID = Input.Lighting.y;
-#endif//USE_LIGHTMAP
-#else//USE_R2_STATIC_SUN
-    vector MaterialID = L_material.w;
-#endif//USE_R2_STATIC_SUN
+//#ifdef USE_R2_STATIC_SUN
+//#ifdef	USE_LIGHTMAP
+//	vector MaterialID = LightMap.Sun;
+//#else// USE_LIGHTMAP
+//	vector MaterialID = Input.Lighting.y;
+//#endif//USE_LIGHTMAP
+//#else//USE_R2_STATIC_SUN
+//    vector MaterialID = L_material.w;
+//#endif//USE_R2_STATIC_SUN
 
 	// Apply baked ao for light map ao
-    AO *= Material.AO;
+    GBuffer.BakedAO = Material.AO;
 
-    GBuffer Output = PackGBuffer (Position, MaterialID,
-								 Normal, AO,
-								 Material.Albedo, Material.Glossiness);
+    GBuffer.Glossiness = Material.Glossiness;
+	
+    GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

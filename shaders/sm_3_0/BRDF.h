@@ -37,15 +37,6 @@ vector3 EnvironmentBRDF_LUT(vector3 Point, vector3 Normal, vector Glossiness)
     return F * (brdf.x + brdf.y);
 }
 ////////////////////////////////////////////////////////////////////////////
-//  https://learnopengl.com/Advanced-Lighting/Advanced-Lighting
-////////////////////////////////////////////////////////////////////////////
-vector Calculate_Energy_Conservation(vector Specular)
-{
-    const vector kShininess = 16.0h;
-    const vector kEnergyConservation = (8.0h + kShininess) / (8.0h * PI);
-    return pow(Specular, kEnergyConservation);
-}
-////////////////////////////////////////////////////////////////////////////
 vector Fresnel(vector Specular, vector3 ViewDirection, vector3 HalfAngle)
 {
     return (Specular + (1.0h - Specular) * pow(1.0h - saturate(dot(ViewDirection, HalfAngle)), 5.0h));
@@ -55,11 +46,7 @@ vector Blinn_Phong_Specular(vector3 HalfAngle, vector3 Normal)
 {
     vector Specular = max(0.0h, dot(HalfAngle, Normal));
 
-    Specular = pow(Specular, 24.0h);
-
-    Specular = Calculate_Energy_Conservation(Specular);
-
-    return Specular;
+    return pow(Specular, 36.0h) * 1.2h;
 }
 ////////////////////////////////////////////////////////////////////////////
 // https://www.shadertoy.com/view/ltfyD8
@@ -80,7 +67,7 @@ vector Oren_Nayar_Diffuse(vector3 LightDirection, vector3 ViewDirection, vector3
 ////////////////////////////////////////////////////////////////////////////
 // Ultimate lighting model
 ////////////////////////////////////////////////////////////////////////////
-vector4 Calculate_Lighting_Model(vector Material, vector Glossiness, vector3 Point, vector3 Normal,
+vector2 Calculate_Lighting_Model(vector Glossiness, vector3 Point, vector3 Normal,
                                  vector3 LightDirection)
 {
     Normal = normalize(Normal);
@@ -96,11 +83,8 @@ vector4 Calculate_Lighting_Model(vector Material, vector Glossiness, vector3 Poi
 
     // --Indirect diffuse from light--
     vector Diffuse = Oren_Nayar_Diffuse(LightDirection, ViewDirection, Normal, Glossiness);
-    Diffuse = Calculate_Energy_Conservation(Diffuse);
 
-    return vector4(Diffuse.xxx, Specular);
-    // vector4 LightingModel = tex3D(s_material, vector3(Diffuse, Specular, Material));
-    //  return LightingModel;
+    return vector2(Diffuse, Specular);
 }
 ////////////////////////////////////////////////////////////////////////////
 // Spot\Point lighting

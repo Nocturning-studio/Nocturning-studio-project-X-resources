@@ -3,52 +3,42 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 3.0
 ////////////////////////////////////////////////////////////////////////////
-/* Deathman to all:
-   Необходим рефакторинг содержимого геометрического буфера 
-   с переработкой материалов игры.
-   MatID можно заменить на карту металличности, Glossiness можно 
-   заменить на шероховатость.
-   Позицию необходимо получать из глубины, а вместо освободившихся 
-   компонентов можно хранить AO и эмиссию, чтобы использовать 
-   их свободно в аккумуляции света.
-*/
-////////////////////////////////////////////////////////////////////////////
 #ifndef GBUFFER_INCLUDED
 #define GBUFFER_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ////////////////////////////////////////////////////////////////////////////
-struct GBufferData
+struct GBuffer
 {
     vector3 Position;
-    vector Material;
+    vector BakedAO;
     vector3 Normal;
     vector AO;
     vector3 Albedo;
     vector Glossiness;
 };
 ////////////////////////////////////////////////////////////////////////////
-struct GBuffer
+struct GBufferPacked
 {
-    vector4 PositionMtl : COLOR0;
-    vector4 NormalAO : COLOR1;
-    vector4 AlbedoGloss : COLOR2;
+    vector4 GBuffer0 : COLOR0;
+    vector4 GBuffer1 : COLOR1;
+    vector4 GBuffer2 : COLOR2;
 };
 
-GBuffer PackGBuffer(vector3 Position, vector Material, vector3 Normal, vector AO, vector3 Albedo, vector Gloss)
+GBufferPacked PackGBuffer(GBuffer Input)
 {
-    GBuffer GData;
+    GBufferPacked GBuffer;
 
-    GData.PositionMtl.rgb = Position;
-    GData.PositionMtl.a = Material;
+    GBuffer.GBuffer0.rgb = Input.Position;
+    GBuffer.GBuffer0.a = Input.BakedAO;
 
-    GData.NormalAO.rgb = Normal;
-    GData.NormalAO.a = AO;
+    GBuffer.GBuffer1.rgb = Input.Normal;
+    GBuffer.GBuffer1.a = Input.AO;
 
-    GData.AlbedoGloss.rgb = Albedo;
-    GData.AlbedoGloss.a = Gloss;
+    GBuffer.GBuffer2.rgb = Input.Albedo;
+    GBuffer.GBuffer2.a = Input.Glossiness;
 
-    return GData;
+    return GBuffer;
 }
 
 vector3 GetPosition(vector2 TexCoords)
@@ -62,24 +52,24 @@ vector3 GetPosition(vector2 TexCoords)
     return Position;
 }
 
-GBufferData UnpackGBuffer(vector2 TexCoords)
+GBuffer UnpackGBuffer(vector2 TexCoords)
 {
-    GBufferData GData;
+    GBuffer GBuffer;
 
-    GData.Position = GetPosition(TexCoords);
-    GData.Material = tex2D(s_gbuffer_position, TexCoords).a;
+    GBuffer.Position = GetPosition(TexCoords);
+    GBuffer.BakedAO = tex2D(s_gbuffer_position, TexCoords).a;
 
     vector4 NormalAO = tex2D(s_gbuffer_normal, TexCoords);
 
-    GData.Normal = NormalAO.rgb;
-    GData.AO = NormalAO.a;
+    GBuffer.Normal = NormalAO.rgb;
+    GBuffer.AO = NormalAO.a;
 
     vector4 AlbedoGloss = tex2D(s_gbuffer_albedo, TexCoords);
 
-    GData.Albedo = AlbedoGloss.rgb;
-    GData.Glossiness = AlbedoGloss.a;
+    GBuffer.Albedo = AlbedoGloss.rgb;
+    GBuffer.Glossiness = AlbedoGloss.a;
 
-    return GData;
+    return GBuffer;
 }
 
 vector3 GetPositionProjected(vector4 TexCoords)
@@ -93,24 +83,24 @@ vector3 GetPositionProjected(vector4 TexCoords)
     return Position;
 }
 
-GBufferData UnpackGBufferWithProjection(vector4 TexCoords)
+GBuffer UnpackGBufferWithProjection(vector4 TexCoords)
 {
-    GBufferData GData;
+    GBuffer GBuffer;
 
-    GData.Position = GetPositionProjected(TexCoords);
-    GData.Material = tex2Dproj(s_gbuffer_position, TexCoords).a;
+    GBuffer.Position = GetPositionProjected(TexCoords);
+    GBuffer.BakedAO = tex2Dproj(s_gbuffer_position, TexCoords).a;
 
     vector4 NormalAO = tex2Dproj(s_gbuffer_normal, TexCoords);
 
-    GData.Normal = NormalAO.rgb;
-    GData.AO = NormalAO.a;
+    GBuffer.Normal = NormalAO.rgb;
+    GBuffer.AO = NormalAO.a;
 
     vector4 AlbedoGloss = tex2Dproj(s_gbuffer_albedo, TexCoords);
 
-    GData.Albedo = AlbedoGloss.rgb;
-    GData.Glossiness = AlbedoGloss.a;
+    GBuffer.Albedo = AlbedoGloss.rgb;
+    GBuffer.Glossiness = AlbedoGloss.a;
 
-    return GData;
+    return GBuffer;
 }
 ////////////////////////////////////////////////////////////////////////////
 #endif // GBUFFER_INCLUDED

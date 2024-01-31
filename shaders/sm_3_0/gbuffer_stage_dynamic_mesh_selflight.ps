@@ -19,23 +19,29 @@ struct Interpolators
 ///////////////////////////////////////////////////////////////////////////////////
 #define EMISSIVE_POWER 2.0h
 ///////////////////////////////////////////////////////////////////////////////////
-GBuffer main (Interpolators Input)
+GBufferPacked main (Interpolators Input)
 {
+    GBuffer GBuffer;
+	
 	matrix3x3 TBN = matrix3x3(Input.TBN0, Input.TBN1, Input.TBN2);
 
-	vector3 Albedo = tex2D(s_base, Input.UV) * EMISSIVE_POWER;
+    GBuffer.Albedo = tex2D (s_base, Input.UV) * EMISSIVE_POWER;
 
-	vector3 Normal = normalize(mul(TBN, vector3(0.5f, 0.5f, 1.0h)));
+    GBuffer.Normal = normalize (mul (TBN, vector3 (0.5f, 0.5f, 1.0h)));
 
-	vector3 Position = Input.Position;
+    GBuffer.Position = Input.Position;
 	
 #ifdef USE_POSITION_WITH_NORMALS_BIAS
-	Position += Normal * def_virtualh * 0.015f;
+    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
 #endif
 
-	GBuffer Output = PackGBuffer(Position, 0.0h,
-								 Normal, EMISSIVE_POWER,
-								 Albedo.rgb, 0.0h);
+    GBuffer.AO = EMISSIVE_POWER;
+	
+    GBuffer.BakedAO = 1.0h;
+	
+    GBuffer.Glossiness = def_gloss;
+	
+	GBufferPacked Output = PackGBuffer(GBuffer);
 	return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

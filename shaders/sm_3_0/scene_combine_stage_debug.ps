@@ -11,7 +11,7 @@ uniform int debug_mode;
 ////////////////////////////////////////////////////////////////////////////
 vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
 {
-    GBufferData GBuffer = UnpackGBuffer (TexCoords);
+    GBuffer GBuffer = UnpackGBuffer (TexCoords);
     LightingData Light = UnpackLightingAccumulator (TexCoords);
     
 	vector3 OutputColor = NULL;
@@ -26,8 +26,8 @@ vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
         OutputColor = GBuffer.Glossiness;
     else if (debug_mode == GBUFFER_LIGHTMAP_AO)
         OutputColor = GBuffer.AO;
-    else if (debug_mode == GBUFFER_MATERIAL)
-        OutputColor = GBuffer.Material;
+    else if (debug_mode == GBUFFER_BAKED_AO)
+        OutputColor = GBuffer.BakedAO;
     else if (debug_mode == ACCUMULATOR_DIFFUSE)
         OutputColor = Light.Diffuse;
     else if (debug_mode == ACCUMULATOR_SPECULAR)
