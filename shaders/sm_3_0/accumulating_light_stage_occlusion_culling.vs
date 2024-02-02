@@ -7,10 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
+	float4 HomogeniousPosition: POSITION;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-Interpolators main (vector4 Position: POSITION)
+Interpolators main (float4 Position: POSITION)
 {
     Interpolators Output;
     Output.HomogeniousPosition = mul (m_WVP, Position);

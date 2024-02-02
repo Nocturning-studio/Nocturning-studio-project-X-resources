@@ -2,8 +2,8 @@
 
 struct 	a2v
 {
-	vector4 P:	 	POSITION;	// Object-space position
- 	vector4 tc0:		TEXCOORD0;	// Texture coordinates
+	float4 P:	 	POSITION;	// Object-space position
+ 	float4 tc0:		TEXCOORD0;	// Texture coordinates
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////

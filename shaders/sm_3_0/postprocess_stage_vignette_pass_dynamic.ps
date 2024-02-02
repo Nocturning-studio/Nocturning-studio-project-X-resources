@@ -5,13 +5,13 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ///////////////////////////////////////////////////////////////////////////////////
-uniform vector vignette_power;
+uniform float vignette_power;
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords : TEXCOORD0): COLOR
+float4 main (float2 TexCoords : TEXCOORD0): COLOR
 {
-	vector4 OutColor = tex2Dlod0 (s_image, TexCoords);
+	float4 OutColor = tex2Dlod0 (s_image, TexCoords);
 
-    vector Vignette = tex2Dlod0 (s_vignette, TexCoords).r;
+    float Vignette = tex2Dlod0 (s_vignette, TexCoords).r;
 	OutColor.rgb *= Vignette + (1.0h - Vignette) * (1.0h - vignette_power);
 
 	return OutColor;

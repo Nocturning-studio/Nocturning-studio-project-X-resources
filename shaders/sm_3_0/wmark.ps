@@ -2,16 +2,16 @@
 #include "common.h"
 #include "fog.h"
 //////////////////////////////////////////////////////////////////////////////////////////
-vector4 main (float2 UV: TEXCOORD0): COLOR0
+float4 main (float2 UV: TEXCOORD0): COLOR0
 {
-    vector4 WallmarkColor = tex2D (s_base, UV);
+    float4 WallmarkColor = tex2D (s_base, UV);
     
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    vector3 PositionBuffer = tex2D (s_gbuffer_position, UV);
+    float3 PositionBuffer = tex2D (s_gbuffer_position, UV);
     FogComponents Fog = CalcFog (PositionBuffer);
     WallmarkColor.rgb = lerp (WallmarkColor.rgb, Fog.Color, Fog.Fogness);
-    vector Opacity = (1.0h - pow (Fog.Fogness, 2)) * WallmarkColor.a;
+    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * WallmarkColor.a;
     
-    return vector4 (WallmarkColor.rgb, Opacity);
+    return float4 (WallmarkColor.rgb, Opacity);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

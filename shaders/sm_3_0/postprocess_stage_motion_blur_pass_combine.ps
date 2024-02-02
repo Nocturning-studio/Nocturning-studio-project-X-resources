@@ -6,14 +6,14 @@
 #include "common.h"
 ///////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_previous_image;
-uniform vector m_blur_power;
+uniform float m_blur_power;
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    vector MotionBlurPower = clamp (m_blur_power, 0.0h, 0.35f);
+    float MotionBlurPower = clamp (m_blur_power, 0.0h, 0.35f);
 
-	vector4 CurrentImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0h - MotionBlurPower);
-	vector4 PreviousImageColor = tex2Dlod0 (s_previous_image, TexCoords) * MotionBlurPower;
+	float4 CurrentImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0h - MotionBlurPower);
+	float4 PreviousImageColor = tex2Dlod0 (s_previous_image, TexCoords) * MotionBlurPower;
 
     return CurrentImageColor + PreviousImageColor;
 }

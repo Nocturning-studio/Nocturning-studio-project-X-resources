@@ -2,39 +2,39 @@
 
 struct v_vert
 {
-        vector4 P: POSITION; // (vector,vector,vector,1)
-        vector4 N: NORMAL; // (nx,ny,nz,hemi occlusion)
-        vector4 T: TANGENT;
-        vector4 B: BINORMAL;
-        vector4 color: COLOR0; // (r,g,b,dir-occlusion)
-        vector2 uv: TEXCOORD0; // (u0,v0)
+        float4 P: POSITION; // (float,float,float,1)
+        float4 N: NORMAL; // (nx,ny,nz,hemi occlusion)
+        float4 T: TANGENT;
+        float4 B: BINORMAL;
+        float4 color: COLOR0; // (r,g,b,dir-occlusion)
+        float2 uv: TEXCOORD0; // (u0,v0)
 };
 
 struct vf
 {
-        vector4 hpos: POSITION;
-        vector2 tbase: TEXCOORD0; // base
-        vector2 tnorm0: TEXCOORD1; // nm0
-        vector2 tnorm1: TEXCOORD2; // nm1
-        vector3 M1: TEXCOORD3;
-        vector3 M2: TEXCOORD4;
-        vector3 M3: TEXCOORD5;
-        vector3 v2point: TEXCOORD6;
+        float4 hpos: POSITION;
+        float2 tbase: TEXCOORD0; // base
+        float2 tnorm0: TEXCOORD1; // nm0
+        float2 tnorm1: TEXCOORD2; // nm1
+        float3 M1: TEXCOORD3;
+        float3 M2: TEXCOORD4;
+        float3 M3: TEXCOORD5;
+        float3 v2point: TEXCOORD6;
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
-	    vector4 tctexgen: TEXCOORD7;
+	    float4 tctexgen: TEXCOORD7;
 #endif	//	USE_SOFT_WATER
 #endif	//	NEED_SOFT_WATER	
-    	vector3 position: TEXCOORD8;
-        vector4 c0: COLOR0;
+    	float3 position: TEXCOORD8;
+        float4 c0: COLOR0;
 };
 
 vf main (v_vert v)
 {
     vf o;
 
-    vector4 P = watermove (v.P);
-    vector3 NN = unpack_normal (v.N);
+    float4 P = watermove (v.P);
+    float3 NN = unpack_normal (v.N);
 
     o.v2point = P - eye_position;
     o.tbase = unpack_tc_base (v.uv, v.T.w, v.B.w);
@@ -45,10 +45,10 @@ vf main (v_vert v)
         // Calculate the 3x3 transform from tangent space to eye-space
         // TangentToEyeSpace = object2eye * tangent2object
         //                     = object2eye * transpose(object2tangent) (since the inverse of a rotation is its transpose)
-        vector3 N = unpack_normal (v.N); // just scale (assume normal in the -.5f, .5f)
-        vector3 T = unpack_normal (v.T); //
-        vector3 B = unpack_normal (v.B); //
-        matrix3x3 xform = mul ((matrix3x3)m_W, matrix3x3 (
+        float3 N = unpack_normal (v.N); // just scale (assume normal in the -.5f, .5f)
+        float3 T = unpack_normal (v.T); //
+        float3 B = unpack_normal (v.B); //
+        float3x3 xform = mul ((float3x3)m_W, float3x3 (
                                                 T.x, B.x, N.x,
                                                 T.y, B.y, N.y,
                                                 T.z, B.z, N.z
@@ -67,22 +67,22 @@ vf main (v_vert v)
     o.M2 = xform[1];
     o.M3 = xform[2];
 
-        vector3 L_rgb = v.color.xyz; // precalculated RGB lighting
-        vector3 L_hemi = v_hemi (N) * v.N.w; // hemisphere
-        vector3 L_sun = v_sun (N) * v.color.w; // sun
-        vector3 L_final = L_rgb + L_hemi + L_sun + L_ambient;
+        float3 L_rgb = v.color.xyz; // precalculated RGB lighting
+        float3 L_hemi = v_hemi (N) * v.N.w; // hemisphere
+        float3 L_sun = v_sun (N) * v.color.w; // sun
+        float3 L_final = L_rgb + L_hemi + L_sun + L_ambient;
                 // L_final        = v.N.w        + L_ambient;
 
     o.hpos = mul (m_VP, P); // xform, input in world coords
     o.position = mul (m_WV, P);
 
-    o.c0 = vector4 (L_final, 0.0h);
+    o.c0 = float4 (L_final, 0.0h);
 
 //	Igor: for additional depth dest
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
 	o.tctexgen = mul( m_texgen, P);
-	vector3	Pe	= mul		(m_V,  P);
+	float3	Pe	= mul		(m_V,  P);
 	o.tctexgen.z = Pe.z;
 #endif	//	USE_SOFT_WATER
 #endif	//	NEED_SOFT_WATER

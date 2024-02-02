@@ -8,9 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #define POISSON_SAMPLES_COUNT 12
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    vector BlurPower = DOFFactor (GetDepth (TexCoords).x);
+    float BlurPower = DOFFactor (GetDepth (TexCoords).x);
     
     if (BlurPower == 0.0h)
     {
@@ -18,25 +18,25 @@ vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
     }
     else
     {
-        vector2 RaySize = screen_res.zw;
-        vector3 SummaryImageColor = NULL;
-        vector Contribution = 0.0h;
+        float2 RaySize = screen_res.zw;
+        float3 SummaryImageColor = NULL;
+        float Contribution = 0.0h;
         
         for (int i = 0; i < POISSON_SAMPLES_COUNT; i++)
         {
-            vector2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize;
+            float2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize;
         
-            vector3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
+            float3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
 
-            vector SampleContribution = DOFFactor (GetDepth (SampleCoords).x);
+            float SampleContribution = DOFFactor (GetDepth (SampleCoords).x);
         
             SummaryImageColor += SampleColor * SampleContribution.x;
         
             Contribution += SampleContribution;
         }
     
-        vector4 BlurredImageColor = vector4 ((SummaryImageColor / Contribution.x), 1.0h) * BlurPower;
-        vector4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0h - BlurPower);
+        float4 BlurredImageColor = float4 ((SummaryImageColor / Contribution.x), 1.0h) * BlurPower;
+        float4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0h - BlurPower);
     
         return BlurredImageColor + UnblurredImageColor;
     }

@@ -45,7 +45,7 @@ void FindBlocker (out float avgBlockerDepth,
 
 	for (int i = 0; i < BLOCKER_SEARCH_NUM_SAMPLES; ++i)
 	{
-		float shadowMapDepth = tex2Dproj(s_smap_depth, uv + uv.w * vector4(poissonDisk[i], 0.0h, 0.0h) * searchWidth);
+		float shadowMapDepth = tex2Dproj(s_smap_depth, uv + uv.w * float4(poissonDisk[i], 0.0h, 0.0h) * searchWidth);
 
 		if (shadowMapDepth < zReceiver)
 		{
@@ -63,7 +63,7 @@ float PCF_Filter (float4 uv, float zReceiver, float filterRadiusUV)
 	{
 		float2 offset = poissonDisk[i] * filterRadiusUV;
 
-		sum += (tex2Dproj(s_smap_depth, float4(uv + uv.w * vector4(offset, 0.0h, 0.0h))) + 0.00000001h < zReceiver) ? 0.0f : 1.0f;
+		sum += (tex2Dproj(s_smap_depth, float4(uv + uv.w * float4(offset, 0.0h, 0.0h))) + 0.00000001h < zReceiver) ? 0.0f : 1.0f;
 	}
 	return sum / PCF_NUM_SAMPLES;
 }

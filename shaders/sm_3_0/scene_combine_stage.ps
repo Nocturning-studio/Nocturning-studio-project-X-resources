@@ -11,31 +11,31 @@
 #include "reflection.h"
 #include "BRDF.h"
 ////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     GBuffer GBuffer = UnpackGBuffer (TexCoords);
     LightingData Light = UnpackLightingAccumulator (TexCoords);
     
-    vector3 AmbientLighting = CalculateAmbient (GBuffer.AO);
+    float3 AmbientLighting = CalculateAmbient (GBuffer.AO);
     
 #ifdef AO_ENABLED
     AmbientLighting *= tex2D(s_ao, TexCoords).r;
 #endif
     
-    vector3 DiffuseLighting = (AmbientLighting + Light.Diffuse);
+    float3 DiffuseLighting = (AmbientLighting + Light.Diffuse);
     
-    vector3 SkyReflections = BlurredSkyReflectionApproximated (GBuffer.Position, GBuffer.Normal, GBuffer.Glossiness);
+    float3 SkyReflections = BlurredSkyReflectionApproximated (GBuffer.Position, GBuffer.Normal, GBuffer.Glossiness);
     
-    vector3 SpecularLighting = Light.Specular * SkyReflections * 2.0h;
+    float3 SpecularLighting = Light.Specular * SkyReflections * 2.0h;
 	
-    vector3 SceneColor = (GBuffer.Albedo * DiffuseLighting + SpecularLighting) * GBuffer.BakedAO;
+    float3 SceneColor = (GBuffer.Albedo * DiffuseLighting + SpecularLighting) * GBuffer.BakedAO;
     
     FogComponents Fog = CalcFog (GBuffer.Position);
     
     SceneColor = lerp (SceneColor, Fog.Color, Fog.Fogness);
     
-    vector3 OutputColor = SceneColor;
-    vector Opacity = saturate (pow (Fog.Fogness, 2.0h));
-    return vector4 (OutputColor, Opacity);
+    float3 OutputColor = SceneColor;
+    float Opacity = saturate (pow (Fog.Fogness, 2.0h));
+    return float4 (OutputColor, Opacity);
 }
 ////////////////////////////////////////////////////////////////////////////

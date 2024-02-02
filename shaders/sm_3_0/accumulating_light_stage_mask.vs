@@ -1,6 +1,6 @@
 #include "common.h"
 
-vector4 	main	( vector4 P:	POSITION )	: POSITION
+float4 	main	( float4 P:	POSITION )	: POSITION
 {
 	return	mul	(m_WVP,	P	);
 }

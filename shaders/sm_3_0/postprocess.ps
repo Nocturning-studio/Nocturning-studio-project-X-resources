@@ -2,32 +2,32 @@
 
 struct v2p
 {
-	vector4 color: COLOR0; // multiplier, color.w = noise_amount
-	vector4 gray: COLOR1; // (.3,.3,.3.,amount)
- 	vector2 tc0: TEXCOORD0; // base1 (duality)
- 	vector2 tc1: TEXCOORD1; // base2 (duality)
- 	vector2 tc2: TEXCOORD2; // base  (noise)
+	float4 color: COLOR0; // multiplier, color.w = noise_amount
+	float4 gray: COLOR1; // (.3,.3,.3.,amount)
+ 	float2 tc0: TEXCOORD0; // base1 (duality)
+ 	float2 tc1: TEXCOORD1; // base2 (duality)
+ 	float2 tc2: TEXCOORD2; // base  (noise)
 };
 
 uniform sampler2D s_base0;
 uniform sampler2D s_base1;
 uniform sampler2D s_noise;
-uniform vector4 c_brightness;
+uniform float4 c_brightness;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-vector4 main (v2p I): COLOR
+float4 main (v2p I): COLOR
 {
-	vector3 t_0 = tex2Dlod0 (s_base0, I.tc0);
-	vector3 t_1 = tex2Dlod0 (s_base1, I.tc1);
-	vector3 image = (t_0 + t_1) * .5;
-    vector gray = dot (image, I.gray);
+	float3 t_0 = tex2Dlod0 (s_base0, I.tc0);
+	float3 t_1 = tex2Dlod0 (s_base1, I.tc1);
+	float3 image = (t_0 + t_1) * .5;
+    float gray = dot (image, I.gray);
     image = lerp (gray, image, I.gray.w);
 
-	vector4 t_noise = tex2Dlod0 (s_noise, I.tc2);
-	vector3 noised = image * t_noise * 2;
+	float4 t_noise = tex2Dlod0 (s_noise, I.tc2);
+	float3 noised = image * t_noise * 2;
     image = lerp (noised, image, I.color.w);
     image = (image * I.color + c_brightness) * 2;
 
-    return vector4 (image, 1);
+    return float4 (image, 1);
 }

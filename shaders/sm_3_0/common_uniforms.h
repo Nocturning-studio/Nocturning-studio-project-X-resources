@@ -8,69 +8,69 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common_math.h"
 ////////////////////////////////////////////////////////////////////////////
-uniform vector4 screen_res;
-uniform vector4 ao_resolution;
+uniform float4 screen_res;
+uniform float4 ao_resolution;
 
-uniform vector3 L_sun_color;
-uniform vector3 L_sun_dir_w;
-uniform vector3 L_sun_dir_e;
-uniform vector4 L_hemi_color;
-uniform vector4 L_ambient;      // L_ambient.w = skynbox-lerp-factor
-uniform vector4 L_material;     // 0,0,0,mid
-uniform vector4 Ldynamic_color; // dynamic light color (rgb1)	- spot/point
-uniform vector4 Ldynamic_pos;   // dynamic light pos+1/range(w) - spot/point
-uniform vector4 Ldynamic_dir;   // dynamic light direction 	- sun
+uniform float3 L_sun_color;
+uniform float3 L_sun_dir_w;
+uniform float3 L_sun_dir_e;
+uniform float4 L_hemi_color;
+uniform float4 L_ambient;      // L_ambient.w = skynbox-lerp-factor
+uniform float4 L_material;     // 0,0,0,mid
+uniform float4 Ldynamic_color; // dynamic light color (rgb1)	- spot/point
+uniform float4 Ldynamic_pos;   // dynamic light pos+1/range(w) - spot/point
+uniform float4 Ldynamic_dir;   // dynamic light direction 	- sun
 
-uniform vector4 J_direct[6];
-uniform vector4 J_spot[6];
-uniform vector4 m_lmap[2];
-uniform matrix4x4 m_shadow;
+uniform float4 J_direct[6];
+uniform float4 J_spot[6];
+uniform float4 m_lmap[2];
+uniform float4x4 m_shadow;
 
-uniform matrix3x4 m_W;
-uniform matrix3x4 m_invW;
-uniform matrix3x4 m_V;
-uniform matrix3x4 m_invV;
-uniform matrix4x4 m_P;
-uniform matrix3x4 m_WV;
-uniform matrix4x4 m_VP;
-uniform matrix4x4 m_WVP;
-uniform matrix3x4 m_v2w;
-uniform matrix4x4 m_texgen;
-uniform matrix4x4 m_texgen_J;
-uniform matrix4x4 mVPTexgen;
+uniform float3x4 m_W;
+uniform float3x4 m_invW;
+uniform float3x4 m_V;
+uniform float3x4 m_invV;
+uniform float4x4 m_P;
+uniform float3x4 m_WV;
+uniform float4x4 m_VP;
+uniform float4x4 m_WVP;
+uniform float3x4 m_v2w;
+uniform float4x4 m_texgen;
+uniform float4x4 m_texgen_J;
+uniform float4x4 mVPTexgen;
 
-uniform vector4 timers;
+uniform float4 timers;
 
-uniform vector4 fog_plane;
-uniform vector4 fog_params; // x=near*(1/(far-near)), ?,?, w = -1/(far-near)
-uniform vector4 fog_color;
-uniform vector fog_density;
-uniform vector fog_sky_influence;
-uniform vector vertical_fog_intensity;
-uniform vector vertical_fog_density;
-uniform vector vertical_fog_height;
+uniform float4 fog_plane;
+uniform float4 fog_params; // x=near*(1/(far-near)), ?,?, w = -1/(far-near)
+uniform float4 fog_color;
+uniform float fog_density;
+uniform float fog_sky_influence;
+uniform float vertical_fog_intensity;
+uniform float vertical_fog_density;
+uniform float vertical_fog_height;
 
-uniform vector far_plane;
+uniform float far_plane;
 
-uniform vector4 env_color;
+uniform float4 env_color;
 
-uniform vector4 rain_density;
+uniform float4 rain_density;
 
-uniform vector4 wind_velocity;
+uniform float4 wind_velocity;
 
-uniform vector3 eye_position;
-uniform vector3 eye_direction;
-uniform vector3 eye_normal;
+uniform float3 eye_position;
+uniform float3 eye_direction;
+uniform float3 eye_normal;
 
-uniform vector4 dt_params;
+uniform float4 dt_params;
 
-uniform vector4 pos_decompression_params;
-uniform vector4 pos_decompression_params2;
+uniform float4 pos_decompression_params;
+uniform float4 pos_decompression_params2;
 
-uniform vector4 dof_params; // x - near, y - focus, z - far, w - sky distance
-uniform vector3 dof_kernel; // x, y - resolution pre-scaled, z - just kernel size
+uniform float4 dof_params; // x - near, y - focus, z - far, w - sky distance
+uniform float3 dof_kernel; // x, y - resolution pre-scaled, z - just kernel size
 
-uniform vector2 parallax_height;
+uniform float2 parallax_height;
 ////////////////////////////////////////////////////////////////////////////
 #endif //	COMMON_UNIFORMS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////

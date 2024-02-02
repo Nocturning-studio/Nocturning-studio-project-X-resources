@@ -11,29 +11,29 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-    vector4 TexCoords: TEXCOORD0;
+	float4 HomogeniousPosition: POSITION;
+    float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
-    vector AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
+    float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
-    vector3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
-    vector2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
+    float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
+    float2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
     
-    vector3 Diffuse = LightingModel.xxx;
-    vector3 Specular = LightingModel.yyy;
+    float3 Diffuse = LightingModel.xxx;
+    float3 Specular = LightingModel.yyy;
     
-    vector4 Position = vector4 (GBuffer.Position, 1.0h);
-    vector4 ShadowMapTexCoords = mul (m_shadow, Position);
+    float4 Position = float4 (GBuffer.Position, 1.0h);
+    float4 ShadowMapTexCoords = mul (m_shadow, Position);
   
 #ifdef USE_SHADOW_MAPPING
-    vector ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    float ShadowMap = get_shadow_map (ShadowMapTexCoords);
 #else
-    vector ShadowMap = 1.0h;
+    float ShadowMap = 1.0h;
 #endif
     
 #ifdef USE_LIGHT_MAPPING
@@ -41,9 +41,9 @@ Accumulator main (Interpolators Input)
     ShadowMapTexCoords.x = dot (Position, m_lmap[0]);
     ShadowMapTexCoords.y = dot (Position, m_lmap[1]);
 #endif
-    vector3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
+    float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
 #else
-    vector3 LightMap = vector3 (1.0h, 1.0h, 1.0h);
+    float3 LightMap = float3 (1.0h, 1.0h, 1.0h);
 #endif
     
     LightMap *= ShadowMap * AttenuationFactor;

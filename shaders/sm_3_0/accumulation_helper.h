@@ -10,17 +10,17 @@
 ////////////////////////////////////////////////////////////////////////////
 struct LightingData
 {
-	vector3 Diffuse;
-	vector3 Specular;
+	float3 Diffuse;
+	float3 Specular;
 };
 
 struct Accumulator
 {
-	vector4 DiffuseAccumulator: COLOR0;
-	vector4 SpecularAccumulator: COLOR1;
+	float4 DiffuseAccumulator: COLOR0;
+	float4 SpecularAccumulator: COLOR1;
 };
 
-Accumulator PackLightingAccumulator(vector3 Diffuse, vector3 Specular)
+Accumulator PackLightingAccumulator(float3 Diffuse, float3 Specular)
 {
 	Accumulator Output;
 
@@ -32,12 +32,12 @@ Accumulator PackLightingAccumulator(vector3 Diffuse, vector3 Specular)
 	return Output;
 }
 
-LightingData UnpackLightingAccumulator(vector2 TexCoords)
+LightingData UnpackLightingAccumulator(float2 TexCoords)
 {
 	LightingData Output;
 	
-	vector4 DiffuseAccumulator = tex2D(s_diffuse_accumulator, TexCoords);
-	vector4 SpecularAccumulator = tex2D(s_specular_accumulator, TexCoords);
+	float4 DiffuseAccumulator = tex2D(s_diffuse_accumulator, TexCoords);
+	float4 SpecularAccumulator = tex2D(s_specular_accumulator, TexCoords);
 
 	Output.Diffuse = DiffuseAccumulator.rgb;
 	Output.Specular = SpecularAccumulator.rgb;

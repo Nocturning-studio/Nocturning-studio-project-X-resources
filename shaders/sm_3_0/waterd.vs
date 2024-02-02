@@ -2,33 +2,33 @@
 
 struct v_vert
 {
-	vector4 P: POSITION; // (vector,vector,vector,1)
-	vector4 N: NORMAL; // (nx,ny,nz,hemi occlusion)
-	vector4 T: TANGENT;
-	vector4 B: BINORMAL;
-	vector4 color: COLOR0; // (r,g,b,dir-occlusion)
-	vector2 uv: TEXCOORD0; // (u0,v0)
+	float4 P: POSITION; // (float,float,float,1)
+	float4 N: NORMAL; // (nx,ny,nz,hemi occlusion)
+	float4 T: TANGENT;
+	float4 B: BINORMAL;
+	float4 color: COLOR0; // (r,g,b,dir-occlusion)
+	float2 uv: TEXCOORD0; // (u0,v0)
 };
 struct vf
 {
-	vector4 hpos: POSITION;
-	vector2 tbase: TEXCOORD0;
-	vector2 tdist0: TEXCOORD1;
-	vector2 tdist1: TEXCOORD2;
+	float4 hpos: POSITION;
+	float2 tbase: TEXCOORD0;
+	float2 tdist0: TEXCOORD1;
+	float2 tdist1: TEXCOORD2;
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
-	vector4 tctexgen: TEXCOORD3;
+	float4 tctexgen: TEXCOORD3;
 #endif	//	USE_SOFT_WATER
 #endif	//	NEED_SOFT_WATER
-	vector3 position: TEXCOORD4;
+	float3 position: TEXCOORD4;
 };
 
 vf main (v_vert v)
 {
     vf o;
 
-	vector4 P = watermove (v.P);
-	vector3 N = unpack_normal (v.N);
+	float4 P = watermove (v.P);
+	float3 N = unpack_normal (v.N);
 
     o.tbase = unpack_tc_base (v.uv, v.T.w, v.B.w); // copy tc
     o.tdist0 = watermove_tc (o.tbase * W_DISTORT_BASE_TILE_0, P.xz, W_DISTORT_AMP_0);
@@ -39,7 +39,7 @@ vf main (v_vert v)
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
 	o.tctexgen = mul( m_texgen, P);
-	vector3	Pe	= mul(m_V,  P);
+	float3	Pe	= mul(m_V,  P);
 	o.tctexgen.z = Pe.z;
 #endif	//	USE_SOFT_WATER
 #endif	//	NEED_SOFT_WATER

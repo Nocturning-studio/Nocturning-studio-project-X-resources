@@ -335,7 +335,7 @@ A. Or use FXAA_GREEN_AS_LUMA.
 //
 // 8.0 is sharper
 // 4.0 is softer
-// 2.0 is really soft (good for vector graphics inputs)
+// 2.0 is really soft (good for float graphics inputs)
 //
 #if 1
 #define FXAA_CONSOLE__PS3_EDGE_SHARPNESS 8.0

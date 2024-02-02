@@ -8,8 +8,8 @@
 ////////////////////////////////////////////////////////////////////////////
 // Options
 ////////////////////////////////////////////////////////////////////////////
-#define KERNEL_SIZE vector(200)
-#define POWER vector(2.2)
+#define KERNEL_SIZE float(200)
+#define POWER float(2.2)
 ////////////////////////////////////////////////////////////////////////////
 // Presets
 #if AO_QUALITY == UNDEFINED_QUALITY
@@ -29,7 +29,7 @@
 #define RENDER_DISTANCE 100.0h
 #endif
 ////////////////////////////////////////////////////////////////////////////
-vector2 CalcDirection (vector2 TexCoords, vector2 Position2D)
+float2 CalcDirection (float2 TexCoords, float2 Position2D)
 {
     int2 pos2d = Position2D; //TexCoords * screen_res.xy + 0.5;
     float jitter = (pos2d.y % 4) * 0.25 + (pos2d.x % 4) * 0.0625 + 0.0625;
@@ -39,24 +39,24 @@ vector2 CalcDirection (vector2 TexCoords, vector2 Position2D)
     return dir;
 }
 ////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
+float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
     if (GetPosition (TexCoords).z > RENDER_DISTANCE)
     {
-        return vector4 (1.0h, 1.0h, 1.0h, 1.0h);
+        return float4 (1.0h, 1.0h, 1.0h, 1.0h);
     }
     else
     {
 	    // Position and normal for pixel, where we should get occlusion
-	    vector3 CenterRayNormalData = tex2D (s_gbuffer_normal, TexCoords);
-	    vector3 CenterRayPositionData = GetPosition (TexCoords);
+	    float3 CenterRayNormalData = tex2D (s_gbuffer_normal, TexCoords);
+	    float3 CenterRayPositionData = GetPosition (TexCoords);
 
 	    // Create pixel scale
-	    vector2 RaySize = vector2 (0.5h / screen_res.xy) * KERNEL_SIZE / max (CenterRayPositionData.z, 1.0h);
+	    float2 RaySize = float2 (0.5h / screen_res.xy) * KERNEL_SIZE / max (CenterRayPositionData.z, 1.0h);
 
 	    // Values, wich we will use outside the cycle
-        vector Occlusion = 0.0h;
-        vector DirectionsCount = 0.0h;
+        float Occlusion = 0.0h;
+        float DirectionsCount = 0.0h;
 
         // RotationCosSin is (cos(alpha),sin(alpha)) where alpha is the rotation angle
 	    // A 2D rotation matrix is applied (see https://en.wikipedia.org/wiki/Rotation_matrix)
@@ -64,23 +64,23 @@ vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
         sincos (PI, c, s);
         float2x2 rot = float2x2 (c, -s, s, c);
         
-        vector2 Jitter = CalcDirection (TexCoords, Position2D);
+        float2 Jitter = CalcDirection (TexCoords, Position2D);
         
         for (int i = 0; i < SAMPLES; i++)
         {
-		    vector2 SearchRayCoord = TexCoords + mul (Jitter, rot) * RaySize;
+		    float2 SearchRayCoord = TexCoords + mul (Jitter, rot) * RaySize;
 
-			vector3 SearchRayPositionData = GetPosition (SearchRayCoord);
+			float3 SearchRayPositionData = GetPosition (SearchRayCoord);
 
-			vector3 SearchRayDirection = SearchRayPositionData - CenterRayPositionData;
+			float3 SearchRayDirection = SearchRayPositionData - CenterRayPositionData;
                 
-            vector SearchRayIntersectDistance = length (SearchRayDirection);
+            float SearchRayIntersectDistance = length (SearchRayDirection);
                 
             SearchRayDirection = normalize (SearchRayDirection);
                 
-            vector RayInfluence = dot (SearchRayDirection, CenterRayNormalData);
+            float RayInfluence = dot (SearchRayDirection, CenterRayNormalData);
 
-            vector OcclusionFactor = saturate (SearchRayIntersectDistance);
+            float OcclusionFactor = saturate (SearchRayIntersectDistance);
                 
             Occlusion += (RayInfluence + 0.01f) * lerp (1.0h, OcclusionFactor, RayInfluence) / (OcclusionFactor + 0.1f);
                 
@@ -89,7 +89,7 @@ vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
         
         Occlusion /= DirectionsCount;
 
-        vector FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (CenterRayPositionData));
+        float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (CenterRayPositionData));
         Occlusion = lerp (1.0h, Occlusion, 1.0h - FarFadingFactor);
 
         return pow (Occlusion, POWER).xxxx;

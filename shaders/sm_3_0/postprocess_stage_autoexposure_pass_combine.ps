@@ -5,11 +5,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    vector4 SceneColor = tex2D (s_image, TexCoords);
+    float4 SceneColor = tex2D (s_image, TexCoords);
     
-    vector Exposure = max (tex2Dlod0 (s_autoexposure, vector2 (0.5f, 0.5f)).r, 1.0h);
+    float Exposure = max (tex2Dlod0 (s_autoexposure, float2 (0.5f, 0.5f)).r, 1.0h);
     Exposure = pow (Exposure, 2.2f);
     
     return SceneColor * Exposure;

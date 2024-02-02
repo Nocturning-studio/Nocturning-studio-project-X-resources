@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #define SKY_LIGHT_BRIGHTNESS 0.75f
 ////////////////////////////////////////////////////////////////////////////
-vector3 CalculateAmbient(vector LightMapAO)
+float3 CalculateAmbient(float LightMapAO)
 {
     return env_color.rgb * (pow(LightMapAO, 1.6h) * SKY_LIGHT_BRIGHTNESS) + L_ambient.rgb;
 }

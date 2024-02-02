@@ -6,8 +6,8 @@
 #include "common.h"
 #include "chromatic_abberation.h"
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
-    return vector4 (ChromaticAberration (s_image, TexCoords), 1.0h);
+    return float4 (ChromaticAberration (s_image, TexCoords), 1.0h);
 }
 ///////////////////////////////////////////////////////////////////////////////////

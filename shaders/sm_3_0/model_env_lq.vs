@@ -3,20 +3,20 @@
 
 struct vf
 {
-	vector4 hpos: POSITION;
-	vector2 tc0: TEXCOORD0; // base
-	vector3 tc1: TEXCOORD1; // environment
-	vector3 position: TEXCOORD2;
-	vector3 c0: COLOR0; // color
+	float4 hpos: POSITION;
+	float2 tc0: TEXCOORD0; // base
+	float3 tc1: TEXCOORD1; // environment
+	float3 position: TEXCOORD2;
+	float3 c0: COLOR0; // color
 };
 
 vf _main (v_model v)
 {
     vf o;
 
-	vector4 pos = v.P;
-	vector3 pos_w = mul (m_W, pos);
-	vector3 norm_w = normalize (mul (m_W, v.N));
+	float4 pos = v.P;
+	float3 pos_w = mul (m_W, pos);
+	float3 norm_w = normalize (mul (m_W, v.N));
 
     o.hpos = mul (m_WVP, pos); // xform, input in world coords
     o.tc0 = v.tc.xy; // copy tc

@@ -4,17 +4,17 @@
 
 struct v2p
 {
-    vector2 tbase: TEXCOORD0;
-    vector2 tdist0: TEXCOORD1;
-    vector2 tdist1: TEXCOORD2;
-	vector4 tctexgen: TEXCOORD3;
-    vector3 position: TEXCOORD4;
+    float2 tbase: TEXCOORD0;
+    float2 tdist0: TEXCOORD1;
+    float2 tdist1: TEXCOORD2;
+	float4 tctexgen: TEXCOORD3;
+    float3 position: TEXCOORD4;
 };
 
 struct PixelShaderOutputStruct
 {
-	vector4 Generic_0: COLOR0;
-	vector4 Position: COLOR1;
+	float4 Generic_0: COLOR0;
+	float4 Position: COLOR1;
 };
 
 #define POWER .5h
@@ -22,44 +22,44 @@ struct PixelShaderOutputStruct
 // Pixel
 PixelShaderOutputStruct main (v2p I)
 {
-    vector4 t_base = tex2D (s_base, I.tbase);
+    float4 t_base = tex2D (s_base, I.tbase);
 
-    vector2 t_d0 = tex2D (s_distort, I.tdist0);
-    vector2 t_d1 = tex2D (s_distort, I.tdist1);
-    vector2 distort = (t_d0 + t_d1) * 0.5;
-    vector2 zero = vector2 (0.5, 0.5);
-    vector2 faded = lerp (distort, zero, t_base.a);
+    float2 t_d0 = tex2D (s_distort, I.tdist0);
+    float2 t_d1 = tex2D (s_distort, I.tdist1);
+    float2 distort = (t_d0 + t_d1) * 0.5;
+    float2 zero = float2 (0.5, 0.5);
+    float2 faded = lerp (distort, zero, t_base.a);
 
 	//	Igor: additional depth test
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
-	vector alphaDistort;
-	vector Depth = GetPositionProjected(I.tctexgen).z;
-	vector waterDepth = Depth - I.tctexgen.z;
+	float alphaDistort;
+	float Depth = GetPositionProjected(I.tctexgen).z;
+	float waterDepth = Depth - I.tctexgen.z;
 	alphaDistort = saturate(5*waterDepth);
 	faded = lerp (zero, faded, alphaDistort);
 #endif	//	NEED_SOFT_WATER
 #endif	//	USE_SOFT_WATER & NEED_SOFT_WATER
 
-    vector2 faded_bx2 = (faded * 2 - 1) * W_DISTORT_POWER;
-    vector faded_dot = dot (vector3 (faded_bx2, 0), .75);
-    vector alpha = .5f;
+    float2 faded_bx2 = (faded * 2 - 1) * W_DISTORT_POWER;
+    float faded_dot = dot (float3 (faded_bx2, 0), .75);
+    float alpha = .5f;
     faded = faded * POWER - .5 * POWER + 0.5;
     
 #ifdef	NEED_SOFT_WATER    
-    vector3 final = vector3(faded, 0.0h);
+    float3 final = float3(faded, 0.0h);
 #else
-    vector3 final = vector3 (faded, 0.08h);
+    float3 final = float3 (faded, 0.08h);
 #endif
     
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     FogComponents Fog = CalcFog (I.position);
-    vector Opacity = (1.0h - pow (Fog.Fogness, 2)) * alpha;
+    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * alpha;
     final = lerp (final, Fog.Color, Fog.Fogness);
     
     PixelShaderOutputStruct Output;
-    Output.Generic_0 = vector4 (final.rgb, Opacity);
-    Output.Position = vector4 (I.position, xmaterial);
+    Output.Generic_0 = float4 (final.rgb, Opacity);
+    Output.Position = float4 (I.position, xmaterial);
     return Output;
 }
 

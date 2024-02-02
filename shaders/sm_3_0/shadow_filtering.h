@@ -25,22 +25,22 @@
 #define OFFSET_ARRAY strided_coords
 #endif
 ////////////////////////////////////////////////////////////////////////////
-vector sample_shadow_map(vector4 TexCoords, vector2 SampleBias)
+float sample_shadow_map(float4 TexCoords, float2 SampleBias)
 {
-    vector ShadowMapPixelSize = 1.0h / float(SMAP_size);
-    vector4 SampleTexCoords = vector4(TexCoords + TexCoords.w * vector4(SampleBias, 0.0h, 0.0h) * ShadowMapPixelSize);
+    float ShadowMapPixelSize = 1.0h / float(SMAP_size);
+    float4 SampleTexCoords = float4(TexCoords + TexCoords.w * float4(SampleBias, 0.0h, 0.0h) * ShadowMapPixelSize);
 
     return tex2Dproj(s_smap, SampleTexCoords).x;
 }
 
-vector shadow_map_filter(vector4 TexCoords)
+float shadow_map_filter(float4 TexCoords)
 {
-    vector ShadowMap = 0.0h;
+    float ShadowMap = 0.0h;
 
     for (int i = 0; i < SHADOW_FILTERING_SAMPLES_COUNT; i++)
     {
 #ifdef USE_JITTERING
-        vector2 JitterCoords = tex2Dlod0(s_blue_noise, (TexCoords + poissonDisk_64[i]) * vector(SMAP_size) / 256.0h);
+        float2 JitterCoords = tex2Dlod0(s_blue_noise, (TexCoords + poissonDisk_64[i]) * float(SMAP_size) / 256.0h);
         ShadowMap += sample_shadow_map(TexCoords, OFFSET_ARRAY[i] + JitterCoords);
 #else
         ShadowMap += sample_shadow_map(TexCoords, OFFSET_ARRAY[i]);
@@ -50,7 +50,7 @@ vector shadow_map_filter(vector4 TexCoords)
     return ShadowMap / SHADOW_FILTERING_SAMPLES_COUNT;
 }
 
-vector get_shadow_map(vector4 TexCoords)
+float get_shadow_map(float4 TexCoords)
 {
     return shadow_map_filter(TexCoords);
 }

@@ -2,12 +2,12 @@
 
 struct 	v2p
 {
-	vector4 	hpos: 		POSITION;	// Clip-space position 	(for rasterization)
+	float4 	hpos: 		POSITION;	// Clip-space position 	(for rasterization)
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vertex
-v2p 	main	( vector4 P:	POSITION )
+v2p 	main	( float4 P:	POSITION )
 {
 	v2p 		O;
 	O.hpos 		= mul	(m_WVP,	  	P	);

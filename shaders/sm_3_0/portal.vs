@@ -2,14 +2,14 @@
 
 struct v_vert
 {
-	vector4 pos: POSITION; // (vector,vector,vector,1)
-	vector4 color: COLOR0; // (r,g,b,dir-occlusion)
+	float4 pos: POSITION; // (float,float,float,1)
+	float4 color: COLOR0; // (r,g,b,dir-occlusion)
 };
 struct vf
 {
-	vector4 hpos: POSITION;
-	vector4 c: COLOR0;
-    vector fog: FOG;
+	float4 hpos: POSITION;
+	float4 c: COLOR0;
+    float fog: FOG;
 };
 
 vf main (v_vert v)

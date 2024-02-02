@@ -2,15 +2,15 @@
 
 struct vv
 {
-	vector4 P: POSITION;
-	vector2 tc: TEXCOORD0;
-	vector4 c: COLOR0;
+	float4 P: POSITION;
+	float2 tc: TEXCOORD0;
+	float4 c: COLOR0;
 };
 struct vf
 {
-	vector4 hpos: POSITION;
-	vector2 tc: TEXCOORD0;
-	vector4 c: COLOR0;
+	float4 hpos: POSITION;
+	float2 tc: TEXCOORD0;
+	float4 c: COLOR0;
 };
 
 vf main (vv v)

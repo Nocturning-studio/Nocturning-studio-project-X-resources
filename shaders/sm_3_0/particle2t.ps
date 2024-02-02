@@ -2,18 +2,18 @@
 
 struct v2p
 {
-	vector2 tc0: TEXCOORD0; // base
-	vector2 tc1: TEXCOORD1; // another
-	vector4 c: COLOR0; // diffuse
+	float2 tc0: TEXCOORD0; // base
+	float2 tc1: TEXCOORD1; // another
+	float4 c: COLOR0; // diffuse
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 uniform sampler2D s_another;
-vector4 main (v2p I): COLOR
+float4 main (v2p I): COLOR
 {
- vector3 base = I.c * tex2D (s_base, I.tc0);
- vector4 grad = tex2D (s_another, I.tc1);
- vector3 mult = base * grad * 2;
-    return vector4 (lerp (base, mult, grad.w), 1);
+ float3 base = I.c * tex2D (s_base, I.tc0);
+ float4 grad = tex2D (s_another, I.tc1);
+ float3 mult = base * grad * 2;
+    return float4 (lerp (base, mult, grad.w), 1);
 }

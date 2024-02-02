@@ -6,13 +6,13 @@
 #include "common.h"
 #include "filters.h"
 ///////////////////////////////////////////////////////////////////////////////////
-uniform vector2 bloom_parameters;
+uniform float2 bloom_parameters;
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords0: TEXCOORD0): COLOR
+float4 main (float2 TexCoords0: TEXCOORD0): COLOR
 {
-    vector4 OutColor = tex2Dlod0 (s_image, TexCoords0);
+    float4 OutColor = tex2Dlod0 (s_image, TexCoords0);
 
-	vector4 Bloom = box_filter (s_bloom, int (9), TexCoords0) * (1.0h + bloom_parameters.x);
+	float4 Bloom = box_filter (s_bloom, int (9), TexCoords0) * (1.0h + bloom_parameters.x);
 
     return OutColor + (Bloom * bloom_parameters.y);
 }

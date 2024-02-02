@@ -8,9 +8,9 @@
 #ifndef TBN_INCLUDED
 #define TBN_INCLUDED
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-matrix3x3 Get_TBN(vector3 Tangent, vector3 Bitangent, vector3 Normal)
+float3x3 Get_TBN(float3 Tangent, float3 Bitangent, float3 Normal)
 {
-    return matrix3x3(Tangent.x, Bitangent.x, Normal.x, Tangent.y, Bitangent.y, Normal.y, Tangent.z, Bitangent.z,
+    return float3x3(Tangent.x, Bitangent.x, Normal.x, Tangent.y, Bitangent.y, Normal.y, Tangent.z, Bitangent.z,
                      Normal.z);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

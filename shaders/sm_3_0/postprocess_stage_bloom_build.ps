@@ -6,11 +6,11 @@
 #include "common.h"
 #include "filters.h"
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform vector2 bloom_parameters;
+uniform float2 bloom_parameters;
 //////////////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords0: TEXCOORD0): COLOR
+float4 main (float2 TexCoords0: TEXCOORD0): COLOR
 {
-	vector4 ImageColor = tex2Dlod0 (s_image, TexCoords0);
+	float4 ImageColor = tex2Dlod0 (s_image, TexCoords0);
     
     ImageColor = max (ImageColor, bloom_parameters.x) - bloom_parameters.x;
     

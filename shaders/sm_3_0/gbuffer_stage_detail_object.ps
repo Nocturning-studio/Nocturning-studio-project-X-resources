@@ -11,19 +11,19 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-	vector3 Position: TEXCOORD0;
-	vector3 Normal: TEXCOORD3;
-	vector2 UV: TEXCOORD4;
-	vector2 Lighting: TEXCOORD5;
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 Normal: TEXCOORD3;
+	float2 UV: TEXCOORD4;
+	float2 Lighting: TEXCOORD5;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
 {
     GBuffer GBuffer;
 	
-	vector3 Albedo;
-    vector Opacity;
+	float3 Albedo;
+    float Opacity;
 	
 #if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
     calc_fxaa_atoc(Input.UV, Albedo, Opacity);
@@ -41,9 +41,9 @@ GBufferPacked main (Interpolators Input)
     GBuffer.BakedAO = 1.0h;
 	
 //#ifdef USE_R2_STATIC_SUN
-//	vector MaterialID = Input.Lighting.y;
+//	float MaterialID = Input.Lighting.y;
 //#else
-//    vector MaterialID = 0.0h;
+//    float MaterialID = 0.0h;
 //#endif
 
     GBuffer.Normal = normalize (Input.Normal.xyz);

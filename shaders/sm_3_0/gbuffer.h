@@ -10,19 +10,19 @@
 ////////////////////////////////////////////////////////////////////////////
 struct GBuffer
 {
-    vector3 Position;
-    vector BakedAO;
-    vector3 Normal;
-    vector AO;
-    vector3 Albedo;
-    vector Glossiness;
+    float3 Position;
+    float BakedAO;
+    float3 Normal;
+    float AO;
+    float3 Albedo;
+    float Glossiness;
 };
 ////////////////////////////////////////////////////////////////////////////
 struct GBufferPacked
 {
-    vector4 GBuffer0 : COLOR0;
-    vector4 GBuffer1 : COLOR1;
-    vector4 GBuffer2 : COLOR2;
+    float4 GBuffer0 : COLOR0;
+    float4 GBuffer1 : COLOR1;
+    float4 GBuffer2 : COLOR2;
 };
 
 GBufferPacked PackGBuffer(GBuffer Input)
@@ -41,9 +41,9 @@ GBufferPacked PackGBuffer(GBuffer Input)
     return GBuffer;
 }
 
-vector3 GetPosition(vector2 TexCoords)
+float3 GetPosition(float2 TexCoords)
 {
-    vector3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
+    float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
 
     // Check skybox intersection
     if (all(Position <= 0.0001h))
@@ -52,19 +52,19 @@ vector3 GetPosition(vector2 TexCoords)
     return Position;
 }
 
-GBuffer UnpackGBuffer(vector2 TexCoords)
+GBuffer UnpackGBuffer(float2 TexCoords)
 {
     GBuffer GBuffer;
 
     GBuffer.Position = GetPosition(TexCoords);
     GBuffer.BakedAO = tex2D(s_gbuffer_position, TexCoords).a;
 
-    vector4 NormalAO = tex2D(s_gbuffer_normal, TexCoords);
+    float4 NormalAO = tex2D(s_gbuffer_normal, TexCoords);
 
     GBuffer.Normal = NormalAO.rgb;
     GBuffer.AO = NormalAO.a;
 
-    vector4 AlbedoGloss = tex2D(s_gbuffer_albedo, TexCoords);
+    float4 AlbedoGloss = tex2D(s_gbuffer_albedo, TexCoords);
 
     GBuffer.Albedo = AlbedoGloss.rgb;
     GBuffer.Glossiness = AlbedoGloss.a;
@@ -72,9 +72,9 @@ GBuffer UnpackGBuffer(vector2 TexCoords)
     return GBuffer;
 }
 
-vector3 GetPositionProjected(vector4 TexCoords)
+float3 GetPositionProjected(float4 TexCoords)
 {
-    vector3 Position = tex2Dproj(s_gbuffer_position, TexCoords);
+    float3 Position = tex2Dproj(s_gbuffer_position, TexCoords);
 
     // Check skybox intersection
     if (all(Position <= 0.0001h))
@@ -83,19 +83,19 @@ vector3 GetPositionProjected(vector4 TexCoords)
     return Position;
 }
 
-GBuffer UnpackGBufferWithProjection(vector4 TexCoords)
+GBuffer UnpackGBufferWithProjection(float4 TexCoords)
 {
     GBuffer GBuffer;
 
     GBuffer.Position = GetPositionProjected(TexCoords);
     GBuffer.BakedAO = tex2Dproj(s_gbuffer_position, TexCoords).a;
 
-    vector4 NormalAO = tex2Dproj(s_gbuffer_normal, TexCoords);
+    float4 NormalAO = tex2Dproj(s_gbuffer_normal, TexCoords);
 
     GBuffer.Normal = NormalAO.rgb;
     GBuffer.AO = NormalAO.a;
 
-    vector4 AlbedoGloss = tex2Dproj(s_gbuffer_albedo, TexCoords);
+    float4 AlbedoGloss = tex2Dproj(s_gbuffer_albedo, TexCoords);
 
     GBuffer.Albedo = AlbedoGloss.rgb;
     GBuffer.Glossiness = AlbedoGloss.a;

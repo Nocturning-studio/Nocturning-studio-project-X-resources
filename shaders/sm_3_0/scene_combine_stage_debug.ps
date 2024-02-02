@@ -9,12 +9,12 @@
 ////////////////////////////////////////////////////////////////////////////
 uniform int debug_mode;
 ////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     GBuffer GBuffer = UnpackGBuffer (TexCoords);
     LightingData Light = UnpackLightingAccumulator (TexCoords);
     
-	vector3 OutputColor = NULL;
+	float3 OutputColor = NULL;
     
     if (debug_mode == GBUFFER_ALBEDO)
         OutputColor = GBuffer.Albedo;
@@ -35,6 +35,6 @@ vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
     else if (debug_mode == REAL_TIME_AO)
         OutputColor = tex2D (s_ao, TexCoords).rrr;
     
-    return vector4 (OutputColor, 0.0h);
+    return float4 (OutputColor, 0.0h);
 }
 ////////////////////////////////////////////////////////////////////////////

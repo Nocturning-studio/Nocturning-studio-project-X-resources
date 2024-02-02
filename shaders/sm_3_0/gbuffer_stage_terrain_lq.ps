@@ -8,12 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-	vector3 Position: TEXCOORD0;
-	vector3 Normal: TEXCOORD1;
-	vector2 UV: TEXCOORD2;
-	vector2 DetailUV: TEXCOORD3;
-	vector2 Lighting: TEXCOORD4;
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 Normal: TEXCOORD1;
+	float2 UV: TEXCOORD2;
+	float2 DetailUV: TEXCOORD3;
+	float2 Lighting: TEXCOORD4;
 };
 ////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -21,7 +21,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Diffuse color
-	vector4 Albedo = tex2D (s_base, Input.UV);
+	float4 Albedo = tex2D (s_base, Input.UV);
     GBuffer.Albedo = 2 * Albedo * tex2D (s_detail, Input.DetailUV);
 
     GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
@@ -29,9 +29,9 @@ GBufferPacked main (Interpolators Input)
     GBuffer.BakedAO = 1.0h;
 	
 //#ifdef USE_R2_STATIC_SUN
-//	vector  MaterialID = tex2D(s_lmap, Input.UV).a;
+//	float  MaterialID = tex2D(s_lmap, Input.UV).a;
 //#else
-//    vector MaterialID = xmaterial;
+//    float MaterialID = xmaterial;
 //#endif
 
 	// Normal for Geometry Buffer

@@ -9,12 +9,12 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition : POSITION;
-	vector3 Position 			: TEXCOORD0;
-	vector3 TBN0 				: TEXCOORD1;
-	vector3 TBN1				: TEXCOORD2;
-	vector3 TBN2 				: TEXCOORD3;
-	vector2 UV					: TEXCOORD4;
+	float4 HomogeniousPosition : POSITION;
+	float3 Position 			: TEXCOORD0;
+	float3 TBN0 				: TEXCOORD1;
+	float3 TBN1				: TEXCOORD2;
+	float3 TBN2 				: TEXCOORD3;
+	float2 UV					: TEXCOORD4;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 #define EMISSIVE_POWER 2.0h
@@ -23,11 +23,11 @@ GBufferPacked main (Interpolators Input)
 {
     GBuffer GBuffer;
 	
-	matrix3x3 TBN = matrix3x3(Input.TBN0, Input.TBN1, Input.TBN2);
+	float3x3 TBN = float3x3(Input.TBN0, Input.TBN1, Input.TBN2);
 
     GBuffer.Albedo = tex2D (s_base, Input.UV) * EMISSIVE_POWER;
 
-    GBuffer.Normal = normalize (mul (TBN, vector3 (0.5f, 0.5f, 1.0h)));
+    GBuffer.Normal = normalize (mul (TBN, float3 (0.5f, 0.5f, 1.0h)));
 
     GBuffer.Position = Input.Position;
 	

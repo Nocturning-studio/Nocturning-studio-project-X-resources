@@ -10,13 +10,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-	vector3 Position: TEXCOORD0;
-	vector3 TBN0: TEXCOORD1;
-	vector3 TBN1: TEXCOORD2;
-	vector3 TBN2: TEXCOORD3;
-	vector2 UV: TEXCOORD4;
-	vector2 DetailUV: TEXCOORD5;
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 TBN0: TEXCOORD1;
+	float3 TBN1: TEXCOORD2;
+	float3 TBN2: TEXCOORD3;
+	float2 UV: TEXCOORD4;
+	float2 DetailUV: TEXCOORD5;
 };
 ////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -24,38 +24,38 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Get detail textures map (4 channels = 4 textures)
-	vector4 Mask = GetDetailMask (Input.UV);
+	float4 Mask = GetDetailMask (Input.UV);
 
 	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
-	vector3 DiffuseTextureData = tex2D (s_base, Input.UV);
+	float3 DiffuseTextureData = tex2D (s_base, Input.UV);
 
 	// Combine transform matrix for displacement and normal mapping
-	matrix3x3 TBN = matrix3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
+	float3x3 TBN = float3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
 
 	// Choose displacement type and calculate UV displacement
-	vector2 DetailUV = GetDisplacement (Input.Position, TBN, Input.DetailUV, Mask);
+	float2 DetailUV = GetDisplacement (Input.Position, TBN, Input.DetailUV, Mask);
 
 	// details albedo data, multiplicated by detail map
-	vector3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
+	float3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
     GBuffer.Albedo = 2.0h * DiffuseTextureData.rgb * DetailAlbedo;
 
 	// Get DXT comressed normals + AO + glossmap for all details in 4 textures set
-	vector4 DetailBumpData = GetDetailBump (Mask, DetailUV);
+	float4 DetailBumpData = GetDetailBump (Mask, DetailUV);
 
 	// Get DXT decompressing data + heightmap for all details in 4 textures set
-	vector4 DetailBumpDecompressionData = GetDetailBumpDecompression (Mask, DetailUV);
+	float4 DetailBumpDecompressionData = GetDetailBumpDecompression (Mask, DetailUV);
 
 	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
-	vector3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0h);
+	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0h);
 
 	 // Reconstruct z component for normals (actually z component used for Baked AO)
     NormalMap.z = sqrt (1.0h - dot (NormalMap.xy, NormalMap.xy));
 
-    vector HeightMap = DetailBumpDecompressionData.a;
+    float HeightMap = DetailBumpDecompressionData.a;
 
 	// If we have good material quality - create MORE relief by convertation height to normal map
 #if BUMP_QUALITY == ULTRA_QUALITY
-	vector3 NormalMapFromHeight = convert_height_to_normal(HeightMap);
+	float3 NormalMapFromHeight = convert_height_to_normal(HeightMap);
 	NormalMap /= NormalMapFromHeight;
 #endif
 
@@ -87,11 +87,11 @@ GBufferPacked main (Interpolators Input)
 	// Material or direct sun lighting
 //#ifdef USE_R2_STATIC_SUN
 //	// Get and smooth local lights
-//    vector LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
+//    float LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
 //
-//	vector MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
+//	float MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
 //#else
-//    vector MaterialID = xmaterial;
+//    float MaterialID = xmaterial;
 //#endif
 
 	// Pack geometry buffer

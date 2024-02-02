@@ -8,9 +8,9 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ////////////////////////////////////////////////////////////////////////////
-vector GetDepth(vector2 TexCoords)
+float GetDepth(float2 TexCoords)
 {
-    vector3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
+    float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
 
     // Check skybox intersection
     if (all(Position <= 0.00001h))
@@ -19,13 +19,13 @@ vector GetDepth(vector2 TexCoords)
     return Position.z;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-vector DOFFactor(vector2 TexCoords)
+float DOFFactor(float2 TexCoords)
 {
-    vector depth = GetDepth(TexCoords);
-    vector dist_to_focus = depth - dof_params.y;
-    vector blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
-    vector blur_near = saturate(dist_to_focus / (dof_params.x - dof_params.y));
-    vector blur = blur_near + blur_far;
+    float depth = GetDepth(TexCoords);
+    float dist_to_focus = depth - dof_params.y;
+    float blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
+    float blur_near = saturate(dist_to_focus / (dof_params.x - dof_params.y));
+    float blur = blur_near + blur_far;
     blur = pow(blur, 2.0h);
     return blur;
 }

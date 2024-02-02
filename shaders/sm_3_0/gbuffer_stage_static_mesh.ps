@@ -11,14 +11,14 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-	vector3 Position: TEXCOORD0;
-	vector3 TBN0: TEXCOORD1;
-	vector3 TBN1: TEXCOORD2;
-	vector3 TBN2: TEXCOORD3;
-	vector2 UV: TEXCOORD4;
-	vector2 LightMapUV: TEXCOORD5;
-	vector2 Lighting: TEXCOORD6;
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 TBN0: TEXCOORD1;
+	float3 TBN1: TEXCOORD2;
+	float3 TBN2: TEXCOORD3;
+	float2 UV: TEXCOORD4;
+	float2 LightMapUV: TEXCOORD5;
+	float2 Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -26,7 +26,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Combine TBN for send to material loading
-	matrix3x3 TBN = matrix3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
+	float3x3 TBN = float3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
 
 	// Load primary material data - textures, displacement, normal data preparing, etc
     MaterialParams Material = GetMaterial (Input.UV, TBN, Input.Position);
@@ -58,12 +58,12 @@ GBufferPacked main (Interpolators Input)
 
 //#ifdef USE_R2_STATIC_SUN
 //#ifdef	USE_LIGHTMAP
-//	vector MaterialID = LightMap.Sun;
+//	float MaterialID = LightMap.Sun;
 //#else// USE_LIGHTMAP
-//	vector MaterialID = Input.Lighting.y;
+//	float MaterialID = Input.Lighting.y;
 //#endif//USE_LIGHTMAP
 //#else//USE_R2_STATIC_SUN
-//    vector MaterialID = L_material.w;
+//    float MaterialID = L_material.w;
 //#endif//USE_R2_STATIC_SUN
 
 	// Apply baked ao for light map ao

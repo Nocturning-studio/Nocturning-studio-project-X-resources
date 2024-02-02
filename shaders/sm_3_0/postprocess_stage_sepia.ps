@@ -5,11 +5,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ///////////////////////////////////////////////////////////////////////////////////
-uniform vector4 sepia_params;
+uniform float4 sepia_params;
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
-    vector4 OutColor = tex2Dlod0 (s_image, TexCoords);
+    float4 OutColor = tex2Dlod0 (s_image, TexCoords);
     
     OutColor.rgb *= sepia_params.rgb + (1.0h - sepia_params.rgb) * (1.0h - sepia_params.a);
     

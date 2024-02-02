@@ -10,19 +10,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-    vector4 HomogeniousPosition: POSITION;
-    vector2 UV: TEXCOORD0;
-    vector3 Position: TEXCOORD1;
-    vector3 Normal: TEXCOORD2;
-	vector4 Color: COLOR0;
+    float4 HomogeniousPosition: POSITION;
+    float2 UV: TEXCOORD0;
+    float3 Position: TEXCOORD1;
+    float3 Normal: TEXCOORD2;
+	float4 Color: COLOR0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
 {
     GBuffer GBuffer;
     
-	vector3 Albedo;
-    vector Opacity;
+	float3 Albedo;
+    float Opacity;
 	
 #if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
     calc_fxaa_atoc(Input.UV, Albedo, Opacity);

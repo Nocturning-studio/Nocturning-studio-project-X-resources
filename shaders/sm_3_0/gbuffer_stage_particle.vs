@@ -7,18 +7,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 struct VertexData
 {
-	vector4 Position: POSITION;
-	vector4 Color: COLOR0;
-	vector2 UV: TEXCOORD0;
+	float4 Position: POSITION;
+	float4 Color: COLOR0;
+	float2 UV: TEXCOORD0;
 };
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-    vector4 HomogeniousPosition: POSITION;
-    vector2 UV: TEXCOORD0;
-    vector3 Position: TEXCOORD1;
-    vector3 Normal: TEXCOORD2;
-	vector4 Color: COLOR0;
+    float4 HomogeniousPosition: POSITION;
+    float2 UV: TEXCOORD0;
+    float3 Position: TEXCOORD1;
+    float3 Normal: TEXCOORD2;
+	float4 Color: COLOR0;
 };
 ////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)

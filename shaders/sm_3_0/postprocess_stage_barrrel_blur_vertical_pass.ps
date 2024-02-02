@@ -8,14 +8,14 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #define SAMPLES_COUNT 2
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     // Create blurring map, based on vignette
-    vector VignetteColor = tex2Dlod0 (s_vignette, TexCoords).r;
+    float VignetteColor = tex2Dlod0 (s_vignette, TexCoords).r;
     VignetteColor = pow (VignetteColor, EXP);
 
     // Separated blur
-    vector4 BlurredImageColor = NULL;
+    float4 BlurredImageColor = NULL;
     for (int i = -(SAMPLES_COUNT / 2); i < SAMPLES_COUNT / 2; i++)
     {
         BlurredImageColor += tex2Dlod0 (s_image, TexCoords + (0.0h, i) * screen_res.zw);
@@ -23,7 +23,7 @@ vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
     BlurredImageColor /= SAMPLES_COUNT;
     
     // Get image color
-    vector4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords);
+    float4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords);
     
     // Blending blurred and unblurred image colors by blur map
     return (UnblurredImageColor * VignetteColor) + (BlurredImageColor * (1.0h - VignetteColor));

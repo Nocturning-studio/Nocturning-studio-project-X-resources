@@ -18,15 +18,15 @@
 #define BLOOM_SAMPLES_COUNT 6
 #endif
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform vector4 bloom_resolution;
+uniform float4 bloom_resolution;
 //////////////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    vector4 output = NULL;
+    float4 output = NULL;
 
     for (int i = -BLOOM_SAMPLES_COUNT / 2; i < BLOOM_SAMPLES_COUNT / 2; i++)
     {
-        vector4 sample = tex2Dlod0 (s_bloom, TexCoords + bloom_resolution.zw * vector2 (i, 0));
+        float4 sample = tex2Dlod0 (s_bloom, TexCoords + bloom_resolution.zw * float2 (i, 0));
         output += sample;
     }
     return output / BLOOM_SAMPLES_COUNT;

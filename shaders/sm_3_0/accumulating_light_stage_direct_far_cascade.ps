@@ -10,29 +10,29 @@
 #include "shadow_filtering.h"
 ///////////////////////////////////////////////////////////////////////////////////
 // Constants
-uniform vector sun_far;
+uniform float sun_far;
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-    vector4 TexCoords: TEXCOORD0;
+	float4 HomogeniousPosition: POSITION;
+    float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
-    vector2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
+    float2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
     
-    vector3 Diffuse = LightingModel.xxx;
-    vector3 Specular = LightingModel.yyy;
+    float3 Diffuse = LightingModel.xxx;
+    float3 Specular = LightingModel.yyy;
     
-    vector4 Position = vector4 (GBuffer.Position, 1.0h);
-    vector4 ShadowMapTexCoords = mul (m_shadow, Position);
-    vector ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    float4 Position = float4 (GBuffer.Position, 1.0h);
+    float4 ShadowMapTexCoords = mul (m_shadow, Position);
+    float ShadowMap = get_shadow_map (ShadowMapTexCoords);
     
     // Fading with distance
-    vector ShadowMapFadingFactor = saturate (GBuffer.Position.z / sun_far);
+    float ShadowMapFadingFactor = saturate (GBuffer.Position.z / sun_far);
     ShadowMap = lerp (ShadowMap, 0.3f, ShadowMapFadingFactor);
     
     Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;

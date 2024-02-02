@@ -7,15 +7,15 @@
 ////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-    vector2 TexCoords: TEXCOORD0;
-    vector4 HomogeniousPosition: POSITION;
+    float2 TexCoords: TEXCOORD0;
+    float4 HomogeniousPosition: POSITION;
 };
 ////////////////////////////////////////////////////////////////////////////
-Interpolators main (vector4 VertexPosition: POSITION)
+Interpolators main (float4 VertexPosition: POSITION)
 {
     Interpolators Output;
     
-    Output.HomogeniousPosition = vector4 (VertexPosition.x, -VertexPosition.y, 0.0h, 1.0h);
+    Output.HomogeniousPosition = float4 (VertexPosition.x, -VertexPosition.y, 0.0h, 1.0h);
     Output.TexCoords = VertexPosition.zw;
     
     return Output;

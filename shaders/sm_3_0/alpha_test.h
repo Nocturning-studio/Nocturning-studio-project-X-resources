@@ -12,7 +12,7 @@
 #include "common.h"
 #include "hashed_alpha.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void calc_alpha_test(vector2 TexCoords, vector Opacity)
+void calc_alpha_test(float2 TexCoords, float Opacity)
 {
 #ifdef USE_HASHED_ALPHA
 	calc_hashed_alpha_test(TexCoords, Opacity);

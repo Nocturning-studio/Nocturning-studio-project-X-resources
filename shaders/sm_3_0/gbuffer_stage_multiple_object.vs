@@ -8,59 +8,59 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct VertexData
 {
-	vector4 Position: POSITION; // (vector,vector,vector,1)
-	vector4 Normal: NORMAL;
-	vector3 Tangent: TANGENT;
-	vector3 Binormal: BINORMAL;
-	vector4 UV: TEXCOORD0;
+	float4 Position: POSITION; // (float,float,float,1)
+	float4 Normal: NORMAL;
+	float3 Tangent: TANGENT;
+	float3 Binormal: BINORMAL;
+	float4 UV: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-	vector3 Position: TEXCOORD0;
-	vector3 TBN0: TEXCOORD1;
-	vector3 TBN1: TEXCOORD2;
-	vector3 TBN2: TEXCOORD3;
-	vector2 UV: TEXCOORD4;
-	vector2 Lighting: TEXCOORD6;
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 TBN0: TEXCOORD1;
+	float3 TBN1: TEXCOORD2;
+	float3 TBN2: TEXCOORD3;
+	float2 UV: TEXCOORD4;
+	float2 Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-uniform matrix3x4 m_xform;
-uniform matrix3x4 m_xform_v;
-uniform vector4 consts; // {1/quant,1/quant,???,???}
-uniform vector4 c_scale;
-uniform vector4 c_bias;
-uniform vector4 wind;
-uniform vector4 wave;
-uniform vector2 c_sun; // x=*, y=+
+uniform float3x4 m_xform;
+uniform float3x4 m_xform_v;
+uniform float4 consts; // {1/quant,1/quant,???,???}
+uniform float4 c_scale;
+uniform float4 c_bias;
+uniform float4 wind;
+uniform float4 wave;
+uniform float2 c_sun; // x=*, y=+
 ///////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)
 {
     Interpolators Output;
 
-	vector3 pos = mul (m_xform, Input.Position);
+	float3 pos = mul (m_xform, Input.Position);
 #ifdef	USE_TREEWAVE
-	vector base = m_xform._24;									// take base height from matrix
-	vector dp = calc_cyclic(wave.w+dot(pos,(vector3)wave));
-	vector H = pos.y - base;									// height of vertex (scaled, rotated, etc.)
-	vector frac = Input.UV.z * consts.x;						// fractional (or rigidity)
-	vector inten = H * dp;										// intensity
-	vector2 result = calc_xz_wave(wind.xz*inten, frac);
+	float base = m_xform._24;									// take base height from matrix
+	float dp = calc_cyclic(wave.w+dot(pos,(float3)wave));
+	float H = pos.y - base;									// height of vertex (scaled, rotated, etc.)
+	float frac = Input.UV.z * consts.x;						// fractional (or rigidity)
+	float inten = H * dp;										// intensity
+	float2 result = calc_xz_wave(wind.xz*inten, frac);
 #else
-	vector2 result = 0.0h;
+	float2 result = 0.0h;
 #endif
 
-	vector4 w_pos = vector4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0h);
+	float4 w_pos = float4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0h);
 
     Output.UV = (Input.UV * consts).xy;
     Output.HomogeniousPosition = mul (m_VP, w_pos);
     Output.Position = mul (m_V, w_pos);
 
-	vector3 Tangent = unpack_bx4 (Input.Tangent);
-	vector3 Bitangent = unpack_bx4 (Input.Binormal);
-	vector3 Normal = unpack_bx4 (Input.Normal);
-	matrix3x3 TBN = mul ((matrix3x3)m_xform_v, matrix3x3 (Tangent.x, Bitangent.x, Normal.x,
+	float3 Tangent = unpack_bx4 (Input.Tangent);
+	float3 Bitangent = unpack_bx4 (Input.Binormal);
+	float3 Normal = unpack_bx4 (Input.Normal);
+	float3x3 TBN = mul ((float3x3)m_xform_v, float3x3 (Tangent.x, Bitangent.x, Normal.x,
 														  Tangent.y, Bitangent.y, Normal.y,
 														  Tangent.z, Bitangent.z, Normal.z));
     Output.TBN0 = TBN[0];
@@ -70,7 +70,7 @@ Interpolators main (VertexData Input)
     Output.Lighting.x = (Input.Normal.w * 0.5f * c_scale.w + c_bias.w);
 
 #ifdef USE_R2_STATIC_SUN
-	vector suno = Input.Normal.w * c_sun.x + c_sun.y;
+	float suno = Input.Normal.w * c_sun.x + c_sun.y;
 	Output.Lighting.y = suno;
 #else
     Output.Lighting.y = 1.0h;

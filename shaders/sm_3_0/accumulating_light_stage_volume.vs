@@ -7,11 +7,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	vector4 HomogeniousPosition: POSITION;
-    vector4 TexCoords: TEXCOORD0;
+	float4 HomogeniousPosition: POSITION;
+    float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-Interpolators main (vector4 Position: POSITION)
+Interpolators main (float4 Position: POSITION)
 {
     Interpolators Output;
     

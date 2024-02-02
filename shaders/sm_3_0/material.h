@@ -23,15 +23,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialParams
 {
-    vector3 Albedo;
-    vector Opacity;
-    vector3 Normal;
-    vector Height;
-    vector Glossiness;
-    vector AO;
+    float3 Albedo;
+    float Opacity;
+    float3 Normal;
+    float Height;
+    float Glossiness;
+    float AO;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-MaterialParams GetMaterial(vector2 UV, matrix3x3 TBN, vector3 Position)
+MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 {
     MaterialParams Material;
 
@@ -45,16 +45,16 @@ MaterialParams GetMaterial(vector2 UV, matrix3x3 TBN, vector3 Position)
     // Get Albedo and opacity with fxaa
     calc_fxaa_atoc(UV, Material.Albedo, Material.Opacity);
 #else//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
-    vector4 BaseTextureData = tex2D(s_base, UV);
+    float4 BaseTextureData = tex2D(s_base, UV);
     Material.Albedo = BaseTextureData.rgb;
     Material.Opacity = BaseTextureData.a;
 #endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
 
     // Get DXT comressed normals + AO + glossmap
-    vector4 NormalMapData = tex2D(s_bump, UV);
+    float4 NormalMapData = tex2D(s_bump, UV);
 
     // Get DXT decompressing data + heightmap
-    vector4 NormalMapDecompressionData = tex2D(s_bumpX, UV);
+    float4 NormalMapDecompressionData = tex2D(s_bumpX, UV);
 
     // Transform normal map color from [0; 1] space to [-1; 1] with DXT decompressing
     Material.Normal = (NormalMapData.abg + (NormalMapDecompressionData.rgb - 1.0h));
@@ -71,7 +71,7 @@ MaterialParams GetMaterial(vector2 UV, matrix3x3 TBN, vector3 Position)
     // If for material used detail texture - we use this block with analogic code, but with detail textures
 #ifdef USE_TDETAIL
     // Create detail UV - dt_params is scaler
-    vector2 DetailUV = UV * dt_params;
+    float2 DetailUV = UV * dt_params;
 
     // Calculate displacement for detail texture only if we have good quality for materials
 #if BUMP_QUALITY >= MIDDLE_QUALITY
@@ -79,12 +79,12 @@ MaterialParams GetMaterial(vector2 UV, matrix3x3 TBN, vector3 Position)
 #endif
 
     // Get albedo, comressed normals + AO + glossmap, and decompressing data + heightmap
-    vector3 DetailAlbedo = tex2D(s_detail, DetailUV);
-    vector4 DetailNormalMapData = tex2D(s_detailBump, DetailUV);
-    vector4 DetailNormalMapDecompressionData = tex2D(s_detailBumpX, DetailUV);
+    float3 DetailAlbedo = tex2D(s_detail, DetailUV);
+    float4 DetailNormalMapData = tex2D(s_detailBump, DetailUV);
+    float4 DetailNormalMapDecompressionData = tex2D(s_detailBumpX, DetailUV);
 
     // Transform normal map color from [0; 1] space to [-1; 1] with decompressing
-    vector3 DetailNormal = (DetailNormalMapData.abg + (DetailNormalMapDecompressionData.rgb - 1.0h));
+    float3 DetailNormal = (DetailNormalMapData.abg + (DetailNormalMapDecompressionData.rgb - 1.0h));
 
     // Reconstruct z component for normals (actually z component used for Baked AO)
     DetailNormal.z = sqrt(1.0h - dot(DetailNormal.xy, DetailNormal.xy));
@@ -106,7 +106,7 @@ MaterialParams GetMaterial(vector2 UV, matrix3x3 TBN, vector3 Position)
 
     // If we have good material quality - create MORE relief by convertation height to normal map
 #if BUMP_QUALITY == ULTRA_QUALITY
-    vector3 NormalFromHeight = convert_height_to_normal(Material.Height);
+    float3 NormalFromHeight = convert_height_to_normal(Material.Height);
     Material.Normal /= NormalFromHeight;
 #endif
 

@@ -13,19 +13,13 @@
 #endif
 ////////////////////////////////////////////////////////////////////////////
 #ifdef USE_R2_STATIC_SUN
-#define xmaterial vector(0.0h)
-#define USE_R2_HARD_OPTIMIZATION
+#define xmaterial float(0.0h)
 #else
-#define xmaterial vector(L_material.w)
+#define xmaterial float(L_material.w)
 #endif
 
 #ifdef AO_TYPE
 #define AO_ENABLED
-#endif
-
-#if RT_FORMAT == INT8
-#define USE_VECTOR_AS_HALF
-#define USE_MATRIX_AS_HALF
 #endif
 ////////////////////////////////////////////////////////////////////////////
 #endif //	COMMON_POLICIES_H_INCLUDED

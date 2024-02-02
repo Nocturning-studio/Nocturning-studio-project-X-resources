@@ -6,7 +6,7 @@
 #include "common.h"
 #include "sharpen.h"
 ///////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0): COLOR
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     return get_image_with_sharpen(s_image, TexCoords);
 }

@@ -8,11 +8,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define HEIGHT_VALUE 1
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-vector3 convert_height_to_normal(vector HeightMap)
+float3 convert_height_to_normal(float HeightMap)
 {
-    vector DUHeightMap = ddx(HeightMap);
-    vector DVHeightMap = ddy(HeightMap);
-    vector3 HeightToNormal = normalize(cross(vector3(1, 0, DUHeightMap), vector3(0, 1, DVHeightMap)));
+    float DUHeightMap = ddx(HeightMap);
+    float DVHeightMap = ddy(HeightMap);
+    float3 HeightToNormal = normalize(cross(float3(1, 0, DUHeightMap), float3(0, 1, DVHeightMap)));
     return (HeightToNormal * 0.5 + 0.5) * HEIGHT_VALUE;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

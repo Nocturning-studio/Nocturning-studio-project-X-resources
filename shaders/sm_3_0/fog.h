@@ -13,11 +13,11 @@
 ////////////////////////////////////////////////////////////////////////////
 struct FogComponents
 {
-	vector3 Color;
-	vector Fogness;
+	float3 Color;
+	float Fogness;
 };
 ////////////////////////////////////////////////////////////////////////////
-vector GetDistance(vector3 Position)
+float GetDistance(float3 Position)
 {
 #if FOG_QUALITY == ULTRA_QUALITY 
 	return length(Position);
@@ -26,30 +26,30 @@ vector GetDistance(vector3 Position)
 #endif
 }
 
-vector CalcEponentialFog(vector3 Position)
+float CalcEponentialFog(float3 Position)
 {
-	vector Distance = GetDistance(Position);
-	vector FogDensity = fog_density * FOG_DENSITY_MULTIPLIER;
+	float Distance = GetDistance(Position);
+	float FogDensity = fog_density * FOG_DENSITY_MULTIPLIER;
 	return saturate(1.0h - exp(-Distance * FogDensity));
 }
 
-vector CalcSqaredExponentialFog(vector3 Position)
+float CalcSqaredExponentialFog(float3 Position)
 {
-	vector Distance = GetDistance(Position);
-	vector FogDensity = fog_density * FOG_DENSITY_MULTIPLIER;
+	float Distance = GetDistance(Position);
+	float FogDensity = fog_density * FOG_DENSITY_MULTIPLIER;
 	return saturate(1.0h - exp((-Distance * FogDensity) * (Distance * FogDensity)));
 }
 
-vector CalcVerticalFog(vector3 Position)
+float CalcVerticalFog(float3 Position)
 {
-	vector Fog = CalcSqaredExponentialFog(Position);
-	vector3 WorldSpacePosition = mul(m_v2w, vector4(Position.xyz, 1.0h));
-	vector VerticalFog = saturate(smoothstep(vertical_fog_height, -vertical_fog_height, WorldSpacePosition.y));
+	float Fog = CalcSqaredExponentialFog(Position);
+	float3 WorldSpacePosition = mul(m_v2w, float4(Position.xyz, 1.0h));
+	float VerticalFog = saturate(smoothstep(vertical_fog_height, -vertical_fog_height, WorldSpacePosition.y));
 	VerticalFog *= vertical_fog_density * VERTICAL_FOG_DENSITY_MULTIPLIER * Fog;
 	return saturate(VerticalFog + Fog);
 }
 
-vector CalcFogness(vector3 Position)
+float CalcFogness(float3 Position)
 {
 #if FOG_QUALITY == UNDEFINED_QUALITY || FOG_QUALITY == LOW_QUALITY || FOG_QUALITY == MIDDLE_QUALITY
 	return CalcEponentialFog(Position);
@@ -60,7 +60,7 @@ vector CalcFogness(vector3 Position)
 #endif
 }
 
-FogComponents CalcFog(vector3 Position)
+FogComponents CalcFog(float3 Position)
 {
 	FogComponents Output;
 

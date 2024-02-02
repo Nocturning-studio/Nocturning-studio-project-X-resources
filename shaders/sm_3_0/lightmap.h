@@ -10,17 +10,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct LightMapData
 {
-    vector AO;
-    vector Sun;
+    float AO;
+    float Sun;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-LightMapData Unpack_LightMap(vector2 LightMapUV)
+LightMapData Unpack_LightMap(float2 LightMapUV)
 {
     LightMapData Output;
 
-    vector4 LightmapData = tex2D(s_hemi, LightMapUV);
+    float4 LightmapData = tex2D(s_hemi, LightMapUV);
 
-    vector AO = avg3(LightmapData.rgb);
+    float AO = avg3(LightmapData.rgb);
     Output.AO = AO * AO_BRIGHTNESS;
     Output.Sun = LightmapData.a;
 

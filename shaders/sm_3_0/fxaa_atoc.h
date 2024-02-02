@@ -43,13 +43,13 @@
 #include "fxaa.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TODO - заменить на актуальное разрешение ткстуры
-#define ALBEDO_TEXTURE_RESOLUTION vector2(1024.0h, 1024.0h)
+#define ALBEDO_TEXTURE_RESOLUTION float2(1024.0h, 1024.0h)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void calc_fxaa_atoc(vector2 TexCoords, out vector3 Albedo, out vector Opacity)
+void calc_fxaa_atoc(float2 TexCoords, out float3 Albedo, out float Opacity)
 {
-    vector2 rcpFrame = vector2(1.0f / ALBEDO_TEXTURE_RESOLUTION.x, 1.0f / ALBEDO_TEXTURE_RESOLUTION.y);
+    float2 rcpFrame = float2(1.0f / ALBEDO_TEXTURE_RESOLUTION.x, 1.0f / ALBEDO_TEXTURE_RESOLUTION.y);
 
-    vector4 TextureColor =
+    float4 TextureColor =
         FxaaPixelShader(TexCoords, s_base, rcpFrame, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
 
     Albedo = TextureColor.rgb;

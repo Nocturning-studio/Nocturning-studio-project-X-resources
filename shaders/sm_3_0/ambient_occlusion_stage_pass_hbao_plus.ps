@@ -7,24 +7,24 @@
 #include "gbuffer.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
-#define POWER  vector(2.2)
-#define	RADIUS vector(2)
-#define BIAS vector(0.007)
+#define POWER  float(2.2)
+#define	RADIUS float(2)
+#define BIAS float(0.007)
 #define SAMPLES 4
 #define STEPS 2
 #define RENDER_DISTANCE 75.0h
 //////////////////////////////////////////////////////////////////////////////////////////
-vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
+float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
-    vector3 Position = GetPosition (TexCoords);
+    float3 Position = GetPosition (TexCoords);
     
     if (Position.z > RENDER_DISTANCE)
     {
-        return vector4 (1.0h, 1.0h, 1.0h, 1.0h);
+        return float4 (1.0h, 1.0h, 1.0h, 1.0h);
     }
     else
     {
-        vector3 Normal = tex2D (s_gbuffer_normal, TexCoords);
+        float3 Normal = tex2D (s_gbuffer_normal, TexCoords);
         
 	    // float radiusPixels = (Radius * screen_res.y * 0.5) / (pos.z * tan(radians(Fov * 0.5)));
         float radiusPixels = (RADIUS * screen_res.y * 0.5) / (Position.z * -pos_decompression_params.y);
@@ -32,7 +32,7 @@ vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
 	    // Early exit if the projected radius is smaller than 1 full-res pixel
         if (radiusPixels < 1.0)
         {
-            return vector4 (1.0h, 1.0h, 1.0h, 1.0h);
+            return float4 (1.0h, 1.0h, 1.0h, 1.0h);
         }
         else
         {
@@ -99,7 +99,7 @@ vector4 main (vector2 TexCoords: TEXCOORD0, vector2 Position2D: VPOS): COLOR
             occ = saturate (pow (1 - occ / SAMPLES, POWER));
 
             // Create smooth render distance border
-            vector FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (Position));
+            float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (Position));
             occ = lerp (1.0h, occ, 1.0h - FarFadingFactor);
             
             return occ.xxxx;

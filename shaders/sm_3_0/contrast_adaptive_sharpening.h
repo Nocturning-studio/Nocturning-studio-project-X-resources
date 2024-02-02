@@ -16,7 +16,7 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 
 //Optimizations by Marty McFly:
-//	vectorized math, even with scalar gcn hardware this should work
+//	floatized math, even with scalar gcn hardware this should work
 //	out the same, order of operations has not changed
 //	For some reason, it went from 64 to 48 instructions, a lot of MOV gone
 //	Also modified the way the final window is calculated
@@ -60,18 +60,18 @@ float3 CAS(sampler2D tex_color, float2 tc, float contrast, float sharpening)
 	//  d(e)f
 	//  g h i
 
-	float3 b = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(0, -1)).xyz;
-	float3 d = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(-1, 0)).xyz;
+	float3 b = tex2Dlod0(tex_color, tc + screen_res.zw * float2(0, -1)).xyz;
+	float3 d = tex2Dlod0(tex_color, tc + screen_res.zw * float2(-1, 0)).xyz;
 
 	float3 e = tex2Dlod0(tex_color, tc).xyz;
-	float3 f = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(1, 0)).xyz;
+	float3 f = tex2Dlod0(tex_color, tc + screen_res.zw * float2(1, 0)).xyz;
 
-	float3 h = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(0, 1)).xyz;
-	float3 i = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(1, 1)).xyz;
+	float3 h = tex2Dlod0(tex_color, tc + screen_res.zw * float2(0, 1)).xyz;
+	float3 i = tex2Dlod0(tex_color, tc + screen_res.zw * float2(1, 1)).xyz;
 
-	float3 g = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(-1, 1)).xyz;
-	float3 a = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(-1, -1)).xyz;
-	float3 c = tex2Dlod0(tex_color, tc + screen_res.zw * vector2(1, -1)).xyz;
+	float3 g = tex2Dlod0(tex_color, tc + screen_res.zw * float2(-1, 1)).xyz;
+	float3 a = tex2Dlod0(tex_color, tc + screen_res.zw * float2(-1, -1)).xyz;
+	float3 c = tex2Dlod0(tex_color, tc + screen_res.zw * float2(1, -1)).xyz;
 
 	// Soft min and max.
 	//  a b c			 b

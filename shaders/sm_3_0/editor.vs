@@ -2,11 +2,11 @@
 
 struct vf
 {
-	vector4 P: POSITION	;
-	vector4 C: COLOR0	;
+	float4 P: POSITION	;
+	float4 C: COLOR0	;
 };
 
-uniform vector4 		tfactor;
+uniform float4 		tfactor;
 vf main (vf i)
 {
 	vf 		o;
