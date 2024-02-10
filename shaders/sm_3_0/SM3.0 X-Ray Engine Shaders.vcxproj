@@ -162,7 +162,6 @@
     <None Include="ambient_occlusion_blurring_stage_pass_bilinear_filter.ps" />
     <None Include="ambient_occlusion_blurring_stage_pass_horizontal_filter.ps" />
     <None Include="ambient_occlusion_stage_pass_hbao.ps" />
-    <None Include="ambient_occlusion_stage_pass_ssao.ps" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.ps" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.vs" />
     <None Include="models_light_panel.ps" />
@@ -384,7 +383,6 @@
     <ClInclude Include="lightmap.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="normal_map_blending.h" />
-    <ClInclude Include="PCSS.h" />
     <ClInclude Include="reflection.h" />
     <ClInclude Include="shadow_filtering.h" />
     <ClInclude Include="sharpen.h" />

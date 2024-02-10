@@ -16,7 +16,6 @@
 #include "height_map_to_normal.h"
 #include "normal_map_blending.h"
 #include "fxaa_atoc.h"
-#include "contrast_adaptive_sharpening.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef MATERIAL_INCLUDED
 #define MATERIAL_INCLUDED
@@ -34,9 +33,6 @@ struct MaterialParams
 MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 {
     MaterialParams Material;
-
-    // We must get ao from texture before UV displacement for avoid ao bugs
-    Material.AO = tex2D(s_baked_ao, UV).r;
 
     // Update UV with displacement
     UV = GetDisplacement(s_bumpX, Position, TBN, UV);
@@ -62,7 +58,9 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Reconstruct z component for normals (actually z component used for Baked AO)
     Material.Normal.z = sqrt(1.0h - dot(Material.Normal.xy, Material.Normal.xy));
 
-    Material.AO *= NormalMapData.g;
+    Material.AO = tex2D(s_baked_ao, UV).r;
+
+    //Material.AO *= NormalMapData.g;
 
     Material.Height = NormalMapDecompressionData.a;
 
@@ -95,11 +93,11 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Combine main albedo with detail
     Material.Albedo.rgb *= 2.0h * DetailAlbedo;
 
-    Material.AO *= DetailNormalMapData.g;
+    //Material.AO *= DetailNormalMapData.g;
 
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is
     // smaller
-    Material.Height += DetailNormalMapDecompressionData.a * 0.1f;
+    Material.Height += DetailNormalMapDecompressionData.a * 0.2f;
 
     Material.Glossiness = DetailNormalMapData.r * Material.Glossiness + Material.Glossiness;
 #endif // USE_TDETAIL
@@ -114,7 +112,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     Material.Normal.xy *= Material.Height + 1.0h;
 
     // Make normals more power with inverted heightmap
-    Material.Normal.z *= invert(Material.Height);
+    Material.Normal.z *= Material.Height;//invert(Material.Height);
     
     Material.Normal = normalize(Material.Normal);
 

@@ -9,8 +9,6 @@
 #include "common.h"
 #include "filters.h"
 ////////////////////////////////////////////////////////////////////////////
-//#define USE_JITTERING
-////////////////////////////////////////////////////////////////////////////
 #if SHADOW_FILTER == LOW_FILTERING
 #define SHADOW_FILTERING_SAMPLES_COUNT 4
 #define OFFSET_ARRAY box_coords
@@ -39,12 +37,7 @@ float shadow_map_filter(float4 TexCoords)
 
     for (int i = 0; i < SHADOW_FILTERING_SAMPLES_COUNT; i++)
     {
-#ifdef USE_JITTERING
-        float2 JitterCoords = tex2Dlod0(s_blue_noise, (TexCoords + poissonDisk_64[i]) * float(SMAP_size) / 256.0h);
-        ShadowMap += sample_shadow_map(TexCoords, OFFSET_ARRAY[i] + JitterCoords);
-#else
         ShadowMap += sample_shadow_map(TexCoords, OFFSET_ARRAY[i]);
-#endif
     }
 
     return ShadowMap / SHADOW_FILTERING_SAMPLES_COUNT;

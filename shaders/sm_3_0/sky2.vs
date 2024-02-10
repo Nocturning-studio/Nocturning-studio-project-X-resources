@@ -1,31 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-
-struct vi
+//////////////////////////////////////////////////////////////////////////////////////////
+struct VertexData
 {
-        float4 p: POSITION;
-        float4 c: COLOR0;
-        float3 tc0: TEXCOORD0;
-        float3 tc1: TEXCOORD1;
+    float4 Position: POSITION;
+    float4 Color: COLOR0;
+    float3 UV0: TEXCOORD0;
+    float3 UV1: TEXCOORD1;
 };
 
-struct vf
+struct Interpolators
 {
-        float4 hpos: POSITION;
-        float4 c: COLOR0;
-        float3 tc0: TEXCOORD0;
-        float3 tc1: TEXCOORD1;
+    float4 HomogeniousPosition: POSITION;
+    float4 Color: COLOR0;
+    float3 UV0: TEXCOORD0;
+    float3 UV1: TEXCOORD1;
 };
-
-vf main (vi v)
+//////////////////////////////////////////////////////////////////////////////////////////
+Interpolators main (VertexData Input)
 {
-    vf o;
-
-    float4 tpos = mul (1000.0h, v.p);
-    o.hpos = mul (m_WVP, tpos);
-    o.hpos.z = o.hpos.w;
-    o.tc0 = v.tc0;
-    o.tc1 = v.tc1;
-    o.c = v.c;
+    Interpolators Output;
     
-    return o;
+    Output.HomogeniousPosition = mul (m_WVP, mul (1000.0h, Input.Position));
+    Output.HomogeniousPosition.z = Output.HomogeniousPosition.w;
+    Output.UV0 = Input.UV0;
+    Output.UV1 = Input.UV1;
+    Output.Color = Input.Color;
+    
+    return Output;
 }
+//////////////////////////////////////////////////////////////////////////////////////////

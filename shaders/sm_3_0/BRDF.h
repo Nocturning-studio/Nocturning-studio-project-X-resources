@@ -20,7 +20,7 @@ float3 fresnelSchlickRoughness(float NdotL, float3 F0, float roughness)
     return F0 + (max((1.0 - roughness), F0) - F0) * pow(1.0 - NdotL, 5.0);
 }
 
-float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Glossiness)
+float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
 {
     float3 v = -normalize(Point);
     float vDotN = saturate(dot(Normal, v));
@@ -31,9 +31,8 @@ float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Glossiness)
     float F0 = float(pow(IOR - 1.0h, 2.0h) / pow(IOR + 1.0h, 2.0h));
     // F0 = lerp(F0, 1.0h, Metalness);
 
-    float roughness = 1.0h - Glossiness;
-    float3 F = fresnelSchlickRoughness(vDotN, F0.xxx, roughness);
-    float2 brdf = tex2D(s_brdf_lut, float2(vDotN, roughness));
+    float3 F = fresnelSchlickRoughness(vDotN, F0.xxx, Roughness);
+    float2 brdf = tex2D(s_brdf_lut, float2(vDotN, Roughness));
     return F * (brdf.x + brdf.y);
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -46,7 +45,7 @@ float Blinn_Phong_Specular(float3 HalfAngle, float3 Normal)
 {
     float Specular = max(0.0h, dot(HalfAngle, Normal));
 
-    return pow(Specular, 36.0h) * 1.2h;
+    return pow(Specular, 16.0h);
 }
 ////////////////////////////////////////////////////////////////////////////
 // https://www.shadertoy.com/view/ltfyD8

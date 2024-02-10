@@ -74,18 +74,18 @@
 #define STEEP_PARALLAX_STOP_FADE 20
 #define PARALLAX_START_FADE 25
 #define PARALLAX_STOP_FADE 30
-#define STEEP_PARALLAX_MIN_SAMPLES 7
-#define STEEP_PARALLAX_MAX_SAMPLES 12
+#define STEEP_PARALLAX_MIN_SAMPLES 10
+#define STEEP_PARALLAX_MAX_SAMPLES 15
 
 #define DETAIL_STEEP_PARALLAX_START_FADE 10
 #define DETAIL_STEEP_PARALLAX_STOP_FADE 15
 #define DETAIL_PARALLAX_START_FADE 15
 #define DETAIL_PARALLAX_STOP_FADE 20
-#define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 4
-#define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 6
+#define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 5
+#define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 10
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 GetEyefloat(float3 Position, float3x3 TBN)
+float3 GetViewVector(float3 Position, float3x3 TBN)
 {
     TBN = transpose(TBN);
     return normalize(mul(TBN, -Position));
@@ -101,32 +101,32 @@ float2 CalculateParallaxMapping(sampler2D HeightmapSampler, float3 Position, flo
 {
     if (Position.z < StopFadingDistance)
     {
-        float3 Eyefloat = GetEyefloat(Position, TBN);
+        float3 ViewVector = GetViewVector(Position, TBN);
 
         float height = GetHeight(HeightmapSampler, UV);
         height *= constant_parallax_scale.x;
         height += constant_parallax_scale.y;
 
         float fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
-        UV += height * Eyefloat * fParallaxFade;
+        UV += height * ViewVector * fParallaxFade;
     }
 
     return UV;
 }
 
-float2 CalculateSteepParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
-                                               float StartFadingDistance, float StopFadingDistance,
-                                               int MinimalSamplesCount, int MaximalSamplesCount)
+float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
+                                         float StartFadingDistance, float StopFadingDistance,
+                                         int MinimalSamplesCount, int MaximalSamplesCount)
 {
     if (Position.z < StopFadingDistance)
     {
-        double3 Eyefloat = GetEyefloat(Position, TBN);
+        double3 ViewVector = GetViewVector(Position, TBN);
 
         // Calculate number of steps
-        double nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, Eyefloat.z);
+        double nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, ViewVector.z);
 
         double fStepSize = 1.0h / nNumSteps;
-        double2 vDelta = -Eyefloat.xy * constant_parallax_scale.x;
+        double2 vDelta = -ViewVector.xy * constant_parallax_scale.x;
         double2 vTexOffsetPerStep = fStepSize * vDelta;
 
         // Prepare start data for cycle
@@ -148,12 +148,10 @@ float2 CalculateSteepParallaxOcclusionMapping(sampler2D HeightmapSampler, float3
         // Smooth tc position between current and previouse step
         double fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
         double fDelta1 = (fCurrentBound - fCurrHeight);
-        double fParallaxAmount =
-            (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
+        double fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
         double fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
-        double2 vParallaxOffset = vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
 
-        UV += vParallaxOffset;
+        UV += vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
     }
 
     return UV;
@@ -162,7 +160,7 @@ float2 CalculateSteepParallaxOcclusionMapping(sampler2D HeightmapSampler, float3
 float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
 {
 #if defined(USE_STEEP_PARALLAX_MAPPING)
-    UV = CalculateSteepParallaxOcclusionMapping(Heightmap, Position, TBN, UV, STEEP_PARALLAX_START_FADE,
+    UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, STEEP_PARALLAX_START_FADE,
                                                 STEEP_PARALLAX_STOP_FADE, STEEP_PARALLAX_MIN_SAMPLES,
                                                 STEEP_PARALLAX_MAX_SAMPLES);
 #elif defined(USE_PARALLAX_MAPPING)
@@ -175,7 +173,7 @@ float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float
 float2 GetDetailDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
 {
 #if defined(USE_STEEP_PARALLAX_MAPPING)
-    UV = CalculateSteepParallaxOcclusionMapping(Heightmap, Position, TBN, UV, DETAIL_STEEP_PARALLAX_START_FADE,
+    UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, DETAIL_STEEP_PARALLAX_START_FADE,
                                                 DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
                                                 DETAIL_STEEP_PARALLAX_MAX_SAMPLES);
 #elif defined(USE_PARALLAX_MAPPING)

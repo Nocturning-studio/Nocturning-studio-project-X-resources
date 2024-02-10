@@ -12,12 +12,6 @@
 #define SMAP_size 2048
 #endif
 ////////////////////////////////////////////////////////////////////////////
-#ifdef USE_R2_STATIC_SUN
-#define xmaterial float(0.0h)
-#else
-#define xmaterial float(L_material.w)
-#endif
-
 #ifdef AO_TYPE
 #define AO_ENABLED
 #endif

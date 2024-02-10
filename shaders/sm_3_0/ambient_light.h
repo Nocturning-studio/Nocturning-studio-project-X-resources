@@ -8,11 +8,15 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ////////////////////////////////////////////////////////////////////////////
-#define SKY_LIGHT_BRIGHTNESS 0.75f
+#define LIGHTMAP_BRIGHTNESS 1.25h
 ////////////////////////////////////////////////////////////////////////////
-float3 CalculateAmbient(float LightMapAO)
+float3 CalculateAmbient(float LightMapAO, float3 Normal)
 {
-    return env_color.rgb * (pow(LightMapAO, 1.6h) * SKY_LIGHT_BRIGHTNESS) + L_ambient.rgb;
+    float3 WorldSpaceNormal = mul(m_v2w, Normal);
+    float3 EnvironmentActual = texCUBElod(env_s0, float4(WorldSpaceNormal, 4));
+	float3 EnvironmentNext = texCUBElod(env_s1, float4(WorldSpaceNormal, 4));
+    float3 Environment = lerp(EnvironmentActual, EnvironmentNext, env_color.w);
+    return env_color.rgb * Environment * LightMapAO * LIGHTMAP_BRIGHTNESS + L_ambient.rgb;
 }
 ////////////////////////////////////////////////////////////////////////////
 #endif // AMBIENT_LIGHT_HELPER_INCLUDED

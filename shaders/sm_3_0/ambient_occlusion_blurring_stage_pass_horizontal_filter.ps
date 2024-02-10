@@ -3,12 +3,12 @@
 //	Author		: Deathman
 //	NSProjectX Nocturning Studio - 2023
 //////////////////////////////////////////////////////////////////////////////////////////
+// Depth based ambient occlusion filter from X-Ray Engine 2.0
+//////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 #include "gbuffer.h"
 //////////////////////////////////////////////////////////////////////////////////////////
-// Depth based ambient occlusion filter from X-Ray Engine 2.0
-//////////////////////////////////////////////////////////////////////////////////////////
-float4 main(float2 TexCoords : TEXCOORD0) : COLOR
+float4 main(float2 TexCoords: TEXCOORD0): COLOR
 {
     float center_depth = GetPosition(TexCoords).z;
     float ao_sum = 0.0h;
@@ -16,7 +16,7 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR
 
     for (int i = -3; i < 3; i++)
     {
-        float2 sample_uv = TexCoords + float2 (i, 0.0h) / ao_resolution.xy;
+        float2 sample_uv = TexCoords + float2 (i + 0.5h, 0.0h) / screen_res.xy;
         
         float sample_ao = tex2Dlod0 (s_ao, sample_uv).r;
         float sample_depth = GetPosition (sample_uv).z;

@@ -10,9 +10,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void calc_hashed_alpha_test(float2 TexCoords, float Opacity)
 {
-	float limit = tex2D(s_blue_noise, TexCoords * 1000.0h).b;
+	float2 Noise = tex2D(s_blue_noise, TexCoords).bg;
+	float limit = tex2D(s_blue_noise, Noise * 1000.0h).b;
 
-	limit = clamp(limit, 0.25h, 0.5h);
+	limit = clamp(limit, 0.2h, 0.5h);
 
 	clip(Opacity - limit);
 }

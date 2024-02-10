@@ -36,6 +36,6 @@ PixelShaderOutputStruct main (v2p I)
 
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);
-    Output.Position = float4 (I.position, xmaterial);
+    Output.Position = float4 (I.position, 1.0);
     return Output;
 }

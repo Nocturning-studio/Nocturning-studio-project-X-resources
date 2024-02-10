@@ -25,7 +25,7 @@ struct Interpolators
 	float3 TBN2: TEXCOORD3;
 	float2 UV: TEXCOORD4;
 	float2 LightMapTexcoords: TEXCOORD5;
-	float2 Lighting: TEXCOORD6;
+	float Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)
@@ -49,7 +49,6 @@ Interpolators main (VertexData Input)
     Output.UV = (Input.UV + float2 (Input.Tangent.w, Input.Binormal.w)) * (32.f / 32768.f);
     Output.LightMapTexcoords = unpack_tc_lmap (Input.LightMapUV);
     Output.Lighting.x = Input.Normal.w;
-    Output.Lighting.y = Input.Color.w;
 
     return Output;
 }

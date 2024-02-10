@@ -11,13 +11,13 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     float3 SceneColor = tex2Dlod0 (s_image, TexCoords);
     
+    float fWhiteIntensitySQR = pow (hdr_params.x, 2.0h);
+
+    SceneColor.rgb = float3 (((SceneColor.rgb * (1.0h + SceneColor.rgb / fWhiteIntensitySQR)) / (SceneColor.rgb + 1.0h)));
+    
     SceneColor = pow (SceneColor, hdr_params.y);
     
     SceneColor *= hdr_params.z;
-    
-    const float fWhiteIntensitySQR = pow (hdr_params.x, 2.0h);
-
-    SceneColor.rgb = float3 (((SceneColor.rgb * (1.0h + SceneColor.rgb / fWhiteIntensitySQR)) / (SceneColor.rgb + 1.0h)));
     
     return float4 (SceneColor, 1.0h);
 }

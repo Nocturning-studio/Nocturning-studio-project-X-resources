@@ -13,29 +13,30 @@
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
-    GBuffer GBuffer = UnpackGBuffer (TexCoords);
-    LightingData Light = UnpackLightingAccumulator (TexCoords);
+    GBuffer GBuffer = UnpackGBuffer(TexCoords);
+    LightingData Light = UnpackLightingAccumulator(TexCoords);
     
-    float3 AmbientLighting = CalculateAmbient (GBuffer.AO);
+    float3 AmbientLighting = CalculateAmbient(GBuffer.AO, GBuffer.Normal);
     
 #ifdef AO_ENABLED
-    AmbientLighting *= tex2D(s_ao, TexCoords).r;
+    AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r;
 #endif
     
-    float3 DiffuseLighting = (AmbientLighting + Light.Diffuse);
+    float3 DiffuseLighting = AmbientLighting + Light.Diffuse;
     
-    float3 SkyReflections = BlurredSkyReflectionApproximated (GBuffer.Position, GBuffer.Normal, GBuffer.Glossiness);
+    float3 SkyReflections = BlurredSkyReflection(GBuffer.Position, GBuffer.Normal, invert(GBuffer.Glossiness));
     
-    float3 SpecularLighting = Light.Specular * SkyReflections * 2.0h;
+    float3 SpecularColor = lerp(GBuffer.Albedo + 0.5h, SkyReflections, GBuffer.Glossiness);
+    
+    float3 SpecularLighting = Light.Specular * SpecularColor * 1.5h;
 	
-    float3 SceneColor = (GBuffer.Albedo * DiffuseLighting + SpecularLighting) * GBuffer.BakedAO;
+    float3 SceneColor = mad(GBuffer.Albedo, DiffuseLighting, SpecularLighting) * GBuffer.BakedAO;
     
-    FogComponents Fog = CalcFog (GBuffer.Position);
+    FogComponents Fog = CalcFog(GBuffer.Position);
     
-    SceneColor = lerp (SceneColor, Fog.Color, Fog.Fogness);
+    SceneColor = lerp(SceneColor, Fog.Color, Fog.Fogness);
     
-    float3 OutputColor = SceneColor;
-    float Opacity = saturate (pow (Fog.Fogness, 2.0h));
-    return float4 (OutputColor, Opacity);
+    float Opacity = saturate(pow(Fog.Fogness, 2.2h));
+    return float4(SceneColor, Opacity);
 }
 ////////////////////////////////////////////////////////////////////////////

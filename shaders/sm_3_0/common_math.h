@@ -13,6 +13,9 @@
 // Inverting
 #define invert(x) 1.0h - x
 ////////////////////////////////////////////////////////////////////////////
+// Myltiply add
+#define mad(m, a, b) m * a + b
+////////////////////////////////////////////////////////////////////////////
 // Average functions
 float avg2(float2 tex)
 {
@@ -23,7 +26,7 @@ float avg3(float3 tex)
 {
     return (tex.x + tex.y + tex.z) * 0.3333333f;
 };
-////////////////////////////////////////////////////////////////////////////
+
 float avg4(float4 tex)
 {
     return (tex.x + tex.y + tex.z + tex.w) * 0.25f;
@@ -32,7 +35,7 @@ float avg4(float4 tex)
 // Tex2D functions
 float4 tex2Dlod0(sampler2D smp, float2 tc)
 {
-    return tex2Dlod(smp, float4(tc, -0.5f, -0.5f));
+    return tex2Dlod(smp, float4(tc, 0.0f, 0.0f));
 }
 ////////////////////////////////////////////////////////////////////////////
 // Approximation functions for sin/cos created by Skye Adaire

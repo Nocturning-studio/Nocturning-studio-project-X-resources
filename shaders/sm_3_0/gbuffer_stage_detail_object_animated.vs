@@ -17,7 +17,7 @@ struct Interpolators
 	float3 Position: TEXCOORD0;
 	float3 Normal: TEXCOORD3;
 	float2 UV: TEXCOORD4;
-	float2 Lighting: TEXCOORD5;
+	float Lighting: TEXCOORD5;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 uniform float4 consts; // {1/quant,1/quant,diffusescale,ambient}
@@ -64,7 +64,6 @@ Interpolators main (VertexData Input)
     Output.UV = (Input.Misc * consts);
 
     Output.Lighting.x = c0.w;
-    Output.Lighting.y = c0.x;
     float _dp = calc_cyclic (dot (pos, wave * GRASS_WAVE_FREQ));
 
     return Output;

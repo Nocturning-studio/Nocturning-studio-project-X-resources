@@ -23,7 +23,7 @@ struct Interpolators
 	float3 TBN1: TEXCOORD2;
 	float3 TBN2: TEXCOORD3;
 	float2 UV: TEXCOORD4;
-	float2 Lighting: TEXCOORD6;
+	float Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 uniform float3x4 m_xform;
@@ -68,13 +68,6 @@ Interpolators main (VertexData Input)
     Output.TBN2 = TBN[2];
 
     Output.Lighting.x = (Input.Normal.w * 0.5f * c_scale.w + c_bias.w);
-
-#ifdef USE_R2_STATIC_SUN
-	float suno = Input.Normal.w * c_sun.x + c_sun.y;
-	Output.Lighting.y = suno;
-#else
-    Output.Lighting.y = 1.0h;
-#endif
 
     return Output;
 }

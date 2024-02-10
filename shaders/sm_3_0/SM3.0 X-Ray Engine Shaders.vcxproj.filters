@@ -97,9 +97,6 @@
     <ClInclude Include="contrast_adaptive_sharpening.h">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
-    <ClInclude Include="PCSS.h">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="depth_of_field_common.h">
       <Filter>Forward rendering pipeline\Postprocess\Depth of field</Filter>
     </ClInclude>
@@ -172,9 +169,6 @@
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Blurring</Filter>
     </None>
     <None Include="ambient_occlusion_stage_pass_hbao.ps">
-      <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
-    </None>
-    <None Include="ambient_occlusion_stage_pass_ssao.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
     </None>
     <None Include="gbuffer_stage_detail_object.ps">

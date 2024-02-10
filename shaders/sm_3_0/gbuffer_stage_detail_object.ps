@@ -15,7 +15,7 @@ struct Interpolators
 	float3 Position: TEXCOORD0;
 	float3 Normal: TEXCOORD3;
 	float2 UV: TEXCOORD4;
-	float2 Lighting: TEXCOORD5;
+	float Lighting: TEXCOORD5;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -39,12 +39,6 @@ GBufferPacked main (Interpolators Input)
     GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
 
     GBuffer.BakedAO = 1.0h;
-	
-//#ifdef USE_R2_STATIC_SUN
-//	float MaterialID = Input.Lighting.y;
-//#else
-//    float MaterialID = 0.0h;
-//#endif
 
     GBuffer.Normal = normalize (Input.Normal.xyz);
 

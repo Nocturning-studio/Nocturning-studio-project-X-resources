@@ -18,7 +18,7 @@ struct Interpolators
 	float3 TBN2: TEXCOORD3;
 	float2 UV: TEXCOORD4;
 	float2 LightMapUV: TEXCOORD5;
-	float2 Lighting: TEXCOORD6;
+	float Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -55,16 +55,6 @@ GBufferPacked main (Interpolators Input)
 #else//USE_LIGHTMAP
     GBuffer.AO = Input.Lighting.x * (AO_BRIGHTNESS - 0.25f);
 #endif//USE_LIGHTMAP
-
-//#ifdef USE_R2_STATIC_SUN
-//#ifdef	USE_LIGHTMAP
-//	float MaterialID = LightMap.Sun;
-//#else// USE_LIGHTMAP
-//	float MaterialID = Input.Lighting.y;
-//#endif//USE_LIGHTMAP
-//#else//USE_R2_STATIC_SUN
-//    float MaterialID = L_material.w;
-//#endif//USE_R2_STATIC_SUN
 
 	// Apply baked ao for light map ao
     GBuffer.BakedAO = Material.AO;

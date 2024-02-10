@@ -63,7 +63,7 @@ GBufferPacked main (Interpolators Input)
     NormalMap.xy *= HeightMap + 1.0h;
 
 	// Make normals more power with inverted heightmap
-    NormalMap.z *= invert (HeightMap);
+    NormalMap.z *= HeightMap; //invert (HeightMap);
 
 	// Out normal for Geometry buffer
     GBuffer.Normal = normalize (mul (TBN, NormalMap));
@@ -83,16 +83,6 @@ GBufferPacked main (Interpolators Input)
 
 	// Create glossiness from details
     GBuffer.Glossiness = DetailBumpData.r;
-
-	// Material or direct sun lighting
-//#ifdef USE_R2_STATIC_SUN
-//	// Get and smooth local lights
-//    float LocalLightSources = avg3 (tex2D (s_lmap, Input.UV).rgb);
-//
-//	float MaterialID = tex2D(s_lmap, Input.UV).a + LocalLightSources;
-//#else
-//    float MaterialID = xmaterial;
-//#endif
 
 	// Pack geometry buffer
     GBufferPacked Output = PackGBuffer (GBuffer);

@@ -28,20 +28,20 @@ end
 
 function main_menu:InitControls()
 	self:Init(0,0,1024,768)			  
-    local xml = CScriptXmlInit()
-    xml:ParseFile("ui_mm_main.xml")
+    	local xml = CScriptXmlInit()
+    	xml:ParseFile("ui_mm_main.xml")
      
-    xml:InitStatic("back_movie", self)
-    xml:InitStatic("background", self)
-    xml:InitStatic("fire_movie", self)
-    self.shniaga = xml:InitMMShniaga("shniaga_wnd",self);
+   	xml:InitStatic("back_movie", self)
+    	xml:InitStatic("background", self)
+    	xml:InitStatic("fire_movie", self)
+    	self.shniaga = xml:InitMMShniaga("shniaga_wnd",self);
 	
 	self.message_box = CUIMessageBoxEx()
 	self:Register(self.message_box, "msg_box")	
 	
-	local _ver = xml:InitStatic		("static_version",self)
-	local mm						= _G.main_menu.get_main_menu()
-	_ver:SetText					("ver. " .. mm:GetGSVer())
+	local _ver = xml:InitStatic("static_version",self)
+	local mm = _G.main_menu.get_main_menu()
+	_ver:SetText("Build ID " .. mm:GetGSVer())
 	
 end
 

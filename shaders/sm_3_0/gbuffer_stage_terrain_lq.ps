@@ -13,7 +13,7 @@ struct Interpolators
 	float3 Normal: TEXCOORD1;
 	float2 UV: TEXCOORD2;
 	float2 DetailUV: TEXCOORD3;
-	float2 Lighting: TEXCOORD4;
+	float Lighting: TEXCOORD4;
 };
 ////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
@@ -27,12 +27,6 @@ GBufferPacked main (Interpolators Input)
     GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
 
     GBuffer.BakedAO = 1.0h;
-	
-//#ifdef USE_R2_STATIC_SUN
-//	float  MaterialID = tex2D(s_lmap, Input.UV).a;
-//#else
-//    float MaterialID = xmaterial;
-//#endif
 
 	// Normal for Geometry Buffer
     GBuffer.Normal = normalize (Input.Normal);
