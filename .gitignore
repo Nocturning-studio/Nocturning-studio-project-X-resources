@@ -20,3 +20,22 @@ shaders/.vs/X-Ray Engine shaders/v16/.suo
 shaders/.vs/X-Ray Engine shaders/v16/Browse.VC.db
 *.db
 shaders/.vs/X-Ray Engine shaders/v16/.suo
+shaders/.vs/SM3.0 X-Ray Engine Shaders/v16/.suo
+*.db
+shaders/.vs/SM3.0 X-Ray Engine Shaders/v16/.suo
+shaders/.vs/X-Ray Engine shaders/v16/.suo
+*.db
+*.json
+shaders/sm_2_0/.vs/R1 Shaders/v16/.suo
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+shaders/sm_2_0/.vs/SM2.0 X-Ray Engine Shaders/v16/.suo
+*.db
+shaders/sm_2_0/.vs/sm_2_0/v16/.suo
+*.db
+*.json
+shaders/sm_3_0/.vs/SM3.0 X-Ray Engine Shaders/v16/.suo
+*.db
+*.sqlite
