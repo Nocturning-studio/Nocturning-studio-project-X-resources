@@ -18,10 +18,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
         SampleTexCoords = TexCoords; // discard new sample
     
     float3 image = tex2Dlod0 (s_image, SampleTexCoords);
-
- 	float3 blurred = def_hdr;
-    image = lerp (image, blurred, distort.z);
-
+    
     return image.rgbb;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

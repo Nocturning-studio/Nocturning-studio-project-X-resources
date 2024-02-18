@@ -9,7 +9,6 @@
 #include "ambient_light.h"
 #include "fog.h"
 #include "reflection.h"
-#include "BRDF.h"
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
@@ -22,7 +21,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r;
 #endif
     
-    float3 DiffuseLighting = AmbientLighting + Light.Diffuse;
+    float3 DiffuseLighting = AmbientLighting + Light.Diffuse * GBuffer.BakedAO;
     
     float3 SkyReflections = BlurredSkyReflection(GBuffer.Position, GBuffer.Normal, invert(GBuffer.Glossiness));
     
@@ -30,7 +29,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     
     float3 SpecularLighting = Light.Specular * SpecularColor * 1.5h;
 	
-    float3 SceneColor = mad(GBuffer.Albedo, DiffuseLighting, SpecularLighting) * GBuffer.BakedAO;
+    float3 SceneColor = mad (GBuffer.Albedo, DiffuseLighting, SpecularLighting) * GBuffer.BakedAO;
     
     FogComponents Fog = CalcFog(GBuffer.Position);
     

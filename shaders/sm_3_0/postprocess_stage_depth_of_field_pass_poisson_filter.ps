@@ -6,11 +6,11 @@
 #include "common.h"
 #include "depth_of_field_common.h"
 ///////////////////////////////////////////////////////////////////////////////////
-#define POISSON_SAMPLES_COUNT 16
+#define POISSON_SAMPLES_COUNT 12
 ///////////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR0
+float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    float BlurPower = DOFFactor (GetDepth (TexCoords).x);
+    float BlurPower = DOFFactor (TexCoords);
     
     if (BlurPower == 0.0h)
     {
@@ -18,35 +18,24 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR0
     }
     else
     {
-        float2 RaySize = screen_res.zw * 2.5;
+        float2 RaySize = screen_res.zw;
         float3 SummaryImageColor = NULL;
         float Contribution = 0.0h;
         
-        // RotationCosSin is (cos(alpha),sin(alpha)) where alpha is the rotation angle
-	    // A 2D rotation matrix is applied (see https://en.wikipedia.org/wiki/Rotation_matrix)
-        float c, s;
-        sincos (PI, c, s);
-        float2x2 rot = float2x2 (c, -s, s, c);
-        
-        float2 dir;
-        sincos (5.0 * PI, dir.y, dir.x);
-        
         for (int i = 0; i < POISSON_SAMPLES_COUNT; i++)
         {
-            dir = mul (dir, rot);
-            
-            float2 SampleCoords = TexCoords + dir * RaySize;
+            float2 SampleCoords = TexCoords + poisson25_round[i] * RaySize;
         
             float3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
 
-            float SampleContribution = DOFFactor (GetDepth (SampleCoords).x);
+            float SampleContribution = DOFFactor (SampleCoords);
         
-            SummaryImageColor += SampleColor * SampleContribution.x;
+            SummaryImageColor += SampleColor * SampleContribution;
         
             Contribution += SampleContribution;
         }
     
-        float4 BlurredImageColor = float4 ((SummaryImageColor / Contribution.x), 1.0h) * BlurPower;
+        float4 BlurredImageColor = float4 ((SummaryImageColor / Contribution), 1.0h) * BlurPower;
         float4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords) * (1.0h - BlurPower);
     
         return BlurredImageColor + UnblurredImageColor;

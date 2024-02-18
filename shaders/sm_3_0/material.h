@@ -93,8 +93,6 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Combine main albedo with detail
     Material.Albedo.rgb *= 2.0h * DetailAlbedo;
 
-    //Material.AO *= DetailNormalMapData.g;
-
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is
     // smaller
     Material.Height += DetailNormalMapDecompressionData.a * 0.2f;
@@ -111,8 +109,8 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Transformate height map from [0; 1] space to [1; 2] and make normals more power
     Material.Normal.xy *= Material.Height + 1.0h;
 
-    // Make normals more power with inverted heightmap
-    Material.Normal.z *= Material.Height;//invert(Material.Height);
+    // Make normals more power with heightmap
+    Material.Normal.z *= Material.Height;
     
     Material.Normal = normalize(Material.Normal);
 

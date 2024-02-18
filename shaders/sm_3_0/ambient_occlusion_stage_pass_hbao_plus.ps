@@ -7,9 +7,9 @@
 #include "gbuffer.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
-#define POWER  float(2.2)
-#define	RADIUS float(2)
-#define BIAS float(0.007)
+#define POWER half(2.2)
+#define	RADIUS half(2)
+#define BIAS half(0.007)
 #define SAMPLES 4
 #define STEPS 2
 #define RENDER_DISTANCE 75.0h
@@ -26,11 +26,10 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     {
         float3 Normal = tex2D (s_gbuffer_normal, TexCoords);
         
-	    // float radiusPixels = (Radius * screen_res.y * 0.5) / (pos.z * tan(radians(Fov * 0.5)));
-        float radiusPixels = (RADIUS * screen_res.y * 0.5) / (Position.z * -pos_decompression_params.y);
+        float radiusPixels = (RADIUS * screen_res.y * 0.5h) / (Position.z * -pos_decompression_params.y);
 
 	    // Early exit if the projected radius is smaller than 1 full-res pixel
-        if (radiusPixels < 1.0)
+        if (radiusPixels < 1.0h)
         {
             return float4 (1.0h, 1.0h, 1.0h, 1.0h);
         }
@@ -45,22 +44,22 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             float2x2 rot = float2x2 (c, -s, s, c);
             
             int2 pos2d = Position2D; //TexCoords * screen_res.xy + 0.5;
-            float jitter = (pos2d.y % 4) * 0.25 + (pos2d.x % 4) * 0.0625 + 0.0625;
+            float jitter = (pos2d.y % 4) * 0.25h + (pos2d.x % 4) * 0.0625h + 0.0625h;
             float2 dir;
-            sincos (5.0 * PI * jitter, dir.y, dir.x);
-            dir = lerp (dir, jitter, 0.5);
+            sincos (5.0h * PI * jitter, dir.y, dir.x);
+            dir = lerp (dir, jitter, 0.5h);
 	
             Position += Normal * BIAS;
 	
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
-            float stepSizePixels = (radiusPixels * 0.25) / (STEPS + 1);
+            float stepSizePixels = (radiusPixels * 0.25h) / (STEPS + 1.0h);
 		
             for (int i = 0; i < SAMPLES; ++i)
             {
-                float negInvR2 = -1.0 / pow (radiusPixels, 2.0h);
-                float rayPixels = 0.5 * stepSizePixels + 1.0;
+                float negInvR2 = -1.0h / pow (radiusPixels, 2.0h);
+                float rayPixels = 0.5h * stepSizePixels + 1.0h;
 
-                float dirSum = 0;
+                float dirSum = 0.0h;
 		
                 dir = mul (dir, rot);
                 
@@ -71,11 +70,11 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 			
                     rayPixels += stepSizePixels;
 
-                    if ((tcHit.x <= 1.0 && tcHit.y <= 1.0 && tcHit.x >= 0.0 && tcHit.y >= 0.0))
+                    if ((tcHit.x <= 1.0h && tcHit.y <= 1.0h && tcHit.x >= 0.0h && tcHit.y >= 0.0h))
                     {
                         float3 posHit = GetPosition (tcHit);
                         posHit.z += BIAS;
-			
+                        
 					    // pos    = view-space position at the kernel center
 					    // norm   = view-space normal at the kernel center
 					    // posHit = view-space position of the current sample
@@ -84,7 +83,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
                         float NdotV = dot (Normal, -V) * rsqrt (VdotV);
 
 					    // Use saturate(x) instead of max(x,0.f) because that is faster
-                        float falloff = saturate (VdotV * negInvR2 + 1.0);
+                        float falloff = saturate (VdotV * negInvR2 + 1.0h);
                         float occluder = saturate (NdotV);
                         
                         dirSum += occluder * falloff;
@@ -96,7 +95,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
                 occ += dirSum;
             }
 
-            occ = saturate (pow (1 - occ / SAMPLES, POWER));
+            occ = saturate (pow (1.0h - occ / SAMPLES, POWER));
 
             // Create smooth render distance border
             float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (Position));

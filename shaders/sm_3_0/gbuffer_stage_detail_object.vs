@@ -43,7 +43,7 @@ Interpolators main (VertexData Input)
 	// Normal in world coords
 	float3 norm;
     norm.x = pos.x - m0.w;
-    norm.y = pos.y - m1.w + 0.75f; // avoid zero
+    norm.y = (pos.y - m1.w + 0.25f) * 2.0f; // avoid zero
     norm.z = pos.z - m2.w;
 
 	float4 Position = mul (m_WVP, pos);

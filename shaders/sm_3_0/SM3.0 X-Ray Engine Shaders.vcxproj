@@ -148,7 +148,6 @@
     <None Include="accumulating_light_stage_omni_normal.ps" />
     <None Include="accumulating_light_stage_omni_transluent.ps" />
     <None Include="accumulating_light_stage_omni_unshadowed.ps" />
-    <None Include="accumulating_light_stage_photon_mapping.ps" />
     <None Include="accumulating_light_stage_spot.ps" />
     <None Include="accumulating_light_stage_spot_fullsize.ps" />
     <None Include="accumulating_light_stage_spot_normal.ps" />

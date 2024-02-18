@@ -66,11 +66,6 @@ float4 wmark_shift(float3 pos, float3 norm)
     P -= normalize(eye_direction + normalize(P - eye_position)) * s;
     return float4(P, 1.f);
 }
-///////////////////////////////////////////////////////////////////////////////////////////
-float calc_fogging(float4 w_pos)
-{
-    return dot(w_pos, fog_plane);
-}
 
 float2 calc_detail(float3 w_pos)
 {
@@ -149,15 +144,6 @@ float Contrast(float Input, float ContrastPower)
     return Output;
 }
 
-float4 proj_to_screen(float4 proj)
-{
-    float4 screen = proj;
-    screen.x = (proj.x + proj.w);
-    screen.y = (proj.w - proj.y);
-    screen.xy *= 0.5;
-    return screen;
-}
-
 float3 uv_to_eye(float2 uv, float eye_z)
 {
     uv = (uv * float2(2.0, 2.0) - float2(1.0, 1.0));
@@ -214,6 +200,17 @@ float2 unpack_tc_lmap(float2 tc)
 float2 unpack_tc_base(float2 tc, float du, float dv)
 {
     return (tc.xy + float2(du, dv)) * (32.f / 32768.f);
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 calc_proj(float3 P)
+{
+    return mul(m_P, float4(P, 1.0h));
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float2 projection_to_screen(float4 proj)
+{
+    float2 screen = proj.xy / proj.w;
+    return (screen + float2(1.0h, -1.0h)) * float2(0.5h, -0.5h);
 }
 ////////////////////////////////////////////////////////////////////////////
 #endif // #ifndef COMMON_FUNCTIONS_H_INCLUDED

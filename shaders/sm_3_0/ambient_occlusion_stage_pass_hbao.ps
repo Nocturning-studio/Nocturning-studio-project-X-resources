@@ -55,7 +55,7 @@ float3 calc_sphere (float3 hash)
 //////////////////////////////////////////////////////////////////////////////////////////
 float3 SampleHemisphereDirection (float3 Normal, float3 hash)
 {
-	float3 sphere = calc_sphere (hash);
+    float3 sphere = calc_sphere (hash);
 
 	float3 Up = float3 (1.0h, 0.0h, 0.0h);
     
@@ -66,17 +66,6 @@ float3 SampleHemisphereDirection (float3 Normal, float3 hash)
 	float3 Binormal = cross (Normal, Tangent);
 
     return float3 ((Tangent * sphere.x) + (Binormal * sphere.y) + (Normal * sphere.z));
-}
-//////////////////////////////////////////////////////////////////////////////////////////
-float4 calc_proj (float3 P)
-{
-    return mul (m_P, float4 (P, 1.0h));
-}
-//////////////////////////////////////////////////////////////////////////////////////////
-float2 projection_to_screen (float4 proj)
-{
-	float2 screen = proj.xy / proj.w;
-    return (screen + float2 (1.0h, -1.0h)) * float2 (0.5h, -0.5h);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
@@ -97,7 +86,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
         
         for (int i = 0; i < HBAO_SAMPLES; i++)
         {
-		    float3 Noise = get_blue_noise (TexCoords + poissonDisk_16[i] * 2.0h);
+            float3 Noise = get_blue_noise (TexCoords + poissonDisk_16[i] * 2.0h);
             
             float3 hemi = SampleHemisphereDirection (N, Noise);
             
