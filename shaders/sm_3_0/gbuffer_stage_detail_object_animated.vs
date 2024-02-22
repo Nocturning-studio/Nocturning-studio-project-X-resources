@@ -64,7 +64,6 @@ Interpolators main (VertexData Input)
     Output.UV = (Input.Misc * consts);
 
     Output.Lighting.x = c0.w;
-    float _dp = calc_cyclic (dot (pos, wave * GRASS_WAVE_FREQ));
 
     return Output;
 }

@@ -10,8 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float3x3 Get_TBN(float3 Tangent, float3 Bitangent, float3 Normal)
 {
-    return float3x3(Tangent.x, Bitangent.x, Normal.x, Tangent.y, Bitangent.y, Normal.y, Tangent.z, Bitangent.z,
-                     Normal.z);
+    return float3x3(Tangent.x, Bitangent.x, Normal.x, Tangent.y, Bitangent.y, Normal.y, Tangent.z, Bitangent.z, Normal.z);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif // TBN_INCLUDED
