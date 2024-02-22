@@ -21,18 +21,18 @@ PixelShaderOutputStruct main (v2p I)
 {
 	float4 t_base = tex2D (s_base, I.tc0);
 	//float4	t_env 	= texCUBE	(s_env,	I.tc1);
-	float3 t_env0 = texCUBE (sky_s0, I.tc1);
-    float3 t_env1 = texCUBE (sky_s1, I.tc1);
-    float3 t_env = env_color.xyz * lerp (t_env0, t_env1, env_color.w);
+	//float3 t_env0 = texCUBE (sky_s0, I.tc1);
+    //float3 t_env1 = texCUBE (sky_s1, I.tc1);
+    //float3 t_env = env_color.xyz * lerp (t_env0, t_env1, env_color.w);
 
-	float3 base = lerp (t_env, t_base, t_base.a);
+	float3 base = t_base.rgb;
 	float3 light = I.c0;
 	float3 final = light * base * 2;
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     FogComponents Fog = CalcFog (I.position);
     final = lerp (final, Fog.Color, Fog.Fogness);
-    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * t_base.a;
+    float Opacity = (1.0h - pow (Fog.Fogness, 2));
 
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

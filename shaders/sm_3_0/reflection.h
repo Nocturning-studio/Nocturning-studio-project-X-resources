@@ -29,7 +29,7 @@ float3 BlurredSkyReflection(float3 Point, float3 Normal, float Roughness)
     float3 Environment1 = texCUBElod(sky_s1, float4(vreflect, 4.0h * Roughness));
     float3 Environment = lerp(Environment0, Environment1, env_color.w);
 
-    return Environment;
+    return lerp(Environment, fog_color.rgb, fog_sky_influence);
 }
 ////////////////////////////////////////////////////////////////////////////
 #endif // REFLECTION_INCLUDED
