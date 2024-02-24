@@ -3,12 +3,17 @@
 struct 	v2p
 {
  	half2 	tc0: 	TEXCOORD0;	// base
+	half  	fog	: FOG	;
 };
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main_ps_1_1	( v2p I )	: COLOR
+half4 	main	( v2p I )	: COLOR
 {
-	return	/*(half4(1,1,1,1) - */ tex2D	(s_base,I.tc0);
+	half4	t_base 	= tex2D		(s_base,I.tc0);
+	ApplyVertexFogness(t_base.rgb, I.fog);
+
+	// out
+	return  t_base;
 }

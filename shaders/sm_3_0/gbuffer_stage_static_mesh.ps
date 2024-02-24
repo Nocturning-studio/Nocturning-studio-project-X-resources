@@ -19,7 +19,9 @@ struct Interpolators
 	float2 UV: TEXCOORD4;
 	float2 LightMapUV: TEXCOORD5;
 	float Lighting: TEXCOORD6;
+	float2 vpos : VPOS;
 };
+// uniform sampler2D s_albedo;
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
 {
@@ -37,7 +39,13 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Albedo = Material.Albedo;
 	
-    GBuffer.Normal = normalize (mul (TBN, Material.Normal));
+//#ifdef USE_ALPHA_TEST
+//	float2 tc = Input.vpos / float2(1024, 768);
+//	float4 old = tex2D(s_albedo, tc);
+//    GBuffer.Albedo = Material.Albedo * 0.5 + old * 0.5;
+//#endif
+
+    GBuffer.Normal = normalize (mul (TBN, Material.Normal)).rgb;
 
 	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
     GBuffer.Position = Input.Position;

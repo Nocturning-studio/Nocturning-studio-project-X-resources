@@ -20,7 +20,7 @@ vf main (v_lmap v)
 	o.tc1		= o.tc0;						// copy tc
 	o.c0		= v_hemi		(N);				// hemi
 	o.c1 		= v_sun			(N);  				// sun
-	o.fog 		= calc_fogging 		(v.P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
 
 	return o;
 }

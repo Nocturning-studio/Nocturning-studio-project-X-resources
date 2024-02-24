@@ -19,7 +19,6 @@ vf 	_main (v_model v)
 
 	half4 	pos 	= v.pos;
 	half3  pos_w 	= mul			(m_W, pos);
-	half4  pos_w4 	= half4		(pos_w,1);
 	half3 	norm_w 	= normalize 		(mul(m_W,v.norm));
 
 	o.hpos 		= mul			(m_WVP, pos);		// xform, input in world coords
@@ -27,7 +26,7 @@ vf 	_main (v_model v)
 	o.tc1		= calc_model_lmap 	(pos_w);		// 
 	o.c0 		= calc_sun		(norm_w);  		// sun
 	o.c1 		= half4		(calc_model_lq_lighting(norm_w),m_plmap_clamp[0].w);
-	o.fog 		= calc_fogging 		(pos_w4);		// fog, input in world coords
+	o.fog 		= CalcVertexFogness(pos_w);		// fog, input in world coords
 
 #ifdef SKIN_COLOR
 	o.c1.rgb	*= v.rgb_tint;

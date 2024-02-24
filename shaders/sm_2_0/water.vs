@@ -33,7 +33,7 @@ vf main (v_vert v)
 
 	o.hpos 		= mul			(m_VP, P);			// xform, input in world coords
 	o.c0		= half4		(L_final,amount);
-	o.fog 		= calc_fogging 		(P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(P);				// fog, input in world coords
 
 	return o;
 }

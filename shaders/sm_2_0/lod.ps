@@ -8,6 +8,7 @@ struct 	v2p
  	half2 	tc3: 	TEXCOORD3;	// hemi1
 	half4 	c:	COLOR0;		// color
 	half4 	f:	COLOR1;		// color
+	half  	fog	: FOG	;
 };
 
 
@@ -17,7 +18,7 @@ uniform sampler2D 	s_base0	;
 uniform sampler2D 	s_base1	;
 uniform sampler2D 	s_hemi0	;
 uniform sampler2D 	s_hemi1	;
-half4 	main_ps_1_1	( v2p I )	: COLOR
+half4 	main	( v2p I )	: COLOR
 {
 	half4 	base0 		= 	tex2D	(s_base0,I.tc0);
 	half4 	base1 		= 	tex2D	(s_base1,I.tc1);
@@ -28,5 +29,6 @@ half4 	main_ps_1_1	( v2p I )	: COLOR
 	half 	hemi 		= 	lerp	(hemi0,hemi1,I.f.w).w	;
 
 	half3 	color 		= 	base*2* (0.5+0.5*hemi);
+	ApplyVertexFogness(color, I.fog);
 	return 	half4 		(color,base.a);
 }

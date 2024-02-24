@@ -33,7 +33,7 @@ half3 	u_normal(half3 v) { return 2.f * v - 1.f; }
 half4 	u_position(half4 v) { return half4(v.xyz * (12.f / 32768.f), 1.f); }	// -12..+12
 
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform half4 	sbones_array[256 - 22] : register(vs, c22);
+uniform float4 	sbones_array[256 - 22] : register(vs, c22);
 half3 	skinning_dir(half3 dir, half3 m0, half3 m1, half3 m2)
 {
 	half3 	U = u_normal(dir);

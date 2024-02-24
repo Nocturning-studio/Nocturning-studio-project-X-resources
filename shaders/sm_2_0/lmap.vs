@@ -23,7 +23,7 @@ vf main (v_lmap v)
 	o.tch 		= o.tc1;
 	o.c0		= v_hemi(N);						// just hemisphere
 	o.c1 		= v_sun(N);  						// sun
-	o.fog 		= calc_fogging 		(v.P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
 
 	return o;
 }

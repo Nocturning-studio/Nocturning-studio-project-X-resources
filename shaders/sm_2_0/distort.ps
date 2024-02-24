@@ -4,7 +4,7 @@
 uniform sampler2D s_distort;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 main_ps_1_4 (half2 tc0: TEXCOORD0): COLOR
+half4 main (half2 tc0: TEXCOORD0): COLOR
 {
     half4 distort = tex2D (s_distort, tc0);
     half2 offset = (distort.xy - .5h) * def_distort;

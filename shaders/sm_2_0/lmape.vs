@@ -27,7 +27,7 @@ vf main (v_lmap v)
 	o.tc2		= calc_reflection	(pos_w, norm_w);
 	o.c0		= v_hemi(norm_w);	// just hemisphere
 	o.c1 		= v_sun	(norm_w);  	// sun
-	o.fog 		= calc_fogging 		(v.P);			// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);			// fog, input in world coords
 
 	return o;
 }

@@ -28,7 +28,7 @@ vf main (v_lmap v)
 	o.tc2		= o.tc0*dt_params;					// dt tc
 	o.c0		= half4 		(v_hemi(N),	dt.x);		// c0=v-lights, 	c0.a = dt*
 	o.c1 		= half4 		(v_sun(N),	dt.y);		// c1=sun, 		c1.a = dt+
-	o.fog 		= calc_fogging 		(v.P);			// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);			// fog, input in world coords
 
 	return o;
 }

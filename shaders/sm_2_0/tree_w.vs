@@ -15,13 +15,13 @@ struct vf
 	half  fog	: FOG;
 };
 
-uniform half3x4	m_xform;
-uniform half4 		consts;		// {1/quant,1/quant,???,???}
-uniform half4 		wave; 		// cx,cy,cz,tm
-uniform half4 		wind; 		// direction2D
-uniform half4		c_bias;		// + color
-uniform half4		c_scale;	// * color
-uniform half2 		c_sun;		// x=*, y=+
+uniform float3x4	m_xform;
+uniform float4 		consts;		// {1/quant,1/quant,???,???}
+uniform float4 		wave; 		// cx,cy,cz,tm
+uniform float4 		wind; 		// direction2D
+uniform float4		c_bias;		// + color
+uniform float4		c_scale;	// * color
+uniform float2 		c_sun;		// x=*, y=+
 
 vf main (av v)
 {
@@ -40,7 +40,7 @@ vf main (av v)
 	half4 	f_pos 	= half4	(pos.x+result.x, pos.y, pos.z+result.y, 1);
 
 	// Calc fog
-	o.fog 		= calc_fogging 	(f_pos);
+	o.fog 		= CalcVertexFogness(f_pos);
 
 	// Final xform
 	o.HPOS		= mul		(m_VP, f_pos);

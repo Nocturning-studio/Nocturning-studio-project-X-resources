@@ -1,6 +1,6 @@
 #include "common.h"
 #include "gbuffer.h"
-#include "fog.h"
+#include "shared\fog.h"
 
 struct vf
 {
@@ -27,6 +27,9 @@ uniform sampler2D s_nmap;
 uniform samplerCUBE s_env0;
 uniform samplerCUBE s_env1;
 uniform sampler2D s_leaves;
+
+uniform float3 sun_dir;
+uniform float3 sun_color;
 
 #if defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
 float3	water_intensity;
@@ -57,7 +60,6 @@ PixelShaderOutputStruct main (vf I)
 	float3 env0 = texCUBE (s_env0, vreflect);
 	float3 env1 = texCUBE (s_env1, vreflect);
 	float3 env = lerp (env0, env1, L_ambient.w);
-    env = lerp (env, fog_color.rgb, fog_sky_influence);
     env *= env * 2;
 
     float fresnel = saturate (dot (vreflect, v2point));
@@ -97,16 +99,14 @@ PixelShaderOutputStruct main (vf I)
 			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth );
 	final		= lerp(final, leaves, leaves.a*fLeavesFactor);
 	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
-	float OpacityMultiplier = alpha;
+	float Opacity = alpha;
 #else	//	USE_SOFT_WATER	
-	float OpacityMultiplier = 1.0h;
+	float Opacity = 1.0h;
 #endif	//	USE_SOFT_WATER	
 #endif	//	NEED_SOFT_WATER
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    FogComponents Fog = CalcFog (I.position);
-    final = lerp (final, Fog.Color, Fog.Fogness);
-    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * OpacityMultiplier;
+	ApplyPixelFogness(final.rgb, Opacity, I.position);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

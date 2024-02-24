@@ -5,12 +5,13 @@ struct   v2p
    half2   	tbase:   	TEXCOORD0;  // base
    half3   	tenv:   	TEXCOORD1;  // env
    half4	c0:  		COLOR0;
+	half  	fog	: FOG	;
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4   main_ps_1_1  ( v2p I )  : COLOR
+half4   main  ( v2p I )  : COLOR
 {
 
 	half4	t_base		= tex2D   (s_base,I.tbase);
@@ -23,6 +24,8 @@ half4   main_ps_1_1  ( v2p I )  : COLOR
 	half	alpha_shift	= saturate(.5-I.c0.a);
 	half	alpha_add	= alpha_shift*alpha_shift;
 	half	alpha		= t_base.a;
+	
+	ApplyVertexFogness(final, I.fog);
 	// out
   return  half4   (final,   t_base.a );  //t_base.a + (1-I.c0.a));  //half4  (final, t_base.a );
 }

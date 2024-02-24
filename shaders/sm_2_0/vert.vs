@@ -23,7 +23,7 @@ vf main (v_vert v)
 	half3 	L_final	= L_rgb + L_hemi + L_sun + L_ambient;
 
 	o.c0		= L_final;
-	o.fog 		= calc_fogging 		(v.P);			// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);			// fog, input in world coords
 
 	return o;
 }

@@ -6,6 +6,8 @@
 #ifndef COMMON_FUNCTIONS_H_INCLUDED
 #define COMMON_FUNCTIONS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
+#include "shared\fog.h" // R1/R2 common shader
+////////////////////////////////////////////////////////////////////////////
 // Shared common
 half3 	unpack_normal(half3 v) { return 2 * v - 1; }
 half3 	unpack_bx2(half3 v) { return 2 * v - 1; }
@@ -31,7 +33,6 @@ half2 	calc_xz_wave(half2 dir2D, half frac) {
 	return  lerp(ctrl_A, ctrl_B, frac);
 }
 
-half  	calc_fogging 	(half4 w_pos)	{ return dot(w_pos,fog_plane); 	}
 half2 	calc_detail 	(half3 w_pos)	{ 
 	half  	dtl	= distance(w_pos,eye_position)*dt_params.w;
 		dtl	= min(dtl*dtl, 1);
@@ -49,7 +50,7 @@ half4	calc_spot 	(out half4 tc_lmap, out half2 tc_att, half4 w_pos, half3 w_norm
 	tc_att 		= s_pos.z;			// z=distance * (1/range)
 	half3 	L_dir_n = normalize	(w_pos - L_dynamic_pos.xyz);
 	half 	L_scale	= dot(w_norm,-L_dir_n);
-	return 	L_dynamic_color*L_scale*saturate(calc_fogging(w_pos));
+	return 	L_dynamic_color*L_scale*saturate(1-CalcVertexFogness(w_pos));
 }
 half4	calc_point 	(out half2 tc_att0, out half2 tc_att1, half4 w_pos, half3 w_norm)	{
 	half3 	L_dir_n = normalize	(w_pos - L_dynamic_pos.xyz);
@@ -57,9 +58,9 @@ half4	calc_point 	(out half2 tc_att0, out half2 tc_att1, half4 w_pos, half3 w_no
 	half3	L_tc 	= (w_pos - L_dynamic_pos.xyz) * L_dynamic_pos.w + .5f;	// tc coords
 	tc_att0		= L_tc.xz;
 	tc_att1		= L_tc.xy;
-	return 	L_dynamic_color*L_scale*saturate(calc_fogging(w_pos));
+	return 	L_dynamic_color*L_scale*saturate(1-CalcVertexFogness(w_pos));
 }
-half3	calc_sun		(half3 norm_w)	{ return L_sun_color*max(dot((norm_w),-L_sun_dir_w),0); 		}
+half3	calc_sun		(half3 norm_w)	{ return max(dot((norm_w),-L_sun_dir_w),0); 		}
 half3 	calc_model_hemi 	(half3 norm_w)	{ return (norm_w.y*0.5+0.5)*L_dynamic_props.w*L_hemi_color; 		}
 half3	calc_model_lq_lighting	(half3 norm_w) { return calc_model_hemi(norm_w) + L_ambient + L_dynamic_props.xyz*calc_sun(norm_w); 	}
 half3 	_calc_model_hemi 	(half3 norm_w)	{ return max(0,norm_w.y)*.2*L_hemi_color; 				}

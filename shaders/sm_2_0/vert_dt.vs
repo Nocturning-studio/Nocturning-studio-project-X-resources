@@ -29,7 +29,7 @@ vf main (v_vert v)
 
 	o.c0		= half4(L_final.x,L_final.y,L_final.z,dt.x);
 	o.c1		= dt.y;							//
-	o.fog 		= calc_fogging 		(v.P);			// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);			// fog, input in world coords
 
 	return o;
 }

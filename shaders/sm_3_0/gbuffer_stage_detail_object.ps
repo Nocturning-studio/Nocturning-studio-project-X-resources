@@ -27,10 +27,10 @@ GBufferPacked main (Interpolators Input)
 	
 #if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
     calc_fxaa_atoc(Input.UV, Albedo, Opacity);
-#else
+#else//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
     Albedo = tex2D (s_base, Input.UV).rgb;
     Opacity = tex2D (s_base, Input.UV).a;
-#endif
+#endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
 
 	calc_alpha_test(Input.UV, Opacity);
 

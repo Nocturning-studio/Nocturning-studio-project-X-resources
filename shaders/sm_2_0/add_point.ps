@@ -2,7 +2,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main_ps_1_1	( vf_point I )	: COLOR
+half4 	main	( vf_point I )	: COLOR
 {
 	half4	t_base 	= tex2D		(s_base,	I.tc0);
 	half4 	t_att1 	= tex2D		(s_lmap, 	I.tc1);	// point-att

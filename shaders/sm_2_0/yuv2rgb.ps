@@ -1,6 +1,6 @@
 #include "common.h"
 
-half4	main_ps_2_0	(half2 uv : TEXCOORD0)	: COLOR
+half4	main	(half2 uv : TEXCOORD0)	: COLOR
 {
 	half3	YUV	= tex2D	(s_base, uv);
 

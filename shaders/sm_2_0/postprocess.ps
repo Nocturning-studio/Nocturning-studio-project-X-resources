@@ -15,10 +15,10 @@ uniform sampler2D s_noise;
 uniform sampler2D s_distort;
 uniform sampler2D s_vignette;
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform half4 c_brightness;
-uniform half vignette_power;
-uniform half4 sepia_params;
-uniform half3 hdr_params;
+uniform float4 c_brightness;
+uniform float vignette_power;
+uniform float4 sepia_params;
+uniform float3 hdr_params;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 half4 main (v2p I): COLOR

@@ -6,7 +6,7 @@ struct vf
 	half4 C: COLOR0	;
 };
 
-uniform half4 		tfactor;
+uniform float4 		tfactor;
 vf main (vf i)
 {
 	vf 		o;

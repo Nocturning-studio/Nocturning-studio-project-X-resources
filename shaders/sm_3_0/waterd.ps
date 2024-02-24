@@ -1,6 +1,6 @@
 #include "common.h"
 #include "gbuffer.h"
-#include "fog.h"
+#include "shared\fog.h"
 
 struct v2p
 {
@@ -53,12 +53,10 @@ PixelShaderOutputStruct main (v2p I)
 #endif
     
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    FogComponents Fog = CalcFog (I.position);
-    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * alpha;
-    final = lerp (final, Fog.Color, Fog.Fogness);
+	ApplyPixelFogness(final.rgb, alpha, I.position);
     
     PixelShaderOutputStruct Output;
-    Output.Generic_0 = float4 (final.rgb, Opacity);
+    Output.Generic_0 = float4 (final.rgb, alpha);
     Output.Position = float4 (I.position, 1.0);
     return Output;
 }

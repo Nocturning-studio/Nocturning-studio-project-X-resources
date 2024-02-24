@@ -13,7 +13,7 @@ vf main (v_vert v)
 
 	o.hpos 		= mul			(m_VP, v.P);			// xform, input in world coords
 	o.c 		= v.color;
-	o.fog 		= calc_fogging 		(v.P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
 
 	return o;
 }

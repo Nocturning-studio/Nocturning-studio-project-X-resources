@@ -7,12 +7,13 @@ struct 	v2p
  	half2 	tc2: 		TEXCOORD2;	// lmap-hemi
   	half3	c0:		COLOR0;		// hemi
 	half3	c1:	        COLOR1;		// sun
+	half  	fog	: FOG	;
 };
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main_ps_1_1	( v2p I )	: COLOR
+half4 	main	( v2p I )	: COLOR
 {
 	half4	t_base 	= tex2D		(s_base,I.tc0);
 	half4	t_lmap 	= tex2D		(s_lmap,I.tc1);
@@ -25,6 +26,7 @@ half4 	main_ps_1_1	( v2p I )	: COLOR
 
 	// final-color
 	half3	final 	= light*t_base*2;
+	ApplyVertexFogness(final, I.fog);;
 	
 	// out
 	return  half4	(final,t_base.a);

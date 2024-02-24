@@ -14,7 +14,7 @@ uniform sampler2D 	s_projector;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main_ps_1_1	( v2p I )	: COLOR
+half4 	main	( v2p I )	: COLOR
 {
 	half4	light 	= I.diffuse + tex2D(s_projector,I.tc0);
 	half4	t_env 	= texCUBE	(s_env,	I.tc1);

@@ -2,13 +2,18 @@
 
 struct 	v2p
 {
-  	half4	c0:		COLOR0;		// color
+	half4 	c	: COLOR0;
+	half  	fog	: FOG	;
 };
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 half4 	main	( v2p I )	: COLOR
 {
+	half4	t_base 	= I.c;
+	ApplyVertexFogness(t_base.rgb, I.fog);
+
 	// out
-	return  I.c0;
+	return  t_base;
 }

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-#include "fog.h"
+#include "shared\fog.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 UV: TEXCOORD0): COLOR0
 {
@@ -8,10 +8,8 @@ float4 main (float2 UV: TEXCOORD0): COLOR0
     
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float3 PositionBuffer = tex2D (s_gbuffer_position, UV);
-    FogComponents Fog = CalcFog (PositionBuffer);
-    WallmarkColor.rgb = lerp (WallmarkColor.rgb, Fog.Color, Fog.Fogness);
-    float Opacity = (1.0h - pow (Fog.Fogness, 2)) * WallmarkColor.a;
+	ApplyPixelFogness(WallmarkColor.rgb, WallmarkColor.a, PositionBuffer);
     
-    return float4 (WallmarkColor.rgb, Opacity);
+    return WallmarkColor;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
