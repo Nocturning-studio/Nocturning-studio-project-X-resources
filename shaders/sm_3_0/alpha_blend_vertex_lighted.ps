@@ -32,7 +32,10 @@ PixelShaderOutputStruct main (v2p I)
     Albedo = Albedo * I.c0 * 2;
 
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    ApplyPixelFogness(Albedo, Opacity, I.position);
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness (I.position);
+    Albedo = lerp (Albedo, fog_params.rgb, Fog);
+    Opacity *= 1.0h - pow(Fog, 2.2h);
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (Albedo, Opacity);

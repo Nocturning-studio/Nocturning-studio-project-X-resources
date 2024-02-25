@@ -30,7 +30,7 @@ half4 	main	( v2p I )	: COLOR
 	
 	// final-color
 	half3	final 	= (light*t_base*2)*detail*2;
-	ApplyVertexFogness(final, I.fog);;
+    final = (final, fog_color, I.fog);
 	
 	// out
 	return  half4	(final.r,final.g,final.b,t_base.a);

@@ -68,11 +68,11 @@ PixelShaderOutputStruct main (vf I)
 
     final *= I.c0 * 2;
 	
+    float Opacity = 1.0h;
+	
 #ifdef	NEED_SOFT_WATER
-
 	float	alpha	= 0.75h+0.25h*power;                        // 1=full env, 0=no env
 
-#ifdef	USE_SOFT_WATER
 	//	Igor: additional depth test
 	float Depth = GetPositionProjected(I.tctexgen).z;
 	float waterDepth = Depth-I.tctexgen.z;
@@ -97,13 +97,12 @@ PixelShaderOutputStruct main (vf I)
 	final		= lerp(final, leaves, leaves.a*fLeavesFactor);
 	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
 	float Opacity = alpha;
-#else	//	USE_SOFT_WATER	
-	float Opacity = 1.0h;
-#endif	//	USE_SOFT_WATER	
 #endif	//	NEED_SOFT_WATER
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-	ApplyPixelFogness(final.rgb, Opacity, I.position);
+    float Fog = CalcFogness (I.position);
+    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
+    Opacity *= 1.0h - pow (Fog, 2.2h);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

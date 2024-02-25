@@ -24,8 +24,8 @@ half4 	main	( v2p I )	: COLOR
 	half3	light	= L_ambient + l_base + l_sun + l_hemi;
 
 	// final-color
-	half3	final 	= light*t_base*2;
-	ApplyVertexFogness(final, I.fog);
+	half3	final 	= light * t_base * 2;
+	final = (final, fog_color, I.fog);
 	
 	// out
 	return  half4	(final.rgb,1);

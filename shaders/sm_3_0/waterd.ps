@@ -52,8 +52,10 @@ PixelShaderOutputStruct main (v2p I)
     float3 final = float3 (faded, 0.08h);
 #endif
     
-    // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-	ApplyPixelFogness(final.rgb, alpha, I.position);
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness (I.position);
+    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
+    alpha *= 1.0h - pow (Fog, 2.2h);
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, alpha);

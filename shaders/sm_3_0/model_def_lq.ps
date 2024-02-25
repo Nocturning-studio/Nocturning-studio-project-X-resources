@@ -22,8 +22,9 @@ PixelShaderOutputStruct main (v2p I)
 	float3 final = light * t_base * 2;
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    float Opacity = t_base.a;
-	ApplyPixelFogness(final.rgb, Opacity, I.position);
+    float Fog = CalcFogness (I.position);
+    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
+    float Opacity = (1.0h - pow (Fog, 2.2h)) * t_base.a;
 
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

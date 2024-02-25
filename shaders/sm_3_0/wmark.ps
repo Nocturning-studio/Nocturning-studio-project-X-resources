@@ -1,15 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
+#include "gbuffer.h"
 #include "shared\fog.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 UV: TEXCOORD0): COLOR0
 {
-    float4 WallmarkColor = tex2D (s_base, UV);
+    float4 Albedo = tex2D (s_base, UV);
     
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    float3 PositionBuffer = tex2D (s_gbuffer_position, UV);
-	ApplyPixelFogness(WallmarkColor.rgb, WallmarkColor.a, PositionBuffer);
+    float Fog = CalcFogness (GetPosition (UV));
+    Albedo.rgb = lerp (Albedo.rgb, fog_params.rgb, Fog);
+    Albedo *= 1.0h - pow (Fog, 2.2h);
     
-    return WallmarkColor;
+    return Albedo;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
