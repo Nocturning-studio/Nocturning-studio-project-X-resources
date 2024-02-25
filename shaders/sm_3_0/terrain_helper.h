@@ -117,36 +117,37 @@ float2 CalculateDetailParallaxOcclusionMapping(float3 Position, float3x3 TBN, fl
 {
     if (Position.z < TERRAIN_STEEP_PARALLAX_STOP_FADE)
     {
-        double3 ViewVector = GetViewVector(Position, TBN);
+        float3 ViewVector = GetViewVector(Position, TBN);
 
         // Calculate number of steps
-        double nNumSteps = lerp(TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, TERRAIN_STEEP_PARALLAX_MIN_SAMPLES, ViewVector.z);
+        float nNumSteps = lerp(TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, TERRAIN_STEEP_PARALLAX_MIN_SAMPLES, ViewVector.z);
 
-        double fStepSize = 1.0h / nNumSteps;
-        double2 vDelta = -ViewVector.xy * constant_terrain_parallax_scale.x;
-        double2 vTexOffsetPerStep = fStepSize * vDelta;
+        float fStepSize = 1.0h / nNumSteps;
+        float2 vDelta = -ViewVector.xy * constant_terrain_parallax_scale.x;
+        float2 vTexOffsetPerStep = fStepSize * vDelta;
 
         // Prepare start data for cycle
-        double2 vTexCurrentOffset = UV;
-        double fCurrHeight = 0.0h;
-        double fCurrentBound = 1.0h;
+        float2 vTexCurrentOffset = UV;
+        float fCurrHeight = 0.0h;
+        float fCurrentBound = 1.0h;
 
+        [loop]
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
             vTexCurrentOffset += vTexOffsetPerStep;
-            double HeightMap = GetDetailHeight(Mask, vTexCurrentOffset.xy);
+            float HeightMap = GetDetailHeight(Mask, vTexCurrentOffset.xy);
             fCurrHeight = HeightMap;
         }
 
         // Reconstruct previouse step's data
         vTexCurrentOffset -= vTexOffsetPerStep;
-        double fPrevHeight = GetDetailHeight(Mask, vTexCurrentOffset.xy);
+        float fPrevHeight = GetDetailHeight(Mask, vTexCurrentOffset.xy);
 
         // Smooth tc position between current and previouse step
-        double fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
-        double fDelta1 = (fCurrentBound - fCurrHeight);
-        double fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
-        double fParallaxFade = smoothstep(TERRAIN_STEEP_PARALLAX_STOP_FADE, TERRAIN_STEEP_PARALLAX_START_FADE, Position.z);
+        float fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
+        float fDelta1 = (fCurrentBound - fCurrHeight);
+        float fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
+        float fParallaxFade = smoothstep(TERRAIN_STEEP_PARALLAX_STOP_FADE, TERRAIN_STEEP_PARALLAX_START_FADE, Position.z);
 
         UV += vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
     }

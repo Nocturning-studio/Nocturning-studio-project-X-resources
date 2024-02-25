@@ -120,36 +120,37 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
 {
     if (Position.z < StopFadingDistance)
     {
-        double3 ViewVector = GetViewVector(Position, TBN);
+        float3 ViewVector = GetViewVector(Position, TBN);
 
         // Calculate number of steps
-        double nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, ViewVector.z);
+        float nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, ViewVector.z);
 
-        double fStepSize = 1.0h / nNumSteps;
-        double2 vDelta = -ViewVector.xy * constant_parallax_scale.x;
-        double2 vTexOffsetPerStep = fStepSize * vDelta;
+        float fStepSize = 1.0h / nNumSteps;
+        float2 vDelta = -ViewVector.xy * constant_parallax_scale.x;
+        float2 vTexOffsetPerStep = fStepSize * vDelta;
 
         // Prepare start data for cycle
-        double2 vTexCurrentOffset = UV;
-        double fCurrHeight = 0.0h;
-        double fCurrentBound = 1.0h;
+        float2 vTexCurrentOffset = UV;
+        float fCurrHeight = 0.0h;
+        float fCurrentBound = 1.0h;
 
+        [loop]
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
             vTexCurrentOffset += vTexOffsetPerStep;
-            double HeightMap = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
+            float HeightMap = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
             fCurrHeight = HeightMap;
         }
 
         // Reconstruct previouse step's data
         vTexCurrentOffset -= vTexOffsetPerStep;
-        double fPrevHeight = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
+        float fPrevHeight = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
 
         // Smooth tc position between current and previouse step
-        double fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
-        double fDelta1 = (fCurrentBound - fCurrHeight);
-        double fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
-        double fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
+        float fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
+        float fDelta1 = (fCurrentBound - fCurrHeight);
+        float fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
+        float fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
 
         UV += vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
     }
