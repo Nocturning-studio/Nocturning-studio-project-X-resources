@@ -99,7 +99,7 @@ half4 main (v2p I): COLOR
     
     image = (image * I.color + c_brightness) * 2.0h;
 	
-	float2 TexCoords = I.tc0.xy;
+	/*float2 TexCoords = I.tc0.xy;
 	
 	float2 RaySize = screen_res.zw * 2.5;
 	float3 SummaryImageColor = 0;
@@ -131,7 +131,7 @@ half4 main (v2p I): COLOR
 	float4 UnblurredImageColor = tex2Dlod (s_base, float4(TexCoords, 0, 0)) * (1.0h - BlurPower);
 
 	image.rgb = BlurredImageColor + UnblurredImageColor;
-	//image.rgb = GetDepth(TexCoords)/250.0f;
+	//image.rgb = GetDepth(TexCoords)/250.0f;*/
 	
     return half4 (image, 1.0h);
 }
