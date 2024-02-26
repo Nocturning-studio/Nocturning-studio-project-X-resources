@@ -7,12 +7,11 @@
 #include "gbuffer.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
-#define POWER half(2.2)
-#define	RADIUS half(2)
-#define BIAS half(0.007)
-#define SAMPLES 4
+#define POWER 2.2f
+#define	RADIUS 2.0f
+#define BIAS 0.007f
 #define STEPS 2
-#define RENDER_DISTANCE 75.0h
+#define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
@@ -20,7 +19,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     
     if (Position.z > RENDER_DISTANCE)
     {
-        return float4 (1.0h, 1.0h, 1.0h, 1.0h);
+        return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
     else
     {
@@ -29,9 +28,9 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
         float radiusPixels = (RADIUS * screen_res.y * 0.5h) / (Position.z * -pos_decompression_params.y);
 
 	    // Early exit if the projected radius is smaller than 1 full-res pixel
-        if (radiusPixels < 1.0h)
+        if (radiusPixels < 1.0f)
         {
-            return float4 (1.0h, 1.0h, 1.0h, 1.0h);
+            return float4 (1.0f, 1.0f, 1.0f, 1.0f);
         }
         else
         {
@@ -45,21 +44,24 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             
             int2 pos2d = Position2D; //TexCoords * screen_res.xy + 0.5;
             float jitter = (pos2d.y % 4) * 0.25h + (pos2d.x % 4) * 0.0625h + 0.0625h;
+			
+			//return jitter;
+			
             float2 dir;
-            sincos (5.0h * PI * jitter, dir.y, dir.x);
+            sincos (5.0f * PI * jitter, dir.y, dir.x);
             dir = lerp (dir, jitter, 0.5h);
 	
             Position += Normal * BIAS;
 	
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
-            float stepSizePixels = (radiusPixels * 0.25h) / (STEPS + 1.0h);
+            float stepSizePixels = (radiusPixels * 0.25h) / (STEPS + 1.0f);
 		
-            for (int i = 0; i < SAMPLES; ++i)
+            for (int i = 0; i < 4; ++i)
             {
-                float negInvR2 = -1.0h / pow (radiusPixels, 2.0h);
-                float rayPixels = 0.5h * stepSizePixels + 1.0h;
+                float negInvR2 = -1.0f / (RADIUS * RADIUS);
+                float rayPixels = 0.5h * stepSizePixels + 1.0f;
 
-                float dirSum = 0.0h;
+                float dirSum = 0.0f;
 		
                 dir = mul (dir, rot);
                 
@@ -70,7 +72,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 			
                     rayPixels += stepSizePixels;
 
-                    if ((tcHit.x <= 1.0h && tcHit.y <= 1.0h && tcHit.x >= 0.0h && tcHit.y >= 0.0h))
+                    if ((tcHit.x <= 1.0f && tcHit.y <= 1.0f && tcHit.x >= 0.0f && tcHit.y >= 0.0f))
                     {
                         float3 posHit = GetPosition (tcHit);
                         posHit.z += BIAS;
@@ -83,7 +85,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
                         float NdotV = dot (Normal, -V) * rsqrt (VdotV);
 
 					    // Use saturate(x) instead of max(x,0.f) because that is faster
-                        float falloff = saturate (VdotV * negInvR2 + 1.0h);
+                        float falloff = saturate (VdotV * negInvR2 + 1.0f);
                         float occluder = saturate (NdotV);
                         
                         dirSum += occluder * falloff;
@@ -95,11 +97,11 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
                 occ += dirSum;
             }
 
-            occ = saturate (pow (1.0h - occ / SAMPLES, POWER));
+            occ = saturate (pow (1.0f - occ * 0.25f, POWER));
 
             // Create smooth render distance border
             float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (Position));
-            occ = lerp (1.0h, occ, 1.0h - FarFadingFactor);
+            occ = lerp (1.0f, occ, 1.0f - FarFadingFactor);
             
             return occ.xxxx;
         }
