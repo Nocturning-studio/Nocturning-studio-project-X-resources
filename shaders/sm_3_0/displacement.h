@@ -134,7 +134,6 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
         float fCurrHeight = 0.0h;
         float fCurrentBound = 1.0h;
 
-        [loop]
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
             vTexCurrentOffset += vTexOffsetPerStep;

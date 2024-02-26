@@ -1,6 +1,7 @@
 #include "common.h"
 #include "fxaa_atoc.h"
 #include "shared\fog.h"
+#include "hdr.h"
 
 struct v2p
 {
@@ -32,10 +33,11 @@ PixelShaderOutputStruct main (v2p I)
     Albedo = Albedo * I.c0 * 2;
 
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
     Albedo = lerp (Albedo, fog_params.rgb, Fog);
     Opacity *= 1.0h - pow(Fog, 2.2h);
+    
+    Albedo = Calc_hdr (Albedo);
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (Albedo, Opacity);

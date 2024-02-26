@@ -1,5 +1,6 @@
 #include "common.h"
 #include "shared\fog.h"
+#include "hdr.h"
 
 struct v2p
 {
@@ -26,6 +27,8 @@ PixelShaderOutputStruct main (v2p I)
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
     float Opacity = (1.0h - pow (Fog, 2.2h)) * t_base.a;
 
+    final = Calc_hdr (final);
+    
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);
     Output.Position = float4 (I.position, 1.0);
