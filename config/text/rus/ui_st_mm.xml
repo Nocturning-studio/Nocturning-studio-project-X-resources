@@ -538,12 +538,6 @@
 	<string id="ui_mm_r2_aa_quality">
 		<text>Качество сглаживания</text>
 	</string>
-	<string id="ui_mm_r_aa_iterations">
-		<text>Сила сглаживания</text>
-	</string>
-	<string id="ui_mm_r_aa_iterations_hint">
-		<text>Количество проходов сглаживания, производимых при обработке кадра.\n Чем больше количество проходов - тем больше нагрузка на графический процессор.</text>
-	</string>
 	<string id="st_opt_ssaa">
 		<text>SSAA</text>
 	</string>
@@ -569,12 +563,40 @@
 		<text>X8</text>
 	</string>
 
+	<string id="st_opt_ssaa_2x">
+		<text>SSAA 2X</text>
+	</string>
+	<string id="st_opt_ssaa_4x">
+		<text>SSAA 4X</text>
+	</string>
+	<string id="st_opt_msaa_2x">
+		<text>MSAA 2X</text>
+	</string>
+	<string id="st_opt_msaa_4x">
+		<text>MSAA 4X</text>
+	</string>
+	<string id="st_opt_msaa_8x">
+		<text>MSAA 8X</text>
+	</string>
+	<string id="st_opt_csaa_2x">
+		<text>CSAA 2X</text>
+	</string>
+	<string id="st_opt_csaa_4x">
+		<text>CSAA 4X</text>
+	</string>
+	<string id="st_opt_csaa_8x">
+		<text>CSAA 8X</text>
+	</string>
+
 	<!-- Сглаживание прозрачных поверхностей -->
-	<string id="ui_mm_r2_alpha_test_aa">
+	<string id="ui_mm_r_aa_transluency">
 		<text>Сглаживание прозрачных объектов</text>
 	</string>
-	<string id="ui_mm_r2_alpha_test_aa_hint">
+	<string id="ui_mm_r_aa_transluency_hint">
 		<text>Применение технологии сглаживания для таких поверхностей как листва,\nтрава, металлические решетки, и другие использующие\nтекстуры с прозрачностью, для наилучшего их отображения.\nДля применения необходим перезапуск игры.</text>
+	</string>
+	<string id="st_opt_atoc">
+		<text>Nvidia Alpha to Coverage</text>
 	</string>
 
 
