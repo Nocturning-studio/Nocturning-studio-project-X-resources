@@ -28,7 +28,7 @@ half4 	main	( v2p I )	: COLOR
 	
 	// final-color
 	half3	final 	= (light*t_base.rgb*2)*detail*2	;
-    final = (final, fog_color, I.fog);
+	R1LerpFogness(final, I.fog);
 	
 	// out
 	return  half4	(final.rgb,1);

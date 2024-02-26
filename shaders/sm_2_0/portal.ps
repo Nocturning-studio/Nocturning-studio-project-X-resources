@@ -12,7 +12,7 @@ struct 	v2p
 half4 	main	( v2p I )	: COLOR
 {
 	half4	t_base 	= I.c;
-	ApplyVertexFogness(t_base.rgb, I.fog);
+	R1LerpFogness(t_base.rgb, I.fog);
 
 	// out
 	return  t_base;
