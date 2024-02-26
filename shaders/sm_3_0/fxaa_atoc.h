@@ -17,7 +17,7 @@
 //   0.50 - lower limit (sharper, less sub-pixel aliasing removal)
 //   0.25 - almost off
 //   0.00 - completely off
-#define FXAA_Subpix 1.0
+#define FXAA_Subpix 0.75
 
 // The minimum amount of local contrast required to apply algorithm.
 //   0.333 - too little (faster)
@@ -25,7 +25,7 @@
 //   0.166 - default
 //   0.125 - high quality
 //   0.063 - overkill (slower)
-#define FXAA_EdgeThreshold 0.01
+#define FXAA_EdgeThreshold 0.0166
 
 // Trims the algorithm from processing darks.
 //   0.0833 - upper limit (default, the start of visible unfiltered edges)
@@ -37,7 +37,7 @@
 //   will appear very dark in the green channel!
 //   Tune by looking at mostly non-green content,
 //   then start at zero and increase until aliasing is a problem.
-#define FXAA_EdgeThresholdMin 0.0
+#define FXAA_EdgeThresholdMin 0.312
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 #include "fxaa.h"
@@ -49,8 +49,7 @@ void calc_fxaa_atoc(float2 TexCoords, out float3 Albedo, out float Opacity)
 {
     float2 rcpFrame = float2(1.0f / ALBEDO_TEXTURE_RESOLUTION.x, 1.0f / ALBEDO_TEXTURE_RESOLUTION.y);
 
-    float4 TextureColor =
-        FxaaPixelShader(TexCoords, s_base, rcpFrame, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
+    float4 TextureColor = FxaaPixelShader(TexCoords, s_base, rcpFrame, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
 
     Albedo = TextureColor.rgb;
     Opacity = TextureColor.a;
