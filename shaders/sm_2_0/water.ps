@@ -25,7 +25,7 @@ half4   main  ( v2p I )  : COLOR
 	half	alpha_add	= alpha_shift*alpha_shift;
 	half	alpha		= t_base.a;
 	
-    final = (final, fog_color, I.fog);
+	R1LerpFogness(final, I.fog);
 	// out
   return  half4   (final,   t_base.a );  //t_base.a + (1-I.c0.a));  //half4  (final, t_base.a );
 }

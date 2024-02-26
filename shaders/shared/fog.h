@@ -27,6 +27,13 @@ float CalcFogness(float3 Position)
 {
 	return CalcSqaredExponentialFog(Position);
 }
+
+// НЕ УДАЛЯТЬ!!!!!!
+void R1LerpFogness(inout float3 Color, float Fogness)
+{
+	// !!! fog_params.rgb НЕ РАБОТАЕТ
+	Color = lerp(Color, fog_color.rgb, Fogness);
+}
 ////////////////////////////////////////////////////////////////////////////
 #endif//FOG_INCLUDED
 ////////////////////////////////////////////////////////////////////////////

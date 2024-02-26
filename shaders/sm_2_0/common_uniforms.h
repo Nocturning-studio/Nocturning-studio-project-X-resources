@@ -15,11 +15,6 @@ uniform float3x4		m_WV;
 uniform float4x4 	m_VP;
 uniform float4x4 	m_WVP;
 uniform float4		timers;
-//uniform float4		fog_plane;
-//uniform float4		fog_params;		// x=near*(1/(far-near)), ?,?, w = -1/(far-near)
-uniform float4		fog_color;
-uniform float 		fog_density;
-uniform float 		fog_sky_influence;
 uniform float4 		env_color;	// color.w  = lerp factor
 uniform float3		L_sun_color;
 uniform float3		L_sun_dir_w;
@@ -30,6 +25,8 @@ uniform float3 		eye_position;
 uniform float3		eye_direction;
 uniform float3		eye_normal;
 uniform	float4 		dt_params;
+uniform float4		fog_params;
+uniform float3		fog_color;
 
 uniform float4		L_dynamic_props;	// per object, xyz=sun,w=hemi
 uniform float4		L_dynamic_color;	// dynamic light color (rgb1)	- spot/point

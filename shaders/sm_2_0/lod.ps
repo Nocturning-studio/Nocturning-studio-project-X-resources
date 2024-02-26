@@ -29,6 +29,6 @@ half4 	main	( v2p I )	: COLOR
 	half 	hemi 		= 	lerp	(hemi0,hemi1,I.f.w).w	;
 
 	half3 	color 		= 	base*2* (0.5+0.5*hemi);
-    color = (color, fog_color, I.fog);
+	R1LerpFogness(color, I.fog);
 	return 	half4 		(color,base.a);
 }
