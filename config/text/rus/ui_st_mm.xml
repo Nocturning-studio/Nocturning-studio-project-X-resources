@@ -222,16 +222,10 @@
 			Требуется перезапуск игры.</text>
 	</string>
 	<string id="renderer_r1">
-		<text>Статичное освещение (DirectX 9.0a)</text>
-	</string>
-	<string id="renderer_r2a">
-		<text>Динамическое освещение (DirectX 9.0c)</text>
+		<text>Статичное освещение</text>
 	</string>
 	<string id="renderer_r2">
-		<text>Полное динамич. освещение (DirectX 9.0c)</text>
-	</string>
-	<string id="renderer_r2.5">
-		<text>Полное динамич. улучшенное освещение (DirectX 9.0c)</text>
+		<text>Динамическое освещение</text>
 	</string>
 
 	<!-- Пресеты качества -->
@@ -597,8 +591,8 @@
 	<string id="st_opt_ssao">
 		<text>SSAO</text>
 	</string>
-	<string id="st_opt_hbao">
-		<text>HBAO</text>
+	<string id="st_opt_ssao_plus">
+		<text>SSAO+</text>
 	</string>
 	<string id="st_opt_hbao_plus">
 		<text>HBAO+</text>
