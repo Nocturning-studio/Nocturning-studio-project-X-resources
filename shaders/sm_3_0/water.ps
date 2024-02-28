@@ -97,7 +97,7 @@ PixelShaderOutputStruct main (vf I)
 			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth );
 	final		= lerp(final, leaves, leaves.a*fLeavesFactor);
 	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
-	float Opacity = alpha;
+	Opacity = alpha;
 #endif	//	NEED_SOFT_WATER
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
