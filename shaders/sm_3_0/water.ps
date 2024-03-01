@@ -59,6 +59,7 @@ PixelShaderOutputStruct main (vf I)
 	float3 env1 = texCUBE (s_env1, vreflect);
 	float3 env = lerp (env0, env1, L_ambient.w);
     env *= env * 2;
+    env = lerp (env, fog_params.rgb, fog_sky_influence);
 
     float fresnel = saturate (dot (vreflect, v2point));
     float power = pow (fresnel, 9);
