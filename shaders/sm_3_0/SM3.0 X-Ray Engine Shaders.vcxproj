@@ -161,7 +161,8 @@
     <None Include="ambient_occlusion_blurring_stage_pass_vertical_filter.ps" />
     <None Include="ambient_occlusion_blurring_stage_pass_bilinear_filter.ps" />
     <None Include="ambient_occlusion_blurring_stage_pass_horizontal_filter.ps" />
-    <None Include="ambient_occlusion_stage_pass_hbao.ps" />
+    <None Include="ambient_occlusion_stage_pass_ssao_plus.ps" />
+    <None Include="ambient_occlusion_stage_pass_ssao.ps" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.ps" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.vs" />
     <None Include="models_light_panel.ps" />
@@ -307,7 +308,6 @@
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
     <None Include="postprocess_stage_sepia.ps" />
     <None Include="postprocess_stage_sharpen.ps" />
-    <None Include="postprocess_stage_tonemapping.ps" />
     <None Include="postprocess_stage_vignette_pass_dynamic.ps" />
     <None Include="postprocess_stage_vignette_pass_static.ps" />
     <None Include="scene_combine_stage.ps" />
@@ -379,6 +379,7 @@
     <ClInclude Include="fxaa_atoc.h" />
     <ClInclude Include="gbuffer.h" />
     <ClInclude Include="hashed_alpha.h" />
+    <ClInclude Include="hdr.h" />
     <ClInclude Include="height_map_to_normal.h" />
     <ClInclude Include="lightmap.h" />
     <ClInclude Include="material.h" />

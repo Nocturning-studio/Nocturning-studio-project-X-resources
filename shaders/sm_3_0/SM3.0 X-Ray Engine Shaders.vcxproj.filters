@@ -109,6 +109,9 @@
     <ClInclude Include="hashed_alpha.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="hdr.h">
+      <Filter>Helpers\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="accumulating_light_stage_direct_far_cascade.ps">
@@ -168,7 +171,7 @@
     <None Include="ambient_occlusion_blurring_stage_pass_horizontal_filter.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Blurring</Filter>
     </None>
-    <None Include="ambient_occlusion_stage_pass_hbao.ps">
+    <None Include="ambient_occlusion_stage_pass_ssao_plus.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
     </None>
     <None Include="gbuffer_stage_detail_object.ps">
@@ -380,9 +383,6 @@
     </None>
     <None Include="postprocess_stage_autoexposure_pass_combine.ps">
       <Filter>Forward rendering pipeline\Postprocess\Autoexposure</Filter>
-    </None>
-    <None Include="postprocess_stage_tonemapping.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Tonemapping</Filter>
     </None>
     <None Include="postprocess_stage_antialiasing_pass_dlaa.ps">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
@@ -750,6 +750,9 @@
     <None Include="scene_combine_stage_debug.ps">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
     </None>
+    <None Include="ambient_occlusion_stage_pass_ssao.ps">
+      <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -883,9 +886,6 @@
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Autoexposure">
       <UniqueIdentifier>{49feecaa-bc5c-432a-94bf-ffea9d67953f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Tonemapping">
-      <UniqueIdentifier>{cbf1744f-56f9-4e54-90c0-c65c650e6b3c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers">
       <UniqueIdentifier>{db7ceedf-b04f-4372-bc9c-2ae8d69979f4}</UniqueIdentifier>

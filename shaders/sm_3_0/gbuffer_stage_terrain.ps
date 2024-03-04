@@ -65,6 +65,8 @@ GBufferPacked main (Interpolators Input)
 	// Make normals more power with heightmap
     NormalMap.z *= HeightMap;
 
+    NormalMap = normalize (NormalMap);
+	
 	// Out normal for Geometry buffer
     GBuffer.Normal = normalize (mul (TBN, NormalMap));
 

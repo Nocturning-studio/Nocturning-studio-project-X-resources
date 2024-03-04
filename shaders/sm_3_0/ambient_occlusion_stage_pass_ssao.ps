@@ -1,102 +1,110 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-//	Modified	: 03.02.2023 - 14.12.2023
+//	Modified	: 27.02.2023
 //	Author		: Mihan323
 //	From Stalker DWM
-//  *Some modified by Deathman*
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 #include "gbuffer.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
-static int		ssao_samples	= 6;
-static float	ssao_radius 	= 0.15;
-static float	ssao_normal		= 0.002;
-static float	ssao_power 		= 1;
-static float	ssao_dist 		= 50;
+#define USE_ATTENUATION
+#define SSAO_ATTENUATION_DISTANCE 0.5h
+#define SSAO_NORMAL float(0.0050)
+#define SSAO_POWER  float(2.2)
+#define	SSAO_RADIUS float(0.4)
 //////////////////////////////////////////////////////////////////////////////////////////
-float2 hash22(float2 p)
+// Presets
+#define SSAO_SAMPLES 6
+#define SSAO_RENDER_DISTANCE 50.0h
+//////////////////////////////////////////////////////////////////////////////////////////
+float2 hash22 (float2 p)
 {
-	float3 p3 = frac(float3(p.xyx) * float3(.1031, .1030, .0973));
-	p3 += dot(p3, p3.yzx+33.33);
-	return frac((p3.xx+p3.yz)*p3.zy);
+    float3 p3 = frac (float3 (p.xyx) * float3 (.1031, .1030, .0973));
+    p3 += dot (p3, p3.yzx + 33.33);
+    return frac ((p3.xx + p3.yz) * p3.zy);
 }
-float hash13(float3 p3)
+//////////////////////////////////////////////////////////////////////////////////////////
+float hash13 (float3 p3)
 {
-	p3  = frac(p3 * .1031);
-	p3 += dot(p3, p3.zyx + 31.32);
-	return frac((p3.x + p3.y) * p3.z);
+    p3 = frac (p3 * .1031);
+    p3 += dot (p3, p3.zyx + 31.32);
+    return frac ((p3.x + p3.y) * p3.z);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
     float3 P = GetPosition (TexCoords);
     
-    if (P.z > ssao_dist)
+    if (P.z > SSAO_RENDER_DISTANCE)
     {
         return float4 (1.0h, 1.0h, 1.0h, 1.0h);
     }
     else
     {
-	    float3 N = tex2D (s_gbuffer_normal, TexCoords);
+        float3 N = tex2D (s_gbuffer_normal, TexCoords);
 		
-		int2 pos2d4 = Position2D;
-			  pos2d4 %= 4;
+        int2 pos2d4 = Position2D;
+        pos2d4 %= 4;
 
-		float3 position = P + N * ssao_normal * P.z;
+        float3 position = P + N * SSAO_NORMAL * P.z;
 
-		float3 up 		= abs(N.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f);
-		float3 tangent 	= normalize(cross(up, N));
-		float3 binormal = cross(N, tangent);
+        float3 up = abs (N.z) < 0.999f ? float3 (0.0f, 0.0f, 1.0f) : float3 (1.0f, 0.0f, 0.0f);
+        float3 tangent = normalize (cross (up, N));
+        float3 binormal = cross (N, tangent);
 
-		float3x3 tbn = float3x3(tangent, binormal, N);
+        float3x3 tbn = float3x3 (tangent, binormal, N);
 
-		float radius = ssao_radius * sqrt(P.z);
+        float radius = SSAO_RADIUS * sqrt (P.z);
 
-		float2 hash = hash22(pos2d4);
+        float2 hash = hash22 (pos2d4);
 
-		float circle = 6.2831853*8;
-		float sector = circle / ssao_samples;
-		float angle = circle * hash.x;
+        float circle = 6.2831853 * 8;
+        float sector = circle / SSAO_SAMPLES;
+        float angle = circle * hash.x;
 
-		float2 direction;
-		sincos(angle, direction.y, direction.x);
+        float2 direction;
+        sincos (angle, direction.y, direction.x);
 
-		float2 rotation;
-		sincos(sector, rotation.y, rotation.x);
+        float2 rotation;
+        sincos (sector, rotation.y, rotation.x);
 
-		float2x2 rot = float2x2(rotation.x, -rotation.y, rotation.y, rotation.x);
+        float2x2 rot = float2x2 (rotation.x, -rotation.y, rotation.y, rotation.x);
 
         float occ = 0.0f;
         
-        for (int i = 0; i < ssao_samples; i++)
+        for (int i = 0; i < SSAO_SAMPLES; i++)
         {
-			float st = (i + hash.y) / ssao_samples;
-			float ct = sqrt(1 - st*st);
+            float st = (i + hash.y) / SSAO_SAMPLES;
+            float ct = sqrt (1 - st * st);
 
-			float2 uv_dir = direction * ct;
-			direction = mul(direction, rot);
+            float2 uv_dir = direction * ct;
+            direction = mul (direction, rot);
 
-			float3 sph = float3(uv_dir, st);
-			sph = mul(sph, tbn);
+            float3 sph = float3 (uv_dir, st);
+            sph = mul (sph, tbn);
 
-			float r = hash13(float3(pos2d4, i));
+            float r = hash13 (float3 (pos2d4, i));
 
-		    float3 position_tap = position + sph * radius * r;
+            float3 position_tap = position + sph * radius * r;
 
-		    float4 sample_proj = calc_proj (position_tap);
-		    float2 sample_tap = projection_to_screen (sample_proj);
+            float4 sample_proj = calc_proj (position_tap);
+            float2 sample_tap = projection_to_screen (sample_proj);
 
             float hit = GetPosition (sample_tap).z;
 
-			float error = position_tap.z - hit;
+            float error = position_tap.z - hit;
 
-			if(error >= 0 && error <= 1)
-				occ += 1 - error * error;
+            if (error >= 0 && error <= 1)
+                occ += 1 - error * error;
         }
 
-		occ = pow(1 - occ / ssao_samples, ssao_power);
+        occ = pow (1 - occ / SSAO_SAMPLES, SSAO_POWER);
+        
+        // Create smooth render distance border
+        float FarFadingFactor = smoothstep (SSAO_RENDER_DISTANCE * 0.75h, SSAO_RENDER_DISTANCE, length (P));
+        occ = lerp (1.0f, occ, 1.0f - FarFadingFactor);
 
-		return occ;
+        return occ;
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////

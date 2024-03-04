@@ -27,7 +27,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     else if (debug_mode == GBUFFER_LIGHTMAP_AO)
         OutputColor = GBuffer.AO;
     else if (debug_mode == GBUFFER_BAKED_AO)
-        OutputColor = GBuffer.BakedAO;
+        OutputColor = pow (saturate(GBuffer.BakedAO + 0.1h), 2.2h);
     else if (debug_mode == ACCUMULATOR_DIFFUSE)
         OutputColor = Light.Diffuse;
     else if (debug_mode == ACCUMULATOR_SPECULAR)
