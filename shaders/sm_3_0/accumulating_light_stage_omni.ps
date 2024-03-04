@@ -19,6 +19,10 @@ Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
+#ifndef USE_POSITION_WITH_NORMALS_BIAS
+    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
+#endif
+
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
     float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
