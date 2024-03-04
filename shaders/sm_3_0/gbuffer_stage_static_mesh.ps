@@ -38,12 +38,6 @@ GBufferPacked main (Interpolators Input)
 #endif
 
     GBuffer.Albedo = Material.Albedo;
-	
-//#ifdef USE_ALPHA_TEST
-//	float2 tc = Input.vpos / float2(1024, 768);
-//	float4 old = tex2D(s_albedo, tc);
-//    GBuffer.Albedo = Material.Albedo * 0.5 + old * 0.5;
-//#endif
 
     GBuffer.Normal = normalize (mul (TBN, Material.Normal)).rgb;
 
