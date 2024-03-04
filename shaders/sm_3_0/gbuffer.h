@@ -20,9 +20,9 @@ struct GBuffer
 ////////////////////////////////////////////////////////////////////////////
 struct GBufferPacked
 {
-    float4 GBuffer0 : COLOR0;
-    float4 GBuffer1 : COLOR1;
-    float4 GBuffer2 : COLOR2;
+    float4 GBuffer0 : COLOR0; // Position .BackedAO
+    float4 GBuffer1 : COLOR1; // Normall .Hemi
+    float4 GBuffer2 : COLOR2; // Albedo .Gloss
 };
 
 GBufferPacked PackGBuffer(GBuffer Input)
@@ -46,7 +46,7 @@ float3 GetPosition(float2 TexCoords)
     float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
 
     // Check skybox intersection
-    if (all(Position <= 0.0001h))
+    if (Position.z <= 0.0001h)
         Position.z = 400.0h;
 
     return Position;
@@ -77,7 +77,7 @@ float3 GetPositionProjected(float4 TexCoords)
     float3 Position = tex2Dproj(s_gbuffer_position, TexCoords);
 
     // Check skybox intersection
-    if (all(Position <= 0.0001h))
+    if (Position.z <= 0.0001h)
         Position.z = 400.0h;
 
     return Position;
