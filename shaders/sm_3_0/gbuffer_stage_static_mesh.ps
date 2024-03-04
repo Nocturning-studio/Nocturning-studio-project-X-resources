@@ -43,10 +43,6 @@ GBufferPacked main (Interpolators Input)
 
 	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
     GBuffer.Position = Input.Position;
-
-#ifdef USE_POSITION_WITH_NORMALS_BIAS
-    GBuffer.Position += GBuffer.Normal * Material.Height * 0.015f;
-#endif
 	
 #ifdef USE_LIGHTMAP
 	// Get and separate static light data
@@ -62,7 +58,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.BakedAO = Material.AO;
 
     GBuffer.Glossiness = Material.Glossiness;
-	
+
     GBufferPacked Output = PackGBuffer (GBuffer);
     return Output;
 }

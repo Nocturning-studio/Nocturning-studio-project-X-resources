@@ -19,9 +19,7 @@ Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
-#ifndef USE_POSITION_WITH_NORMALS_BIAS
-    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
-#endif
+    GBuffer.Position += GBuffer.Normal * 0.00075f;
 
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
@@ -41,10 +39,6 @@ Accumulator main (Interpolators Input)
 #endif
     
 #ifdef USE_LIGHT_MAPPING
-#ifdef  USE_LIGHT_MAP_XFORM
-    ShadowMapTexCoords.x = dot (Position, m_lmap[0]);
-    ShadowMapTexCoords.y = dot (Position, m_lmap[1]);
-#endif
     float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
 #else
     float3 LightMap = float3 (1.0h, 1.0h, 1.0h);

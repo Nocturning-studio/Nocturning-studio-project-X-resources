@@ -30,16 +30,12 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Normal = normalize (mul (TBN, float3 (0.5f, 0.5f, 1.0h)));
 
     GBuffer.Position = Input.Position;
-	
-#ifdef USE_POSITION_WITH_NORMALS_BIAS
-    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
-#endif
 
     GBuffer.AO = EMISSIVE_POWER;
 	
     GBuffer.BakedAO = 1.0h;
 	
-    GBuffer.Glossiness = def_gloss;
+    GBuffer.Glossiness = 0.0h;
 	
 	GBufferPacked Output = PackGBuffer(GBuffer);
 	return Output;

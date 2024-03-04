@@ -73,10 +73,6 @@ GBufferPacked main (Interpolators Input)
 	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
     GBuffer.Position = Input.Position;
 
-#ifdef USE_POSITION_WITH_NORMALS_BIAS
-    GBuffer.Position += GBuffer.Normal * HeightMap * 0.015f;
-#endif
-
 	// Get light map ambient
     GBuffer.AO = tex2D (s_base, Input.UV).a * (AO_BRIGHTNESS - 0.2f);
 

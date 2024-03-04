@@ -156,9 +156,9 @@ float2 CalculateDetailParallaxOcclusionMapping(float3 Position, float3x3 TBN, fl
 
 float2 GetDisplacement(float3 Position, float3x3 TBN, float2 UV, float4 Mask)
 {
-#if defined(USE_TERRAIN_PARALLAX_MAPPING)
+#if defined(USE_PARALLAX_MAPPING)
     UV = CalculateDetailParallaxMapping(Position, TBN, UV, Mask);
-#elif defined(USE_TERRAIN_STEEP_PARALLAX_MAPPING)
+#elif defined(USE_STEEP_PARALLAX_MAPPING)
     UV = CalculateDetailParallaxOcclusionMapping(Position, TBN, UV, Mask);
 #endif
     return UV;

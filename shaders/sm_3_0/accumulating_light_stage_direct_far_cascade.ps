@@ -22,9 +22,7 @@ Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
     
-#ifndef USE_POSITION_WITH_NORMALS_BIAS
-    GBuffer.Position += GBuffer.Normal * def_virtualh * 0.015f;
-#endif
+    GBuffer.Position += GBuffer.Normal * 0.00075f;
 
     float2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
     
