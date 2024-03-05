@@ -114,12 +114,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="accumulating_light_stage_direct_far_cascade.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Direct</Filter>
-    </None>
-    <None Include="accumulating_light_stage_direct_near_cascade.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Direct</Filter>
-    </None>
     <None Include="accumulating_light_stage_mask.vs">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Masking</Filter>
     </None>
@@ -131,33 +125,6 @@
     </None>
     <None Include="accumulating_light_stage_occlusion_culling.vs">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Occlusion culling</Filter>
-    </None>
-    <None Include="accumulating_light_stage_photon_mapping.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Photon mapping</Filter>
-    </None>
-    <None Include="accumulating_light_stage_omni.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Omni %28Point%29</Filter>
-    </None>
-    <None Include="accumulating_light_stage_omni_normal.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Omni %28Point%29</Filter>
-    </None>
-    <None Include="accumulating_light_stage_omni_transluent.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Omni %28Point%29</Filter>
-    </None>
-    <None Include="accumulating_light_stage_omni_unshadowed.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Omni %28Point%29</Filter>
-    </None>
-    <None Include="accumulating_light_stage_spot.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Spot</Filter>
-    </None>
-    <None Include="accumulating_light_stage_spot_fullsize.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Spot</Filter>
-    </None>
-    <None Include="accumulating_light_stage_spot_normal.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Spot</Filter>
-    </None>
-    <None Include="accumulating_light_stage_spot_unshadowed.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating\Spot</Filter>
     </None>
     <None Include="accumulating_light_stage_volume.vs">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
@@ -181,15 +148,6 @@
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Detail object</Filter>
     </None>
     <None Include="gbuffer_stage_detail_object_animated.vs">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Detail object</Filter>
-    </None>
-    <None Include="gbuffer_stage_detail_object_normal.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Detail object</Filter>
-    </None>
-    <None Include="gbuffer_stage_detail_object_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Detail object</Filter>
-    </None>
-    <None Include="gbuffer_stage_detail_object_steep_parallax.ps">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Detail object</Filter>
     </None>
     <None Include="gbuffer_stage_dynamic_mesh.vs">
@@ -219,109 +177,10 @@
     <None Include="gbuffer_stage_static_mesh.vs">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
     </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_normal.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_normal_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_steep_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_alphatest_steep_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_normal.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_normal_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_steep_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_alphatest_steep_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_normal.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_normal_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_steep_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_lightmapped_steep_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_normal.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_normal_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_steep_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
-    <None Include="gbuffer_stage_static_mesh_steep_parallax_detailed.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Static mesh</Filter>
-    </None>
     <None Include="gbuffer_stage_terrain.ps">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Terrain %28Implicit lighted mesh%29\Hight quality geometry</Filter>
     </None>
     <None Include="gbuffer_stage_terrain.vs">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Terrain %28Implicit lighted mesh%29\Hight quality geometry</Filter>
-    </None>
-    <None Include="gbuffer_stage_terrain_parallax.ps">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Terrain %28Implicit lighted mesh%29\Hight quality geometry</Filter>
-    </None>
-    <None Include="gbuffer_stage_terrain_steep_parallax.ps">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Terrain %28Implicit lighted mesh%29\Hight quality geometry</Filter>
     </None>
     <None Include="gbuffer_stage_terrain_lq.ps">
@@ -358,12 +217,6 @@
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
     </None>
     <None Include="scene_combine_stage.vs">
-      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
-    </None>
-    <None Include="scene_combine_stage_pass_copy_rendertarget.ps">
-      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
-    </None>
-    <None Include="scene_combine_stage_pass_early_output_to_screen.ps">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
     </None>
     <None Include="scene_combine_stage_pass_volumetric.s">
@@ -753,6 +606,18 @@
     <None Include="ambient_occlusion_stage_pass_ssao.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
     </None>
+    <None Include="accumulating_light_stage_spot.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
+    </None>
+    <None Include="accumulating_light_stage_point.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
+    </None>
+    <None Include="accumulating_light_stage_direct_far_cascade.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
+    </None>
+    <None Include="accumulating_light_stage_direct_near_cascade.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -785,23 +650,11 @@
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Accumulating">
       <UniqueIdentifier>{fb28a79a-5770-43b4-a9fc-e573d685b090}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Accumulating\Spot">
-      <UniqueIdentifier>{b1e417eb-4e2f-423f-b147-34a717073582}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Accumulating\Direct">
-      <UniqueIdentifier>{0b4cbaca-d5be-4f0a-ac8b-8374752f98ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Photon mapping">
-      <UniqueIdentifier>{6334a28c-430a-4c20-839a-8fb6c212f28f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Occlusion culling">
       <UniqueIdentifier>{3b150f74-98e1-43e0-b5e9-b5447c062051}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Masking">
       <UniqueIdentifier>{2d6d1344-c086-4443-87dc-8abae9513c9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Accumulating\Omni %28Point%29">
-      <UniqueIdentifier>{2bfcc96c-aa15-4e74-9787-c97704830466}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Volumetric">
       <UniqueIdentifier>{c5e36bb6-4d63-4f29-9599-377989f0dc34}</UniqueIdentifier>
