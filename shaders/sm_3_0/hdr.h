@@ -10,6 +10,23 @@
 ////////////////////////////////////////////////////////////////////////////
 uniform float3 hdr_params;
 ////////////////////////////////////////////////////////////////////////////
+//https://www.shadertoy.com/view/MdfXWr
+////////////////////////////////////////////////////////////////////////////
+float3 lin2srgb(float3 color) 
+{
+    float3 S1 = sqrt(color);
+    float3 S2 = sqrt(S1);
+    float3 S3 = sqrt(S2);
+    return 0.585122381f * S1 + 0.783140355f * S2 - 0.368262736f * S3;
+}
+
+float3 ff_filmic_gamma3(float3 Color) {
+    float3 x = max(0.0, Color - 0.004);
+    return (x * (x * 6.2 + 0.5)) / (x * (x * 6.2 + 1.7) + 0.06);
+}
+////////////////////////////////////////////////////////////////////////////
+// X-Ray 2.0
+////////////////////////////////////////////////////////////////////////////
 static const float3 luminance_weights = float3(0.2125f, 0.7154f, 0.0721f);
 ////////////////////////////////////////////////////////////////////////////
 float get_luminance(float3 color)
@@ -17,14 +34,19 @@ float get_luminance(float3 color)
     return dot(color, luminance_weights);
 }
 
-float3 Calc_hdr(float3 Color)
+float3 exponential_tonemapping(float3 Color)
 {
     const float white_level = hdr_params;
     const float luminance_saturation = 1.0f;
     const float pixel_luminance = get_luminance(Color);
     const float tone_mapped_luminance = 1.0f - exp(-pixel_luminance / white_level);
 
-    Color = tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
+    return tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
+}
+////////////////////////////////////////////////////////////////////////////
+float3 Calc_hdr(float3 Color)
+{
+    Color = exponential_tonemapping(Color);
 
     Color = pow(Color, hdr_params.y);
 
