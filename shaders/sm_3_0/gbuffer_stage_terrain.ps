@@ -81,9 +81,7 @@ GBufferPacked main (Interpolators Input)
 
 	// Create glossiness from details
     GBuffer.Glossiness = DetailBumpData.r;
-
-	// Pack geometry buffer
-    GBufferPacked Output = PackGBuffer (GBuffer);
-    return Output;
+	
+    return PackGBuffer (GBuffer);
 }
 ////////////////////////////////////////////////////////////////////////////////

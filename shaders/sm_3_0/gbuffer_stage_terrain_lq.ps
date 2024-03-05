@@ -37,8 +37,6 @@ GBufferPacked main (Interpolators Input)
 	// Out glossiness
     GBuffer.Glossiness = 0.0h;
 	
-	// Pack Geometry buffer
-    GBufferPacked Output = PackGBuffer (GBuffer);
-    return Output;
+    return PackGBuffer (GBuffer);
 }
 ////////////////////////////////////////////////////////////////////////////////

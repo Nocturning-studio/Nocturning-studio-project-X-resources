@@ -19,9 +19,7 @@ struct Interpolators
 	float2 UV: TEXCOORD4;
 	float2 LightMapUV: TEXCOORD5;
 	float Lighting: TEXCOORD6;
-	float2 vpos : VPOS;
 };
-// uniform sampler2D s_albedo;
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
 {
@@ -59,7 +57,6 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Glossiness = Material.Glossiness;
 
-    GBufferPacked Output = PackGBuffer (GBuffer);
-    return Output;
+    return PackGBuffer (GBuffer);
 }
 ///////////////////////////////////////////////////////////////////////////////////
