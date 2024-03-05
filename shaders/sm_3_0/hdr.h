@@ -10,11 +10,21 @@
 ////////////////////////////////////////////////////////////////////////////
 uniform float3 hdr_params;
 ////////////////////////////////////////////////////////////////////////////
+static const float3 luminance_weights = float3(0.2125f, 0.7154f, 0.0721f);
+////////////////////////////////////////////////////////////////////////////
+float get_luminance(float3 color)
+{
+    return dot(color, luminance_weights);
+}
+
 float3 Calc_hdr(float3 Color)
 {
-    float fWhiteIntensitySQR = pow(hdr_params.x, 2.0h);
+    const float white_level = hdr_params;
+    const float luminance_saturation = 1.0f;
+    const float pixel_luminance = get_luminance(Color);
+    const float tone_mapped_luminance = 1.0f - exp(-pixel_luminance / white_level);
 
-    Color.rgb = float3(((Color.rgb * (1.0h + Color.rgb / fWhiteIntensitySQR)) / (Color.rgb + 1.0h)));
+    Color = tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
 
     Color = pow(Color, hdr_params.y);
 
