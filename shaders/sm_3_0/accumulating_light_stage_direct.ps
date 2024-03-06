@@ -14,7 +14,7 @@ uniform float sun_far;
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
-	float4 HomogeniousPosition: POSITION;
+    float4 HomogeniousPosition: POSITION;
     float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +34,11 @@ Accumulator main (Interpolators Input)
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
     
     // Fading with distance
-    float ShadowMapFadingFactor = saturate (GBuffer.Position.z / sun_far);
-    ShadowMap = lerp (ShadowMap, 0.3f, ShadowMapFadingFactor);
-    
+#ifdef USE_SMOOTH_FADING
+    float ShadowMapFadingFactor = 1.0h - smoothstep (sun_far * 0.75h, sun_far, length (GBuffer.Position));
+    ShadowMap = lerp (1.0h, ShadowMap, ShadowMapFadingFactor);
+#endif    
+
     Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;
     Specular *= Ldynamic_color.rgb * ShadowMap.xxx;
     
