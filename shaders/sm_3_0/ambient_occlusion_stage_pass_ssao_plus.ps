@@ -107,7 +107,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
         // Create smooth render distance border
         float FarFadingFactor = smoothstep (HBAO_RENDER_DISTANCE * 0.75h, HBAO_RENDER_DISTANCE, length (P));
-        occ = lerp (1.0h, occ, 1.0h - FarFadingFactor);
+        occ = lerp (occ, 1.0f, FarFadingFactor);
         
 #ifdef USE_ATTENUATION
         float attenuation = smoothstep (HBAO_ATTENUATION_DISTANCE, HBAO_ATTENUATION_DISTANCE * 1.75h, length (P));

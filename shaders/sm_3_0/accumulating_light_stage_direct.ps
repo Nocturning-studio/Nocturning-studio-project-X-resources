@@ -35,8 +35,8 @@ Accumulator main (Interpolators Input)
     
     // Fading with distance
 #ifdef USE_SMOOTH_FADING
-    float ShadowMapFadingFactor = 1.0h - smoothstep (sun_far * 0.75h, sun_far, length (GBuffer.Position));
-    ShadowMap = lerp (1.0h, ShadowMap, ShadowMapFadingFactor);
+    float ShadowMapFadingFactor = smoothstep(sun_far * 0.75h, sun_far, length (GBuffer.Position));
+    ShadowMap = lerp (ShadowMap, 1.0h, ShadowMapFadingFactor);
 #endif    
 
     Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;

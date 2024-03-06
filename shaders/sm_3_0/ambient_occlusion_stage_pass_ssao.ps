@@ -102,7 +102,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
         
         // Create smooth render distance border
         float FarFadingFactor = smoothstep (SSAO_RENDER_DISTANCE * 0.75h, SSAO_RENDER_DISTANCE, length (P));
-        occ = lerp (1.0f, occ, 1.0f - FarFadingFactor);
+        occ = lerp (occ, 1.0f, FarFadingFactor);
 
         return occ;
     }
