@@ -612,10 +612,7 @@
     <None Include="accumulating_light_stage_point.ps">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
     </None>
-    <None Include="accumulating_light_stage_direct_far_cascade.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
-    </None>
-    <None Include="accumulating_light_stage_direct_near_cascade.ps">
+    <None Include="accumulating_light_stage_direct.ps">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
     </None>
   </ItemGroup>
