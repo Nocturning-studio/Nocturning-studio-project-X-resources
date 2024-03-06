@@ -36,7 +36,7 @@ float get_luminance(float3 color)
 
 float3 exponential_tonemapping(float3 Color)
 {
-    const float white_level = hdr_params;
+    const float white_level = 0.8h;
     const float luminance_saturation = 1.0f;
     const float pixel_luminance = get_luminance(Color);
     const float tone_mapped_luminance = 1.0f - exp(-pixel_luminance / white_level);
