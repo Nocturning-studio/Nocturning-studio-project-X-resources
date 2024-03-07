@@ -76,7 +76,7 @@ PixelShaderOutputStruct main (vf I)
 	float	alpha	= 0.75h+0.25h*power;                        // 1=full env, 0=no env
 
 	//	Igor: additional depth test
-	float Depth = GetPositionProjected(I.tctexgen).z;
+	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float waterDepth = Depth-I.tctexgen.z;
 
 	//	water fog

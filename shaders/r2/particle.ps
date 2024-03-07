@@ -22,7 +22,7 @@ float4 main (v2p I): COLOR
 
 	//	Igor: additional depth test
 #ifdef	USE_SOFT_PARTICLES
-	float Depth = GetPositionProjected(I.tctexgen).z;
+	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float spaceDepth = Depth-I.tctexgen.z-DEPTH_EPSILON;
 	result.a *= Contrast( saturate(spaceDepth*1.3h), 2);
 	result.rgb *= Contrast( saturate(spaceDepth*1.3h), 2);

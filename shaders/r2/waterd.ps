@@ -35,7 +35,7 @@ PixelShaderOutputStruct main (v2p I)
 #ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
 	float alphaDistort;
-	float Depth = GetPositionProjected(I.tctexgen).z;
+	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float waterDepth = Depth - I.tctexgen.z;
 	alphaDistort = saturate(5*waterDepth);
 	faded = lerp (zero, faded, alphaDistort);

@@ -20,7 +20,7 @@ struct Interpolators
 ///////////////////////////////////////////////////////////////////////////////////
 Accumulator main (Interpolators Input)
 {
-    GBuffer GBuffer = UnpackGBufferWithProjection (Input.TexCoords);
+    GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
     
     GBuffer.Position += GBuffer.Normal * 0.00075f;
 

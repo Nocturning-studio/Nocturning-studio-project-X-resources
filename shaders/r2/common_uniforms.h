@@ -64,8 +64,11 @@ uniform float3 eye_normal;
 
 uniform float4 dt_params;
 
+// x = -1.0f * tan(FOV * 0.5)
+// y = x / aspect
+// z = near plane
+// w = far plane
 uniform float4 pos_decompression_params;
-uniform float4 pos_decompression_params2;
 
 uniform float4 dof_params; // x - near, y - focus, z - far, w - sky distance
 uniform float3 dof_kernel; // x, y - resolution pre-scaled, z - just kernel size

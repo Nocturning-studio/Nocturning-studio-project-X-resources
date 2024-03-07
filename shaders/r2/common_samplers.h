@@ -41,6 +41,7 @@ uniform sampler2D s_perlin_noise; // Perlin noise (textures\\noise\\perlin_noise
 // Lighting/shadowing phase
 uniform sampler2D s_depth;
 uniform sampler2D s_gbuffer_position;
+uniform sampler2D s_zb;
 uniform sampler2D s_position_blurred; // Blurred position for ao
 uniform sampler2D s_gbuffer_normal;
 uniform sampler s_smap;               // 2D/cube shadowmap
