@@ -139,8 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="accumulating_light_stage_direct_far_cascade.ps" />
-    <None Include="accumulating_light_stage_direct_near_cascade.ps" />
+    <None Include="accumulating_light_stage_direct.ps" />
     <None Include="accumulating_light_stage_mask.vs" />
     <None Include="accumulating_light_stage_occlusion_culling.ps" />
     <None Include="accumulating_light_stage_occlusion_culling.vs" />
