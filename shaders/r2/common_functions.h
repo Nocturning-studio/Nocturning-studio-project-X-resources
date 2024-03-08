@@ -92,17 +92,6 @@ float3 calc_model_lq_lighting(float3 norm_w)
     return L_material.x * calc_model_hemi_r1(norm_w) + L_ambient + L_material.y * calc_sun_r1(norm_w);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-
-float3 ACES(const float3 x) 
-{
-    const float a = 2.51f;
-    const float b = 0.03f;
-    const float c = 2.43f;
-    const float d = 0.59f;
-    const float e = 0.14f;
-    return (x * (a * x + b)) / (x * (c * x + d) + e);
-}
-
 float3 v_hemi(float3 n)
 {
     return L_hemi_color * (.5f + .5f * n.y);

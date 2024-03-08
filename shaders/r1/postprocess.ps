@@ -23,7 +23,7 @@ uniform float4 dof_params;
 uniform float4 dof_kernel;
 
 static const float2 depth_params = float2(0.2f, 250.0f);
-float linearize_depth(float depth)
+float LinearizeDepth(float depth)
 {
 	return 2.0 * depth_params.x * depth_params.y / (depth_params.y + depth_params.x - (depth * 2.0 - 1.0) * (depth_params.y - depth_params.x));
 }
@@ -31,7 +31,7 @@ float linearize_depth(float depth)
 float GetDepth(float2 TexCoords)
 {
 	float depth = tex2D(s_depth, TexCoords).a;
-	return linearize_depth(depth);
+	return LinearizeDepth(depth);
 }
 
 float DOFFactor(float2 TexCoords)
