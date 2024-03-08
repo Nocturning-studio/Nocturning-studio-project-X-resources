@@ -2,16 +2,16 @@
 
 struct vv
 {
-	half4 P	: POSITION;
-	half2 tc	: TEXCOORD0;
-	half4 c	: COLOR0;
+	float4 P	: POSITION;
+	float2 tc	: TEXCOORD0;
+	float4 c	: COLOR0;
 };
 struct vf
 {
-	half4 hpos	: POSITION;
-	half2 tc	: TEXCOORD0;
-	half4 c	: COLOR0;
-	half  fog	: FOG;
+	float4 hpos	: POSITION;
+	float2 tc	: TEXCOORD0;
+	float4 c	: COLOR0;
+	float  fog	: FOG;
 };
 
 vf main (vv v)

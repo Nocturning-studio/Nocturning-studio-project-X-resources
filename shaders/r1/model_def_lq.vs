@@ -3,24 +3,24 @@
 
 struct vf
 {
-	half4 hpos	: POSITION;
-	half2 tc0	: TEXCOORD0;		// base
-	half3 c0	: COLOR0;		// color
-	half  fog	: FOG;
+	float4 hpos	: POSITION;
+	float2 tc0	: TEXCOORD0;		// base
+	float3 c0	: COLOR0;		// color
+	float  fog	: FOG;
 };
 
 vf 	_main (v_model v)
 {
 	vf 		o;
 
-	half4 	pos 	= v.pos;
-	half3  pos_w 	= mul			(m_W, pos);
-	half3 	norm_w 	= normalize 		(mul(m_W,v.norm));
+	float4 	pos 	= v.pos;
+	float3  pos_w 	= mul			(m_W, pos);
+	float3 	norm_w 	= normalize 		(mul(m_W,v.norm));
 
 	o.hpos 		= mul			(m_WVP, pos);		// xform, input in world coords
 	o.tc0		= v.tc.xy;					// copy tc
 	o.c0 		= calc_model_lq_lighting(norm_w);
-	o.fog 		= CalcVertexFogness(half4(pos_w,1));	// fog, input in world coords
+	o.fog 		= CalcVertexFogness(float4(pos_w,1));	// fog, input in world coords
 
 #ifdef SKIN_COLOR
 	o.c0.rgb	*= v.rgb_tint;

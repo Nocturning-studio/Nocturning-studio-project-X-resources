@@ -616,10 +616,10 @@ NOTE the other tuning knobs are now in the shader function inputs!
 #define FxaaFloat2 vec2
 #define FxaaFloat3 vec3
 #define FxaaFloat4 vec4
-#define FxaaHalf float
-#define FxaaHalf2 vec2
-#define FxaaHalf3 vec3
-#define FxaaHalf4 vec4
+#define Fxaafloat float
+#define Fxaafloat2 vec2
+#define Fxaafloat3 vec3
+#define Fxaafloat4 vec4
 #define FxaaInt2 ivec2
 #define FxaaSat(x) clamp(x, 0.0, 1.0)
 #define FxaaTex sampler2D
@@ -630,10 +630,10 @@ NOTE the other tuning knobs are now in the shader function inputs!
 #define FxaaFloat2 float2
 #define FxaaFloat3 float3
 #define FxaaFloat4 float4
-#define FxaaHalf half
-#define FxaaHalf2 half2
-#define FxaaHalf3 half3
-#define FxaaHalf4 half4
+#define Fxaafloat float
+#define Fxaafloat2 float2
+#define Fxaafloat3 float3
+#define Fxaafloat4 float4
 #define FxaaSat(x) saturate(x)
 #endif
 /*--------------------------------------------------------------------------*/

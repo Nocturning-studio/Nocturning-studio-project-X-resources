@@ -2,9 +2,9 @@
 
 struct vf
 {
-	half4 hpos	: POSITION;
-	half4 C	: COLOR0;
-	half2 tc	: TEXCOORD0;
+	float4 hpos	: POSITION;
+	float4 C	: COLOR0;
+	float2 tc	: TEXCOORD0;
 };
 
 uniform float4 		array	[200] : register(c10);
@@ -15,13 +15,13 @@ vf main (v_detail v)
 
 	// index
 	int 	i 	= v.misc.w;
-	half4  m0 	= array[i+0];
-	half4  m1 	= array[i+1];
-	half4  m2 	= array[i+2];
-	half4  c0 	= array[i+3];
+	float4  m0 	= array[i+0];
+	float4  m1 	= array[i+1];
+	float4  m2 	= array[i+2];
+	float4  c0 	= array[i+3];
 
 	// Transform to world coords
-	half4 	pos;
+	float4 	pos;
  	pos.x 		= dot	(m0, v.pos);
  	pos.y 		= dot	(m1, v.pos);
  	pos.z 		= dot	(m2, v.pos);

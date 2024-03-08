@@ -2,20 +2,20 @@
 
 struct 	v2p
 {
- 	half2 	tc0: 	TEXCOORD0;	// base
-  	half3	c0:	COLOR0;
-	half  	fog	: FOG	;
+ 	float2 	tc0: 	TEXCOORD0;	// base
+  	float3	c0:	COLOR0;
+	float  	fog	: FOG	;
 };
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main	( v2p I )	: COLOR
+float4 	main	( v2p I )	: COLOR
 {
-	half4	t_base 	= tex2D		(s_base,I.tc0);
-	half3	final 	= t_base*I.c0*2;
+	float4	t_base 	= tex2D		(s_base,I.tc0);
+	float3	final 	= t_base*I.c0*2;
 	R1LerpFogness(final, I.fog);;
 
 	// out
-	return  half4	(final, t_base.a);
+	return  float4	(final, t_base.a);
 }

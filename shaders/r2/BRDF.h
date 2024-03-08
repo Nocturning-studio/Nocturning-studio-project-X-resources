@@ -36,14 +36,14 @@ float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
     return F * (brdf.x + brdf.y);
 }
 ////////////////////////////////////////////////////////////////////////////
-float Fresnel(float Specular, float3 ViewDirection, float3 HalfAngle)
+float Fresnel(float Specular, float3 ViewDirection, float3 floatAngle)
 {
-    return (Specular + (1.0h - Specular) * pow(1.0h - saturate(dot(ViewDirection, HalfAngle)), 5.0h));
+    return (Specular + (1.0h - Specular) * pow(1.0h - saturate(dot(ViewDirection, floatAngle)), 5.0h));
 }
 ////////////////////////////////////////////////////////////////////////////
-float Blinn_Phong_Specular(float3 HalfAngle, float3 Normal)
+float Blinn_Phong_Specular(float3 floatAngle, float3 Normal)
 {
-    float Specular = max(0.0h, dot(HalfAngle, Normal));
+    float Specular = max(0.0h, dot(floatAngle, Normal));
 
     return pow(Specular, 16.0h);
 }
@@ -74,11 +74,11 @@ float2 Calculate_Lighting_Model(float Glossiness, float3 Point, float3 Normal,
     float3 ViewDirection = -normalize(Point);
     float VdotN = max(0.0h, dot(ViewDirection, Normal));
     float NdotL = max(0.0h, dot(LightDirection, Normal));
-    float3 HalfAngle = normalize(LightDirection + ViewDirection);
+    float3 floatAngle = normalize(LightDirection + ViewDirection);
 
     // --Indirect specular from light--
-    float Specular = Blinn_Phong_Specular(HalfAngle, Normal);
-    Specular = Fresnel(Specular, ViewDirection, HalfAngle) * NdotL * Glossiness;
+    float Specular = Blinn_Phong_Specular(floatAngle, Normal);
+    Specular = Fresnel(Specular, ViewDirection, floatAngle) * NdotL * Glossiness;
 
     // --Indirect diffuse from light--
     float Diffuse = Oren_Nayar_Diffuse(LightDirection, ViewDirection, Normal, Glossiness);

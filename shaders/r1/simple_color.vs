@@ -2,12 +2,12 @@
 
 struct vf
 {
-	half4 hpos	: POSITION	;
-	half4 C 	: COLOR0	;
+	float4 hpos	: POSITION	;
+	float4 C 	: COLOR0	;
 };
 
 uniform float4 		tfactor;
-vf main (half4	P:POSITION)
+vf main (float4	P:POSITION)
 {
 	vf 		o;
 

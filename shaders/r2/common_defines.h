@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // Defines
 #define def_distort float(0.055f)      // we get -0.5 .. 0.5 range, this is -512 .. 512 for 1024, so scale it
-#define LUMINANCE_float half3(0.3f, 0.38f, 0.22f)
+#define LUMINANCE_float float3(0.3f, 0.38f, 0.22f)
 /////////////////////////////////////////////////////////////////////////////////////////
 // ex. Cloudconfig.h
 // note: timers has resolution (sec), where x=1, y=10, z=1/10,
