@@ -1,6 +1,3 @@
-#ifndef DLAA_INCLUDED
-#define DLAA_INCLUDED
-
 #define PIXEL_SIZE screen_res.zw
 #define LD(o, dx, dy) o = tex2D(s_image, tc + float2(dx, dy) * PIXEL_SIZE.xy);
 static const bool bPreserveHf = 0;
@@ -164,4 +161,3 @@ float4 DLAAPixelShader(float2 tc)
     }
     return clr;
 }
-#endif // DLAA_INCLUDED

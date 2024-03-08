@@ -3,9 +3,6 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 ////////////////////////////////////////////////////////////////////////////
-#ifndef COMMON_DEFINES_H_INCLUDED
-#define COMMON_DEFINES_H_INCLUDED
-////////////////////////////////////////////////////////////////////////////
 //ex. cloudconfig.h (note: timers has resolution (sec), where x=1, y=10, z=1/10)
 #define	CLOUD_TILE0	(0.7f)
 #define	CLOUD_SPEED0	(0.033f)
@@ -30,4 +27,3 @@
 
 #define def_distort	half(0.05f)	// we get -0.5 .. 0.5 range, this is -512 .. 512 for 1024, so scale it
 ////////////////////////////////////////////////////////////////////////////
-#endif	//	COMMON_DEFINES_H_INCLUDED

@@ -3,9 +3,6 @@
 // Deathman Experemental
 // Only non commertial using
 /*********************************************************************************/
-#ifndef NORMAL_MAP_BLENDING_H_INCLUDED
-#define NORMAL_MAP_BLENDING_H_INCLUDED
-/*********************************************************************************/
 // https://blog.selfshadow.com/publications/blending-in-detail/
 /*********************************************************************************/
 float3 Linear_Normal_Map_Blending(float3 NormalMap_1, float3 NormalMap_2)
@@ -80,6 +77,4 @@ float3 Blend_Normal_Maps(float3 NormalMap_1, float3 NormalMap_2)
     NormalMap_2 *= float3(-1, -1, 1);
     return NormalMap_1 * dot(NormalMap_1, NormalMap_2) / NormalMap_1.z - NormalMap_2;
 }
-/*********************************************************************************/
-#endif // NORMAL_MAP_BLENDING_H_INCLUDED
 /*********************************************************************************/

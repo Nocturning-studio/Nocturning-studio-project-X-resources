@@ -3,9 +3,6 @@
 //	Author		: Deathman
 //	NSProjectX - 2022
 ///////////////////////////////////////////////////////////////////////////
-#ifndef SHADERS_R2_FILTERS_H_INCLUDED
-#define SHADERS_R2_FILTERS_H_INCLUDED
-///////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ///////////////////////////////////////////////////////////////////////////
 static const float2 diagonal_coords[32] = {
@@ -259,4 +256,3 @@ float4 strided_filter_ao(sampler2D in_sampler, int numsamples, float2 texcoords)
     }
     return output / numsamples;
 }
-#endif
