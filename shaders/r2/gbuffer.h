@@ -99,6 +99,27 @@ GBufferPacked PackGBuffer(GBuffer Input)
     return GBuffer;
 }
 
+float GetDepth(float2 TexCoords)
+{
+#if GBUFFER_OPT_MODE == 1
+    float  Depth = tex2D(s_gbuffer_position, TexCoords).r; // .r = Depth
+    Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
+#elif GBUFFER_OPT_MODE == 2
+    float  Depth = tex2D(s_zb, TexCoords).a; // .a = hw deph
+    Depth = linearize_depth(Depth);
+#elif GBUFFER_OPT_MODE == 3
+    float4 BGRA = tex2D(s_zb, TexCoords); // BGRA format, b - stencil, gra - depth
+    float Depth = dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5)); // represent to 24bit float
+    Depth = linearize_depth(Depth);
+#else
+    float Depth = tex2Dlod0(s_gbuffer_position, TexCoords).z;
+    if (Depth < pos_decompression_params.z)
+        Depth = pos_decompression_params.w;
+#endif
+
+    return Depth;
+}
+
 float3 GetPosition(float2 TexCoords)
 {
 #if GBUFFER_OPT_MODE == 1
