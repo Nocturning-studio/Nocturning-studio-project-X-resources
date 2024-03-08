@@ -82,12 +82,6 @@
     <ClInclude Include="chromatic_abberation.h">
       <Filter>Forward rendering pipeline\Postprocess\Chromatic abberation</Filter>
     </ClInclude>
-    <ClInclude Include="sharpen.h">
-      <Filter>Forward rendering pipeline\Postprocess\Sharpen</Filter>
-    </ClInclude>
-    <ClInclude Include="upscale.h">
-      <Filter>Helpers\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="contrast_adaptive_sharpening.h">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
@@ -103,7 +97,7 @@
     <ClInclude Include="hashed_alpha.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="hdr.h">
+    <ClInclude Include="tonemap.h">
       <Filter>Helpers\Misc</Filter>
     </ClInclude>
     <ClInclude Include="common_shared.h">
@@ -260,9 +254,6 @@
     </None>
     <None Include="postprocess_stage_sepia.ps">
       <Filter>Forward rendering pipeline\Postprocess\Sepia</Filter>
-    </None>
-    <None Include="postprocess_stage_sharpen.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Sharpen</Filter>
     </None>
     <None Include="postprocess_stage_bloom_build.ps">
       <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
@@ -718,9 +709,6 @@
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Anti-Aliasing">
       <UniqueIdentifier>{cfbb4580-0e0b-4c2c-b69d-42bdfcd5c5a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Sharpen">
-      <UniqueIdentifier>{da63e0b2-5ae1-40bb-8176-9da1c9b479d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Depth of field">
       <UniqueIdentifier>{03d2ac27-155f-49f0-9fec-32dea8af87c8}</UniqueIdentifier>

@@ -7,15 +7,15 @@
 #define COMMON_SHARED_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
 //Common
-#include "shared\shared_uniforms.h"
-#include "shared\shared_iostructs.h"
-#include "shared\shared_functions.h"
+#include <shared_uniforms.h>
+#include <shared_iostructs.h>
+#include <shared_functions.h>
 
 //Effects
-#include "shared\fog.h"
+#include <fog.h>
 
 //Skiining
-#include "shared\skinning.h"
+#include <skinning.h>
 ////////////////////////////////////////////////////////////////////////////
 #endif//COMMON_SHARED_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
