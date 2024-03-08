@@ -6,11 +6,14 @@
 #ifndef	COMMON_SAMPLERS_H_INCLUDED
 #define	COMMON_SAMPLERS_H_INCLUDED
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform sampler2D 	s_base;
-uniform samplerCUBE 	s_env;
-uniform sampler2D 	s_lmap;
-uniform sampler2D 	s_hemi;
-uniform sampler2D 	s_att;
-uniform sampler2D 	s_detail;
+uniform sampler2D s_base;
+uniform samplerCUBE s_env;
+uniform sampler2D s_lmap;
+uniform sampler2D s_hemi;
+uniform sampler2D s_att;
+uniform sampler2D s_detail;
+uniform samplerCUBE s_sky0;
+uniform samplerCUBE s_sky1;
 //////////////////////////////////////////////////////////////////////////////////////////
-#endif	//	#ifndef	COMMON_SAMPLERS_H_INCLUDED
+#endif//COMMON_SAMPLERS_H_INCLUDED
+//////////////////////////////////////////////////////////////////////////////////////////

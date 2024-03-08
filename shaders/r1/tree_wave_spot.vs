@@ -7,14 +7,6 @@ struct av
 	half4 	misc	: TEXCOORD0;	// (u(Q),v(Q),frac,???)
 };
 
-uniform float3x4	m_xform;
-uniform float4 		consts;		// {1/quant,1/quant,???,???}
-uniform float4 		wave; 		// cx,cy,cz,tm
-uniform float4 		wind; 		// direction2D
-uniform float4		c_bias;		// + color
-uniform float4		c_scale;	// * color
-uniform float2 		c_sun;		// x=*, y=+
-
 vf_spot main (av v)
 {
 	vf_spot		o;

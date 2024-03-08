@@ -1,10 +1,5 @@
 #include "common.h"
 
-uniform float3x4		m_xform;
-uniform float3x4		m_xform_v;
-uniform float4 			consts; 	// {1/quant,1/quant,???,???}
-uniform float4 			c_scale,c_bias,wind,wave;
-
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vertex
 v_shadow_direct_aref 	main	( v_tree  	I )

@@ -18,6 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shared.h" />
+    <ClInclude Include="shared_uniforms.h" />
+    <ClInclude Include="fog.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -138,161 +143,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include=".s" />
-    <None Include="add_point.ps" />
-    <None Include="add_ppa.ps" />
-    <None Include="add_spot.ps" />
-    <None Include="avg2.ps" />
-    <None Include="avg4.ps" />
-    <None Include="base_lplanes.ps" />
-    <None Include="base_lplanes.vs" />
-    <None Include="blur2.s" />
-    <None Include="blur4.s" />
-    <None Include="clouds.ps" />
-    <None Include="clouds.s" />
-    <None Include="clouds.vs" />
-    <None Include="detail.ps" />
-    <None Include="details_blend.s" />
-    <None Include="details_lod.s" />
-    <None Include="detail_still.vs" />
-    <None Include="detail_wave.vs" />
-    <None Include="distort.ps" />
-    <None Include="distort.s" />
-    <None Include="editor.vs" />
-    <None Include="effects_lightplanes.s" />
-    <None Include="effects_wallmarkblend.s" />
-    <None Include="effects_wallmarkmult.s" />
-    <None Include="effects_wallmarkset.s" />
-    <None Include="effects_water.s" />
-    <None Include="effects_waterryaska.s" />
-    <None Include="effects_waterstuden.s" />
-    <None Include="hud_crosshair.s" />
-    <None Include="hud_movie.s" />
-    <None Include="impl.ps" />
-    <None Include="impl.vs" />
-    <None Include="impl_dt.ps" />
-    <None Include="impl_dt.vs" />
-    <None Include="impl_dt_adv.ps" />
-    <None Include="impl_dt_adv.vs" />
-    <None Include="impl_l.ps" />
-    <None Include="impl_l.vs" />
-    <None Include="impl_point.vs" />
-    <None Include="impl_spot.vs" />
-    <None Include="lmap.ps" />
-    <None Include="lmap.vs" />
-    <None Include="lmape.ps" />
-    <None Include="lmape.vs" />
-    <None Include="lmap_dt.ps" />
-    <None Include="lmap_dt.vs" />
-    <None Include="lmap_l.ps" />
-    <None Include="lmap_l.vs" />
-    <None Include="lmap_point.vs" />
-    <None Include="lmap_spot.vs" />
-    <None Include="lod.ps" />
-    <None Include="lod.vs" />
-    <None Include="models_lightplanes.s" />
-    <None Include="models_pautina.s" />
-    <None Include="models_selflight.s" />
-    <None Include="models_selflightl.s" />
-    <None Include="models_xanomaly.s" />
-    <None Include="models_xdistort.s" />
-    <None Include="models_xdistortcolor.s" />
-    <None Include="models_xdistortcolorl.s" />
-    <None Include="models_xdistortcolorlinv.s" />
-    <None Include="models_xdistortinv.s" />
-    <None Include="models_xglass.s" />
-    <None Include="models_xglass2.s" />
-    <None Include="models_xlens.s" />
-    <None Include="models_xmonolith.s" />
-    <None Include="models_xwindows.s" />
-    <None Include="model_def_hq.ps" />
-    <None Include="model_def_hq.vs" />
-    <None Include="model_def_lplanes.vs" />
-    <None Include="model_def_lq.ps" />
-    <None Include="model_def_lq.vs" />
-    <None Include="model_def_lqs.vs" />
-    <None Include="model_def_point.vs" />
-    <None Include="model_def_shadow.vs" />
-    <None Include="model_def_spot.vs" />
-    <None Include="model_distort.vs" />
-    <None Include="model_distort2t.vs" />
-    <None Include="model_distort4ghost.vs" />
-    <None Include="model_distort4glass.vs" />
-    <None Include="model_distort_inv.vs" />
-    <None Include="model_env.ps" />
-    <None Include="model_env_hq.ps" />
-    <None Include="model_env_hq.vs" />
-    <None Include="model_env_lq.ps" />
-    <None Include="model_env_lq.vs" />
-    <None Include="model_env_sl.ps" />
-    <None Include="model_shadow.ps" />
-    <None Include="particle.ps" />
-    <None Include="particle.vs" />
-    <None Include="particle2t.ps" />
-    <None Include="particles_xadd.s" />
-    <None Include="particles_xdistort.s" />
-    <None Include="particle_alphaonly.ps" />
-    <None Include="particle_distort.ps" />
-    <None Include="portal.s" />
-    <None Include="portal.vs" />
-    <None Include="postprocess.ps" />
-    <None Include="postprocess.s" />
-    <None Include="postprocess_d.ps" />
-    <None Include="postprocess_d.s" />
-    <None Include="selflight.s" />
-    <None Include="simple.ps" />
-    <None Include="simple.vs" />
-    <None Include="simple_color.ps" />
-    <None Include="simple_color.vs" />
-    <None Include="simple_point.vs" />
-    <None Include="simple_spot.vs" />
-    <None Include="sky2.ps" />
-    <None Include="sky2.vs" />
-    <None Include="tree_s.vs" />
-    <None Include="tree_s_dt.vs" />
-    <None Include="tree_s_point.vs" />
-    <None Include="tree_s_spot.vs" />
-    <None Include="tree_test.vs" />
-    <None Include="tree_w.vs" />
-    <None Include="tree_wave.vs" />
-    <None Include="tree_wave_dt.vs" />
-    <None Include="tree_wave_point.vs" />
-    <None Include="tree_wave_spot.vs" />
-    <None Include="tree_w_dt.vs" />
-    <None Include="tree_w_point.vs" />
-    <None Include="tree_w_spot.vs" />
-    <None Include="vert.ps" />
-    <None Include="vert.vs" />
-    <None Include="vert_dt.ps" />
-    <None Include="vert_dt.vs" />
-    <None Include="vert_l.ps" />
-    <None Include="vert_l.vs" />
-    <None Include="vert_point.vs" />
-    <None Include="vert_spot.vs" />
-    <None Include="water.ps" />
-    <None Include="water.vs" />
-    <None Include="waterd.ps" />
-    <None Include="waterd.vs" />
-    <None Include="waterd_soft.ps" />
-    <None Include="waterd_soft.vs" />
-    <None Include="water_soft.ps" />
-    <None Include="water_soft.vs" />
-    <None Include="wmark.vs" />
-    <None Include="wmark_point.vs" />
-    <None Include="wmark_spot.vs" />
-    <None Include="yuv2rgb.ps" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="chromatic_abberation.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="common_defines.h" />
-    <ClInclude Include="common_functions.h" />
-    <ClInclude Include="common_iostructs.h" />
-    <ClInclude Include="common_samplers.h" />
-    <ClInclude Include="common_uniforms.h" />
-    <ClInclude Include="skin.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

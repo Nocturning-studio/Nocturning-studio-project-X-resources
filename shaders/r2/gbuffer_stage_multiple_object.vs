@@ -26,15 +26,6 @@ struct Interpolators
 	float Lighting: TEXCOORD6;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-uniform float3x4 m_xform;
-uniform float3x4 m_xform_v;
-uniform float4 consts; // {1/quant,1/quant,???,???}
-uniform float4 c_scale;
-uniform float4 c_bias;
-uniform float4 wind;
-uniform float4 wave;
-uniform float2 c_sun; // x=*, y=+
-///////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)
 {
     Interpolators Output;

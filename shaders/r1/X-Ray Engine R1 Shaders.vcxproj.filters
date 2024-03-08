@@ -456,6 +456,9 @@
     <ClInclude Include="skin.h">
       <Filter>Forward rendering pipeline\Geometry stage\Dynamic mesh</Filter>
     </ClInclude>
+    <ClInclude Include="common_shared.h">
+      <Filter>Helpers\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Helpers">

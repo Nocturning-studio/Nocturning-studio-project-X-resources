@@ -61,9 +61,6 @@
     <ClInclude Include="common_uniforms.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\fog.h">
-      <Filter>Helpers\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="filters.h">
       <Filter>Helpers\Misc</Filter>
     </ClInclude>
@@ -111,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="hdr.h">
       <Filter>Helpers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="common_shared.h">
+      <Filter>Helpers\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

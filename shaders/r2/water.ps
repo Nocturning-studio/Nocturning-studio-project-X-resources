@@ -29,10 +29,6 @@ uniform samplerCUBE s_env0;
 uniform samplerCUBE s_env1;
 uniform sampler2D s_leaves;
 
-#if defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
-float3	water_intensity;
-#endif	//	defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
-
 ////////////////////////////////////////////////////////////////////////////////
 PixelShaderOutputStruct main (vf I)
 {

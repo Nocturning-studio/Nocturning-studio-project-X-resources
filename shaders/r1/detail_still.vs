@@ -7,7 +7,6 @@ struct vf
 	half2 tc	: TEXCOORD0;
 };
 
-uniform float4 		consts; // {1/quant,1/quant,diffusescale,ambient}
 uniform float4 		array	[200] : register(c10);
 
 vf main (v_detail v)
