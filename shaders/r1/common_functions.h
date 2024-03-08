@@ -3,8 +3,6 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 ////////////////////////////////////////////////////////////////////////////
-#include "shared\fog.h" // R1/R2 common shader
-////////////////////////////////////////////////////////////////////////////
 // Shared common
 half3 	unpack_normal(half3 v) { return 2 * v - 1; }
 half3 	unpack_bx2(half3 v) { return 2 * v - 1; }

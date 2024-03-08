@@ -25,3 +25,5 @@
 #define	MAX_SHIFT		0.011f
 #define RANGE			100.f
 
+#define def_distort float(0.055f)      // we get -0.5 .. 0.5 range, this is -512 .. 512 for 1024, so scale it
+
