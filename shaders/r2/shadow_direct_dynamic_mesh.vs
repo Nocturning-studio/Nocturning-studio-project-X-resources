@@ -1,16 +1,15 @@
 #include "common.h"
-#include "skinning.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vertex
-v_shadow_direct 	_main	( v_model	I )
+v_shadow_direct _main (v_model I)
 {
-	v_shadow_direct	O ;
-	float4 	hpos 	= mul	(m_WVP,	I.P	);
+    v_shadow_direct O;
+    float4 hpos = mul (m_WVP, I.P);
 
-	O.hpos 			= hpos;
+    O.hpos = hpos;
 
- 	return			O ;
+    return O;
 }
 
 /////////////////////////////////////////////////////////////////////////

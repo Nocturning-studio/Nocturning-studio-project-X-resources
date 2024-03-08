@@ -1,19 +1,18 @@
 #include "common.h"
-#include "skin.h"
 
 struct vf
 {
-	float4	hpos	: POSITION;
-	float4 	c0	: COLOR0;		// color
+    float4 hpos: POSITION;
+    float4 c0: COLOR0; // color
 };
 
-vf 	_main 	(v_model v)
+vf _main (v_model v)
 {
-	vf 		o;
+    vf o;
 
-	o.hpos 		= mul	(m_WVP, v.pos);	// xform, input in world coords
-	o.c0 		= 0;
-	return o;
+    o.hpos = mul (m_WVP, v.P); // xform, input in world coords
+    o.c0 = 0;
+    return o;
 }
 
 /////////////////////////////////////////////////////////////////////////

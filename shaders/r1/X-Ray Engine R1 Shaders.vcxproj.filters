@@ -211,12 +211,6 @@
     <None Include="water.vs">
       <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
     </None>
-    <None Include="water_soft.ps">
-      <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
-    </None>
-    <None Include="water_soft.vs">
-      <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
-    </None>
     <None Include="waterd.ps">
       <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
     </None>
@@ -452,9 +446,6 @@
     </ClInclude>
     <ClInclude Include="chromatic_abberation.h">
       <Filter>Forward rendering pipeline\Postprocess stage\Post process effects</Filter>
-    </ClInclude>
-    <ClInclude Include="skin.h">
-      <Filter>Forward rendering pipeline\Geometry stage\Dynamic mesh</Filter>
     </ClInclude>
     <ClInclude Include="common_shared.h">
       <Filter>Helpers\Common</Filter>

@@ -3,19 +3,17 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#ifndef COMMON_SHARED_H_INCLUDED
-#define COMMON_SHARED_H_INCLUDED
+#ifndef SHARED_IOSTRUCTS_H_INCLUDED
+#define SHARED_IOSTRUCTS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
-//Common
-#include "shared\shared_uniforms.h"
-#include "shared\shared_iostructs.h"
-#include "shared\shared_functions.h"
-
-//Effects
-#include "shared\fog.h"
-
-//Skiining
-#include "shared\skinning.h"
+struct v_model
+{
+	float4 P : POSITION;   // (float,float,float,1)
+	float3 N : NORMAL;     // (nx,ny,nz)
+	float3 T : TANGENT;    // (nx,ny,nz)
+	float3 B : BINORMAL;   // (nx,ny,nz)
+	float2 tc : TEXCOORD0; // (u,v)
+};
 ////////////////////////////////////////////////////////////////////////////
-#endif//COMMON_SHARED_H_INCLUDED
+#endif//SHARED_IOSTRUCTS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////

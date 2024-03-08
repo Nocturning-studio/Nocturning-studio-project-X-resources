@@ -73,9 +73,6 @@
     <ClInclude Include="TBN.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="skinning.h">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="dlaa.h">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers</Filter>
     </ClInclude>

@@ -3,19 +3,18 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#ifndef COMMON_SHARED_H_INCLUDED
-#define COMMON_SHARED_H_INCLUDED
+#ifndef SHARED_FUNCTIONS_H_INCLUDED
+#define SHARED_FUNCTIONS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
-//Common
-#include "shared\shared_uniforms.h"
-#include "shared\shared_iostructs.h"
-#include "shared\shared_functions.h"
+float3 	unpack_normal(float3 v) { return 2 * v - 1; }
+float3 	unpack_bx2(float3 v) { return 2 * v - 1; }
+float3 	unpack_bx4(float3 v) { return 4 * v - 2; }
 
-//Effects
-#include "shared\fog.h"
+float2 	unpack_tc_base(float2 tc, float du, float dv) {
+	return (tc.xy + float2(du, dv)) * (32.f / 32768.f);
+}
 
-//Skiining
-#include "shared\skinning.h"
+float2 	unpack_tc_lmap(float2 tc) { return tc * (1.f / 32768.f); } // [-1  .. +1 ]
 ////////////////////////////////////////////////////////////////////////////
-#endif//COMMON_SHARED_H_INCLUDED
+#endif//SHARED_FUNCTIONS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////

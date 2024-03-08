@@ -341,7 +341,6 @@
     <ClInclude Include="reflection.h" />
     <ClInclude Include="shadow_filtering.h" />
     <ClInclude Include="sharpen.h" />
-    <ClInclude Include="skinning.h" />
     <ClInclude Include="TBN.h" />
     <ClInclude Include="terrain_helper.h" />
     <ClInclude Include="upscale.h" />

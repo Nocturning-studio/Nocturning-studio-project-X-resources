@@ -6,19 +6,6 @@
 #ifndef COMMON_FUNCTIONS_H_INCLUDED
 #define COMMON_FUNCTIONS_H_INCLUDED
 ////////////////////////////////////////////////////////////////////////////
-#include "shared\fog.h" // R1/R2 common shader
-////////////////////////////////////////////////////////////////////////////
-// Shared common
-float3 	unpack_normal(float3 v) { return 2 * v - 1; }
-float3 	unpack_bx2(float3 v) { return 2 * v - 1; }
-float3 	unpack_bx4(float3 v) { return 4 * v - 2; }
-
-float2 	unpack_tc_base(float2 tc, float du, float dv) {
-	return (tc.xy + float2(du, dv)) * (32.f / 32768.f);
-}
-
-float2 	unpack_tc_lmap(float2 tc) { return tc * (1.f / 32768.f); } // [-1  .. +1 ]
-
 float 	calc_cyclic(float x) {
 	float 	phase = 1 / (2 * 3.141592653589f);
 	float 	sqrt2 = 1.4142136f;
