@@ -2,18 +2,18 @@
 
 struct vi
 {
-	half4	p	: POSITION;
-	half4	c	: COLOR0;
-	half3	tc0	: TEXCOORD0;
-	half3	tc1	: TEXCOORD1;
+	float4	p	: POSITION;
+	float4	c	: COLOR0;
+	float3	tc0	: TEXCOORD0;
+	float3	tc1	: TEXCOORD1;
 };
 
 struct vf
 {
-	half4 	hpos	: POSITION;
-	half4	c	: COLOR0;
-	half3	tc0	: TEXCOORD0;
-	half3	tc1	: TEXCOORD1;
+	float4 	hpos	: POSITION;
+	float4	c	: COLOR0;
+	float3	tc0	: TEXCOORD0;
+	float3	tc1	: TEXCOORD1;
 };
 
 vf main (vi v)

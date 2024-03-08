@@ -78,7 +78,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     }
     else
     {
-        float3 N = tex2D (s_gbuffer_normal, TexCoords);
+        float3 N = GetNormal(TexCoords);
 		
         float3 position = P + N * HBAO_NORMAL * P.z;
 

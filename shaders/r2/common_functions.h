@@ -89,17 +89,6 @@ float3 calc_model_lq_lighting(float3 norm_w)
     return L_material.x * calc_model_hemi_r1(norm_w) + L_ambient + L_material.y * calc_sun_r1(norm_w);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-
-float3 ACES(const float3 x) 
-{
-    const float a = 2.51f;
-    const float b = 0.03f;
-    const float c = 2.43f;
-    const float d = 0.59f;
-    const float e = 0.14f;
-    return (x * (a * x + b)) / (x * (c * x + d) + e);
-}
-
 float3 v_hemi(float3 n)
 {
     return L_hemi_color * (.5f + .5f * n.y);
@@ -172,27 +161,6 @@ float2 rand_2_0004(in float2 uv)
     float noiseX = (frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453));
     float noiseY = (frac(sin(dot(uv, float2(12.9898, 78.233) * 2.0)) * 43758.5453));
     return float2(noiseX, noiseY) * 0.004;
-}
-
-float3 unpack_normal(float3 v)
-{
-    return 2 * v - 1;
-}
-float3 unpack_bx2(float3 v)
-{
-    return 2 * v - 1;
-}
-float3 unpack_bx4(float3 v)
-{
-    return 4 * v - 2;
-}
-float2 unpack_tc_lmap(float2 tc)
-{
-    return tc * (1.f / 32768.f);
-} // [-1  .. +1 ]
-float2 unpack_tc_base(float2 tc, float du, float dv)
-{
-    return (tc.xy + float2(du, dv)) * (32.f / 32768.f);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 calc_proj(float3 P)

@@ -1,5 +1,4 @@
 #include "common.h"
-#include "skinning.h"
 
 struct vf
 {

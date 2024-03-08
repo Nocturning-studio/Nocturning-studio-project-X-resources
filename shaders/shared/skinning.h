@@ -1,7 +1,5 @@
-#ifndef SKIN_H
+#ifndef	SKIN_H
 #define SKIN_H
-
-#include "common.h"
 
 struct v_model_skinned_0
 {
@@ -94,6 +92,25 @@ v_model skinning_2(v_model_skinned_2 v)
     o.T = skinning_dir(v.T, m0, m1, m2);
     o.B = skinning_dir(v.B, m0, m1, m2);
     o.tc = v.tc * (16.f / 32768.f); // -16..+16
+    return o;
+}
+
+v_model skinning_2lq(v_model_skinned_2	v)
+{
+    // matrices
+    int 	id_0 = v.tc.z;
+    float4  m0 = sbones_array[id_0 + 0];
+    float4  m1 = sbones_array[id_0 + 1];
+    float4  m2 = sbones_array[id_0 + 2];
+
+    // skinning
+    v_model 	o;
+    o.P = skinning_pos(v.P, m0, m1, m2);
+    o.N = skinning_dir(v.N, m0, m1, m2);
+    o.T = skinning_dir(v.T, m0, m1, m2);
+    o.B = skinning_dir(v.B, m0, m1, m2);
+    o.tc = v.tc * (16.f / 32768.f);	// -16..+16
+
     return o;
 }
 

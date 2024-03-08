@@ -2,9 +2,9 @@
 
 struct vf
 {
-	half4 hpos	: POSITION;
-	half2 tc0	: TEXCOORD0;
-	half  fog	: FOG;
+	float4 hpos	: POSITION;
+	float2 tc0	: TEXCOORD0;
+	float  fog	: FOG;
 };
 
 vf main (v_vert v)

@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords: TEXCOORD0): COLOR
 {
-    float center_depth = GetPosition(TexCoords).z;
+    float center_depth = GetDepth(TexCoords);
     float ao_sum = 0.0h;
     float total_weight = 0.0h;
 
@@ -19,7 +19,7 @@ float4 main(float2 TexCoords: TEXCOORD0): COLOR
         float2 sample_uv = TexCoords + float2 (i + 0.5h, 0.0h) / screen_res.xy;
         
         float sample_ao = tex2Dlod0 (s_ao, sample_uv).r;
-        float sample_depth = GetPosition (sample_uv).z;
+        float sample_depth = GetDepth (sample_uv);
 
         float depth_result = 1.0h - saturate (pow ((sample_depth - center_depth), 2.0h) / (0.001h * center_depth)) + 0.2h;
 

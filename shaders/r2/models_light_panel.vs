@@ -1,11 +1,10 @@
 #include "common.h"
-#include "skinning.h"
 
 struct vf
 {
-	float4 hpos: POSITION;
-	float2 tc0: TEXCOORD0; // base
-	float4 c0: COLOR0; // color
+    float4 hpos: POSITION;
+    float2 tc0: TEXCOORD0; // base
+    float4 c0: COLOR0; // color
 };
 
 vf _main (v_model v)
@@ -16,8 +15,8 @@ vf _main (v_model v)
     o.tc0 = v.tc.xy; // copy tc
 
 	// calculate fade
-	float3 dir_v = normalize (mul (m_WV, v.P));
-	float3 norm_v = normalize (mul (m_WV, v.N));
+    float3 dir_v = normalize (mul (m_WV, v.P));
+    float3 norm_v = normalize (mul (m_WV, v.N));
     float fade = abs (dot (dir_v, norm_v));
     o.c0 = fade;
 

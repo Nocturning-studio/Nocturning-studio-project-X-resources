@@ -23,7 +23,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     }
     else
     {
-        float3 Normal = tex2D (s_gbuffer_normal, TexCoords);
+        float3 Normal = GetNormal(TexCoords);
         
         float radiusPixels = (RADIUS * screen_res.y * 0.5h) / (Position.z * -pos_decompression_params.y);
 

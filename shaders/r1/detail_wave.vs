@@ -2,9 +2,9 @@
 
 struct vf
 {
-	half4 hpos	: POSITION;
-	half4 C	: COLOR0;
-	half2 tc	: TEXCOORD0;
+	float4 hpos	: POSITION;
+	float4 C	: COLOR0;
+	float2 tc	: TEXCOORD0;
 };
 
 uniform float4 		dir2D; 
@@ -16,30 +16,30 @@ vf main (v_detail v)
 
 	// index
 	int 	i 	= v.misc.w;
-	half4  m0 	= array[i+0];
-	half4  m1 	= array[i+1];
-	half4  m2 	= array[i+2];
-	half4  c0 	= array[i+3];
+	float4  m0 	= array[i+0];
+	float4  m1 	= array[i+1];
+	float4  m2 	= array[i+2];
+	float4  c0 	= array[i+3];
 
 	// Transform to world coords
-	half4 	pos;
+	float4 	pos;
  	pos.x 		= dot	(m0, v.pos);
  	pos.y 		= dot	(m1, v.pos);
  	pos.z 		= dot	(m2, v.pos);
 	pos.w 		= 1;
 
 	// 
-	half 	base 	= m1.w;
-	half 	dp	= calc_cyclic   (dot(pos,wave));
-	half 	H 	= pos.y - base;			// height of vertex (scaled)
-	half 	frac 	= v.misc.z*consts.x;		// fractional
-	half 	inten 	= H * dp;
-	half2 	result	= calc_xz_wave	(dir2D.xz*inten,frac);
-	pos		= half4(pos.x+result.x, pos.y, pos.z+result.y, 1);
+	float 	base 	= m1.w;
+	float 	dp	= calc_cyclic   (dot(pos,wave));
+	float 	H 	= pos.y - base;			// height of vertex (scaled)
+	float 	frac 	= v.misc.z*consts.x;		// fractional
+	float 	inten 	= H * dp;
+	float2 	result	= calc_xz_wave	(dir2D.xz*inten,frac);
+	pos		= float4(pos.x+result.x, pos.y, pos.z+result.y, 1);
 	o.hpos		= mul	(m_WVP,pos);
 
 	// Fake lighting
-	half 	dpc 	= max 	(0.f, dp);
+	float 	dpc 	= max 	(0.f, dp);
 	o.C		= c0 * (consts.w+consts.z*dpc*frac);
 
 	// final xform, color, tc

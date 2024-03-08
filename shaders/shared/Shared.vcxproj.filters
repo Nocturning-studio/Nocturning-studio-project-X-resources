@@ -7,6 +7,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{9b98ac8c-8370-4a5e-9419-44e82c840453}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Skinning">
+      <UniqueIdentifier>{66afa5af-5ec3-45d1-8db1-b5894a5a9774}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fog.h">
@@ -16,6 +19,15 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="shared_uniforms.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="skinning.h">
+      <Filter>Skinning</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_functions.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_iostructs.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

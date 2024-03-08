@@ -21,17 +21,7 @@ struct	v_vert
 	float4	color	: COLOR0;	// (r,g,b,dir-occlusion)
 	float2 	uv	: TEXCOORD0;	// (u0,v0)
 };
-struct 	v_model
-{
-	float4 	pos	: POSITION;	// (float,float,float,1)
-	float3	norm	: NORMAL;	// (nx,ny,nz)
-	float3	T	: TANGENT;	// (nx,ny,nz)
-	float3	B	: BINORMAL;	// (nx,ny,nz)
-	float2	tc	: TEXCOORD0;	// (u,v)
-#ifdef SKIN_COLOR
-	float3 	rgb_tint;
-#endif
-};
+
 struct	v_detail
 {
 	float4 	pos	: POSITION;	// (float,float,float,1)

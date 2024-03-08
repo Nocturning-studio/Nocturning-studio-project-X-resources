@@ -4,18 +4,8 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
+#include "gbuffer.h"
 ////////////////////////////////////////////////////////////////////////////
-float GetDepth(float2 TexCoords)
-{
-    float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
-
-    // Check skybox intersection
-    if (all(Position <= 0.00001h))
-        Position.z = dof_params.w;
-
-    return Position.z;
-}
-///////////////////////////////////////////////////////////////////////////////////
 float DOFFactor(float2 TexCoords)
 {
     float depth = GetDepth(TexCoords);
@@ -23,7 +13,7 @@ float DOFFactor(float2 TexCoords)
     float blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
     float blur_near = saturate(dist_to_focus / (dof_params.x - dof_params.y));
     float blur = blur_near + blur_far;
-    blur = pow(blur, 2.0h);
+    blur = pow(blur, 2.0f);
     return blur;
 }
 ////////////////////////////////////////////////////////////////////////////

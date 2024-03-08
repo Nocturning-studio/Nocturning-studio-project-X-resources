@@ -30,7 +30,7 @@ struct GBufferPacked
 };
 ////////////////////////////////////////////////////////////////////////////
 #if GBUFFER_OPT_MODE > 0
-float2 gbuf_pack_normal(float3 norm)
+float2 PackNormal(float3 norm)
 {
    float2 res;
    res = 0.5 * (norm.xy + float2(1, 1));
@@ -39,7 +39,7 @@ float2 gbuf_pack_normal(float3 norm)
    return res;
 }
 
-float3 gbuf_unpack_normal(float2 norm)
+float3 UnpackNormal(float2 norm)
 {
    float3 res;
    norm.x = norm.x * 2.0 - 1.0;
@@ -48,26 +48,26 @@ float3 gbuf_unpack_normal(float2 norm)
    return res;
 }
 
-float linearize_depth(float depth)
+float LinearizeDepth(float depth)
 {
 	return 2.0 * pos_decompression_params.z * pos_decompression_params.w 
 		/ (pos_decompression_params.w + pos_decompression_params.z - (depth * 2.0 - 1.0) 
 		* (pos_decompression_params.w - pos_decompression_params.z));
 }
 
-float delinearize_depth(float depth)
+float DelinearizeDepth(float depth)
 {
 	return 0.5 * ((pos_decompression_params.w + pos_decompression_params.z) 
 		/ (pos_decompression_params.w - pos_decompression_params.z) - (2.0 * pos_decompression_params.z / depth) 
 		/ (pos_decompression_params.w - pos_decompression_params.z) + 1.0);
 }
 
-float gbuf_pack_position(float3 position)
+float PackPosition(float3 position)
 {
    return position.z;
 }
 
-float3 gbuf_unpack_position(float position, float2 tc)
+float3 UnpackPosition(float position, float2 tc)
 {
 	float3 pos;
 	pos.z = position.x;
@@ -76,16 +76,70 @@ float3 gbuf_unpack_position(float position, float2 tc)
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////
+float GetDepth(float2 TexCoords)
+{
+#if GBUFFER_OPT_MODE == 1
+    float  Depth = tex2D(s_gbuffer_position, TexCoords).r; // .r = Depth
+    Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
+#elif GBUFFER_OPT_MODE == 2
+    float  Depth = tex2D(s_zb, TexCoords).a; // .a = hw deph
+    Depth = LinearizeDepth(Depth);
+#elif GBUFFER_OPT_MODE == 3
+    float4 BGRA = tex2D(s_zb, TexCoords); // BGRA format, b - stencil, gra - depth
+    float Depth = dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5)); // represent to 24bit float
+    Depth = LinearizeDepth(Depth);
+#else
+    float Depth = tex2Dlod0(s_gbuffer_position, TexCoords).z;
+    if (Depth < pos_decompression_params.z)
+        Depth = pos_decompression_params.w;
+#endif
 
+    return Depth;
+}
+
+float3 GetPosition(float2 TexCoords)
+{
+#if GBUFFER_OPT_MODE == 1
+    float  Depth = tex2D(s_gbuffer_position, TexCoords).r; // .r = Depth
+    Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
+    float3 Position = UnpackPosition(Depth, TexCoords);
+#elif GBUFFER_OPT_MODE == 2
+    float  Depth = tex2D(s_zb, TexCoords).a; // .a = hw deph
+    Depth = LinearizeDepth(Depth);
+    float3 Position = UnpackPosition(Depth, TexCoords);
+#elif GBUFFER_OPT_MODE == 3
+    float4 BGRA = tex2D(s_zb, TexCoords); // BGRA format, b - stencil, gra - depth
+    float Depth = dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5)); // represent to 24bit float
+    Depth = LinearizeDepth(Depth);
+    float3 Position = UnpackPosition(Depth, TexCoords);
+#else
+    float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
+    if (Position.z < pos_decompression_params.z)
+        Position.z = pos_decompression_params.w;
+#endif
+
+    return Position;
+}
+////////////////////////////////////////////////////////////////////////////
+float3 GetNormal(float2 TexCoords)
+{
+#if GBUFFER_OPT_MODE > 0
+    float2 PackedNormal = tex2D(s_gbuffer_normal, TexCoords).rgb;
+    return UnpackNormal(PackedNormal);
+#else
+    return tex2D(s_gbuffer_normal, TexCoords).rgb;
+#endif
+}
+////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
 {
     GBufferPacked GBuffer;
 
 #if GBUFFER_OPT_MODE > 0
     GBuffer.rt_Albedo = float4(Input.Albedo, Input.Glossiness); // .rgb = Albedo, .a = Gloss
-    GBuffer.rt_Normal = float4(gbuf_pack_normal(Input.Normal), Input.AO, Input.BakedAO); // .rg = Normal, .b = Hemi, .a = BackedAO
+    GBuffer.rt_Normal = float4(PackNormal(Input.Normal), Input.AO, Input.BakedAO); // .rg = Normal, .b = Hemi, .a = BackedAO
  #if GBUFFER_OPT_MODE == 1
-    GBuffer.rt_Position = float4(gbuf_pack_position(Input.Position), 0, 0, 0); // .r = Depth
+    GBuffer.rt_Position = float4(PackPosition(Input.Position), 0, 0, 0); // .r = Depth
  #endif
 #else
     GBuffer.rt_Albedo   = float4(Input.Albedo,   Input.Glossiness); // .rgb = Albedo,   .a = Gloss
@@ -94,30 +148,6 @@ GBufferPacked PackGBuffer(GBuffer Input)
 #endif
 
     return GBuffer;
-}
-
-float3 GetPosition(float2 TexCoords)
-{
-#if GBUFFER_OPT_MODE == 1
-	float  Depth    = tex2D(s_gbuffer_position, TexCoords).r; // .r = Depth
-	Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
-    float3 Position = gbuf_unpack_position(Depth, TexCoords);
-#elif GBUFFER_OPT_MODE == 2
-	float  Depth    = tex2D(s_zb, TexCoords).a; // .a = hw deph
-	Depth = linearize_depth(Depth);
-    float3 Position = gbuf_unpack_position(Depth, TexCoords);
-#elif GBUFFER_OPT_MODE == 3
-	float4 BGRA = tex2D(s_zb, TexCoords); // BGRA format, b - stencil, gra - depth
-	float Depth = dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5)); // represent to 24bit float
-	Depth = linearize_depth(Depth);
-    float3 Position = gbuf_unpack_position(Depth, TexCoords);
-#else
-    float3 Position = tex2Dlod0(s_gbuffer_position, TexCoords);
-    if (Position.z < pos_decompression_params.z)
-        Position.z = pos_decompression_params.w;
-#endif
-
-    return Position;
 }
 
 GBuffer UnpackGBuffer(float2 TexCoords)
@@ -133,19 +163,19 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 	rt_Depth = rt_Depth < pos_decompression_params.z ? pos_decompression_params.w : rt_Depth;
  #elif GBUFFER_OPT_MODE == 2
 	float  rt_Depth    = tex2D(s_zb, TexCoords).a; // .a = hw deph
-	rt_Depth = linearize_depth(rt_Depth);
+	rt_Depth = LinearizeDepth(rt_Depth);
  #elif GBUFFER_OPT_MODE == 3
 	float4 BGRA = tex2D(s_zb, TexCoords); // BGRA format, b - stencil, gra - depth
 	float rt_Depth = dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5)); // represent to 24bit float
-	rt_Depth = linearize_depth(rt_Depth);
-    float3 Position = gbuf_unpack_position(rt_Depth, TexCoords);
+	rt_Depth = LinearizeDepth(rt_Depth);
+    float3 Position = UnpackPosition(rt_Depth, TexCoords);
  #endif
 
     GBuffer.Albedo     = rt_Albedo.rgb;
     GBuffer.Glossiness = rt_Albedo.a;
-    GBuffer.Normal     = gbuf_unpack_normal(rt_Normal.rg);
+    GBuffer.Normal     = UnpackNormal(rt_Normal.rg);
     GBuffer.AO         = rt_Normal.b;
-    GBuffer.Position   = gbuf_unpack_position(rt_Depth, TexCoords);
+    GBuffer.Position   = UnpackPosition(rt_Depth, TexCoords);
     GBuffer.BakedAO    = rt_Normal.a;
 #else
 	float4 rt_Albedo   = tex2D(s_gbuffer_albedo,   TexCoords); // .rgb = Albedo,   .a = Gloss
