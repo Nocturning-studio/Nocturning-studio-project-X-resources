@@ -41,7 +41,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     }
     else
     {
-        float3 N = tex2D (s_gbuffer_normal, TexCoords);
+        float3 N = GetNormal(TexCoords);
 		
         int2 pos2d4 = Position2D;
         pos2d4 %= 4;
