@@ -4,21 +4,21 @@
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 ////////////////////////////////////////////////////////////////////////////
 // Shared common
-half3 	unpack_normal(half3 v) { return 2 * v - 1; }
-half3 	unpack_bx2(half3 v) { return 2 * v - 1; }
-half3 	unpack_bx4(half3 v) { return 4 * v - 2; }
+float3 	unpack_normal(float3 v) { return 2 * v - 1; }
+float3 	unpack_bx2(float3 v) { return 2 * v - 1; }
+float3 	unpack_bx4(float3 v) { return 4 * v - 2; }
 
-half2 	unpack_tc_base(half2 tc, half du, half dv) {
-	return (tc.xy + half2(du, dv)) * (32.f / 32768.f);
+float2 	unpack_tc_base(float2 tc, float du, float dv) {
+	return (tc.xy + float2(du, dv)) * (32.f / 32768.f);
 }
 
-half2 	unpack_tc_lmap(half2 tc) { return tc * (1.f / 32768.f); } // [-1  .. +1 ]
+float2 	unpack_tc_lmap(float2 tc) { return tc * (1.f / 32768.f); } // [-1  .. +1 ]
 
-half 	calc_cyclic(half x) {
-	half 	phase = 1 / (2 * 3.141592653589f);
-	half 	sqrt2 = 1.4142136f;
-	half 	sqrt2m2 = 2.8284271f;
-	half 	f = sqrt2m2 * frac(x) - sqrt2;	// [-sqrt2 .. +sqrt2]
+float 	calc_cyclic(float x) {
+	float 	phase = 1 / (2 * 3.141592653589f);
+	float 	sqrt2 = 1.4142136f;
+	float 	sqrt2m2 = 2.8284271f;
+	float 	f = sqrt2m2 * frac(x) - sqrt2;	// [-sqrt2 .. +sqrt2]
 	return 	f * f - 1.f;				// [-1     .. +1]
 }
 float2 	calc_xz_wave(float2 dir2D, float frac) {

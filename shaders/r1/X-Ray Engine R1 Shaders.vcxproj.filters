@@ -424,6 +424,9 @@
     <None Include=".s">
       <Filter>Unsorted</Filter>
     </None>
+    <None Include="portal.ps">
+      <Filter>Unsorted</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

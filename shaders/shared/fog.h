@@ -23,10 +23,11 @@ float CalcFogness(float3 Position)
 	return CalcSqaredExponentialFog(Position);
 }
 
-// НЕ УДАЛЯТЬ!!!!!!
-void R1LerpFogness(inout float3 Color, float Fogness)
+// Использование одной и той же константы в верт. и пикс. 
+// шейдере вызывает ошибку, так что для блендинга необходимо использовать 
+// цвет в отдельной константе
+float3 ApplyFogness(float3 Color, float Fogness)
 {
-	// !!! fog_params.rgb НЕ РАБОТАЕТ
-	Color = lerp(Color, fog_color.rgb, Fogness);
+	return lerp(Color, fog_color.rgb, Fogness);
 }
 ////////////////////////////////////////////////////////////////////////////

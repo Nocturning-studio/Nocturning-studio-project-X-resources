@@ -1,19 +1,18 @@
 #include "common.h"
 
-struct 	v2p
+struct v2p
 {
-	half4 	c	: COLOR0;
-	half  	fog	: FOG	;
+    float4 c: COLOR0;
+    float fog: FOG;
 };
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-half4 	main	( v2p I )	: COLOR
+float4 main (v2p I): COLOR
 {
-	half4	t_base 	= I.c;
-	R1LerpFogness(t_base.rgb, I.fog);
+    float4 t_base = I.c;
+    t_base.rgb = ApplyFogness (t_base.rgb, I.fog);
 
 	// out
-	return  t_base;
+    return t_base;
 }

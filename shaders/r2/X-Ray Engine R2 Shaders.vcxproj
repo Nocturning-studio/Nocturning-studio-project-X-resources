@@ -319,7 +319,6 @@
     <ClInclude Include="common_define_associations.h" />
     <ClInclude Include="common_functions.h" />
     <ClInclude Include="common_iostructs.h" />
-    <ClInclude Include="common_math.h" />
     <ClInclude Include="common_policies.h" />
     <ClInclude Include="common_samplers.h" />
     <ClInclude Include="common_uniforms.h" />

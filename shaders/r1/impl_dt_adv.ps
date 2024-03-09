@@ -44,7 +44,7 @@ float4 main (v2p I): COLOR
 	
 	// final-color
     float3 final = (light * t_base.rgb * 2) * detail * 2;
-    R1LerpFogness (final, I.fog);
+    final = ApplyFogness (final, I.fog);
 	
 	// out
     return float4 (final.rgb, 1);

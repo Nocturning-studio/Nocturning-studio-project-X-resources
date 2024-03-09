@@ -30,5 +30,11 @@
     <ClInclude Include="shared_iostructs.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="shared_math.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_defines.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

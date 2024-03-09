@@ -234,6 +234,7 @@
     <None Include="particles_xdistort.s" />
     <None Include="particle_alphaonly.ps" />
     <None Include="particle_distort.ps" />
+    <None Include="portal.ps" />
     <None Include="portal.s" />
     <None Include="portal.vs" />
     <None Include="postprocess.ps" />
