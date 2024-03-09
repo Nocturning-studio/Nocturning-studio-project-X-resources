@@ -16,4 +16,15 @@ float DelinearizeDepth(float depth)
 		/ (pos_decompression_params.w - pos_decompression_params.z) - (2.0f * pos_decompression_params.z / depth)
 		/ (pos_decompression_params.w - pos_decompression_params.z) + 1.0f);
 }
+
+float GetZBufferFromINTZ(float2 TexCoords)
+{
+	return tex2D(s_zb, TexCoords).a;
+}
+
+float GetZBufferFromRAWZ(float2 TexCoords)
+{
+	float4 BGRA = tex2D(s_zb, TexCoords);
+	return dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5);
+}
 ////////////////////////////////////////////////////////////////////////////
