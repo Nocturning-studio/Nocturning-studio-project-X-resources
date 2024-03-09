@@ -9,6 +9,4 @@ uniform sampler2D s_lmap;
 uniform sampler2D s_hemi;
 uniform sampler2D s_att;
 uniform sampler2D s_detail;
-uniform samplerCUBE s_sky0;
-uniform samplerCUBE s_sky1;
 //////////////////////////////////////////////////////////////////////////////////////////
