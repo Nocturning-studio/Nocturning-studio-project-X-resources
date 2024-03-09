@@ -41,3 +41,6 @@ shaders/sm_3_0/.vs/SM3.0 X-Ray Engine Shaders/v16/.suo
 *.sqlite
 .vs/gamedata/v16/.suo
 shaders/.vs/shaders/v16/.suo
+*.lastbuildstate
+*.recipe
+*.log
