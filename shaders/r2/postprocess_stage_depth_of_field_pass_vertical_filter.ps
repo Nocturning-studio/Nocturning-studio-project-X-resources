@@ -4,13 +4,13 @@
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-#include "depth_of_field_common.h"
+#include "gbuffer.h"
 ///////////////////////////////////////////////////////////////////////////////////
 #define DOF_SEARCH_SIZE 4
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    float BlurPower = DOFFactor (TexCoords);
+    float BlurPower = DOFFactor (GetDepth (TexCoords));
     
     if (BlurPower == 0.0h)
     {
@@ -28,7 +28,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
         
             float3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
 
-            float SampleContribution = DOFFactor (SampleCoords);
+            float SampleContribution = DOFFactor (GetDepth (SampleCoords));
         
             SummaryImageColor += SampleColor * SampleContribution;
         

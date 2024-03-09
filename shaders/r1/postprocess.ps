@@ -18,27 +18,45 @@ uniform sampler2D s_depth;
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform float4 c_brightness;
 uniform float3 hdr_params;
-
-uniform float4 dof_params;
-uniform float4 dof_kernel;
-
+//////////////////////////////////////////////////////////////////////////////////////////
 float GetDepth(float2 TexCoords)
 {
-	float depth = tex2D(s_depth, TexCoords).a;
-	return LinearizeDepth(depth);
+	float DepthBuffer = tex2D(s_depth, TexCoords).a;
+    return LinearizeDepth (DepthBuffer);
 }
-
-float DOFFactor(float2 TexCoords)
+//////////////////////////////////////////////////////////////////////////////////////////
+float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
 {
-    float depth = GetDepth(TexCoords);
-    float dist_to_focus = depth - dof_params.y;
-    float blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
-    float blur_near = saturate(dist_to_focus / (dof_params.x - dof_params.y));
-    float blur = blur_near + blur_far;
-    blur = pow(blur, 2.0h);
-    return blur;
-}
+    float BlurPower = DOFFactor (GetDepth (TexCoords));
+    if (BlurPower == 0.0f)
+    {
+        return ImageColor;
+    }
+    else
+    {
+        float2 RaySize = screen_res.zw;
+        float3 SummaryImageColor = 0;
+        float Contribution = 0.0h;
+	
+        for (int i = 0; i < 16; i++)
+        {
+            float2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize * 2.5f;
 
+            float3 SampleColor = tex2Dlod0 (s_base, SampleCoords.xy);
+
+            float SampleContribution = DOFFactor (GetDepth (SampleCoords));
+
+            SummaryImageColor += SampleColor * SampleContribution;
+
+            Contribution += SampleContribution;
+        }
+	
+        float3 BlurredImageColor = (SummaryImageColor / Contribution) * BlurPower;
+        float3 UnblurredImageColor = ImageColor * (1.0h - BlurPower);
+
+        return BlurredImageColor + UnblurredImageColor;
+    }
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 float4 main (v2p I): COLOR
@@ -50,13 +68,13 @@ float4 main (v2p I): COLOR
     float2 offset = float2 (0.0h, 0.0h);
 #endif
     
-    float3 t_0 = tex2D (s_base, I.tc0 + offset);
-    float3 t_1 = tex2D (s_base, I.tc1 + offset);
+    float3 t_0 = tex2Dlod0(s_base, I.tc0 + offset);
+    float3 t_1 = tex2Dlod0(s_base, I.tc1 + offset);
     float3 image = (t_0 + t_1) * 0.5h;
     
-//#ifdef USE_CHROMATIC_ABBERATION
-//    image.rgb = ChromaticAberration (image.rgb, (I.tc0 + I.tc1) * 0.5h);
-//#endif
+#ifdef USE_CHROMATIC_ABBERATION
+    image.rgb = ChromaticAberration (image.rgb, (I.tc0 + I.tc1) * 0.5h);
+#endif
     
 #ifdef USE_HDR
     image = pow(image, hdr_params.y);
@@ -89,41 +107,7 @@ float4 main (v2p I): COLOR
     image = lerp (noised, image, I.color.w);
     
     image = (image * I.color + c_brightness) * 2.0h;
-	
-	/*float2 TexCoords = I.tc0.xy;
-	
-	float2 RaySize = screen_res.zw;
-	float3 SummaryImageColor = 0;
-	float Contribution = 0.0h;
-	
-	static const float2 poissonDisk_16[16] = {
-    float2(-0.94201624, -0.39906216), float2(0.94558609, -0.76890725),  float2(-0.094184101, -0.92938870),
-    float2(0.34495938, 0.29387760),   float2(-0.91588581, 0.45771432),  float2(-0.81544232, -0.87912464),
-    float2(-0.38277543, 0.27676845),  float2(0.97484398, 0.75648379),   float2(0.44323325, -0.97511554),
-    float2(0.53742981, -0.47373420),  float2(-0.26496911, -0.41893023), float2(0.79197514, 0.19090188),
-    float2(-0.24188840, 0.99706507),  float2(-0.81409955, 0.91437590),  float2(0.19984126, 0.78641367),
-    float2(0.14383161, -0.14100790)};
-	
-	for (int i = 0; i < 16; i++)
-	{
-		float2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize*10;
-
-		float3 SampleColor = tex2Dlod(s_base, float4(SampleCoords.xy,0,0));
-
-		float SampleContribution = DOFFactor (SampleCoords);
-
-		SummaryImageColor += SampleColor * SampleContribution;
-
-		Contribution += SampleContribution;
-	}
-	
-    float BlurPower = DOFFactor (TexCoords);
-	float4 BlurredImageColor = float4 ((SummaryImageColor / Contribution), 1.0h) * BlurPower;
-	float4 UnblurredImageColor = tex2Dlod (s_base, float4(TexCoords, 0, 0)) * (1.0h - BlurPower);
-
-	image.rgb = BlurredImageColor + UnblurredImageColor;
-	//image.rgb = GetDepth(TexCoords)/250.0f;*/
-	
+    
     return float4 (image, 1.0h);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

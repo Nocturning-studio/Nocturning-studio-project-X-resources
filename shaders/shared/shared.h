@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //Common
 #include <shared_math.h>
+#include <shared_constants.h>
 #include <shared_defines.h>
 #include <shared_uniforms.h>
 #include <shared_iostructs.h>
@@ -12,6 +13,7 @@
 
 //Effects
 #include <fog.h>
+#include <depth_of_field_common.h>
 
 //Skiining
 #include <skinning.h>

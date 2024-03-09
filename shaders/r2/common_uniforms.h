@@ -17,9 +17,6 @@ uniform float4x4 m_shadow;
 
 uniform float4 wind_velocity;
 
-uniform float4 dof_params; // x - near, y - focus, z - far, w - sky distance
-uniform float3 dof_kernel; // x, y - resolution pre-scaled, z - just kernel size
-
 uniform float2 parallax_height;
 
 uniform float3 sun_dir;
