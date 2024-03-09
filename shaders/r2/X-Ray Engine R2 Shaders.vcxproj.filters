@@ -34,9 +34,6 @@
     <ClInclude Include="common.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_constants.h">
-      <Filter>Helpers\Common</Filter>
-    </ClInclude>
     <ClInclude Include="common_define_associations.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
@@ -76,14 +73,8 @@
     <ClInclude Include="fxaa.h">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="chromatic_abberation.h">
-      <Filter>Forward rendering pipeline\Postprocess\Chromatic abberation</Filter>
-    </ClInclude>
     <ClInclude Include="contrast_adaptive_sharpening.h">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
-    </ClInclude>
-    <ClInclude Include="depth_of_field_common.h">
-      <Filter>Forward rendering pipeline\Postprocess\Depth of field</Filter>
     </ClInclude>
     <ClInclude Include="fxaa_atoc.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
@@ -239,18 +230,6 @@
     </None>
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps">
       <Filter>Forward rendering pipeline\Postprocess\Motion blur</Filter>
-    </None>
-    <None Include="postprocess_stage_chromatic_abberation.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Chromatic abberation</Filter>
-    </None>
-    <None Include="postprocess_stage_vignette_pass_dynamic.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Vignette</Filter>
-    </None>
-    <None Include="postprocess_stage_vignette_pass_static.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Vignette</Filter>
-    </None>
-    <None Include="postprocess_stage_sepia.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Sepia</Filter>
     </None>
     <None Include="postprocess_stage_bloom_build.ps">
       <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
@@ -713,17 +692,11 @@
     <Filter Include="Forward rendering pipeline\Postprocess\Motion blur">
       <UniqueIdentifier>{a5c0a9f7-4cb2-4958-b9e9-c459fe7237eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Sepia">
-      <UniqueIdentifier>{323dc634-6efe-43b0-a021-460a427eae27}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Autoexposure">
       <UniqueIdentifier>{49feecaa-bc5c-432a-94bf-ffea9d67953f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers">
       <UniqueIdentifier>{db7ceedf-b04f-4372-bc9c-2ae8d69979f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Vignette">
-      <UniqueIdentifier>{a9389b74-c9cc-487a-accf-275a923543ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Distortion">
       <UniqueIdentifier>{8e5af72c-f84e-4f1e-8c6b-bf926c39d2ba}</UniqueIdentifier>
@@ -811,9 +784,6 @@
     </Filter>
     <Filter Include="Dummy shaders">
       <UniqueIdentifier>{7d1c70ae-13b3-4b8c-9ea2-69f2b9ca9c91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Chromatic abberation">
-      <UniqueIdentifier>{cbf9940a-b204-44c7-bbb2-50d194a2c297}</UniqueIdentifier>
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Contrast adaptive sharpening">
       <UniqueIdentifier>{87454a62-2f60-48be-9bb8-bb02c3d94a65}</UniqueIdentifier>

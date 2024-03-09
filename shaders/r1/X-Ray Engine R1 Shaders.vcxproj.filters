@@ -447,9 +447,6 @@
     <ClInclude Include="common_uniforms.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="chromatic_abberation.h">
-      <Filter>Forward rendering pipeline\Postprocess stage\Post process effects</Filter>
-    </ClInclude>
     <ClInclude Include="common_shared.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>

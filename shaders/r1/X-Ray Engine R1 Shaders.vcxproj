@@ -287,7 +287,6 @@
     <None Include="yuv2rgb.ps" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chromatic_abberation.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="common_shared.h" />
     <ClInclude Include="common_defines.h" />

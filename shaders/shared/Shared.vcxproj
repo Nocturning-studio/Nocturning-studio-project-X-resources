@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="chromatic_abberations.h" />
+    <ClInclude Include="depth_of_field_common.h" />
     <ClInclude Include="shared.h" />
+    <ClInclude Include="shared_constants.h" />
     <ClInclude Include="shared_defines.h" />
     <ClInclude Include="shared_functions.h" />
     <ClInclude Include="shared_iostructs.h" />
@@ -27,6 +30,7 @@
     <ClInclude Include="shared_uniforms.h" />
     <ClInclude Include="fog.h" />
     <ClInclude Include="skinning.h" />
+    <ClInclude Include="zbuffer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

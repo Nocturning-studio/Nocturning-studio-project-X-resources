@@ -258,7 +258,6 @@
     <None Include="postprocess_stage_bloom_filter.ps" />
     <None Include="postprocess_stage_bloom_filter_horizontal.ps" />
     <None Include="postprocess_stage_bloom_filter_vertical.ps" />
-    <None Include="postprocess_stage_chromatic_abberation.ps" />
     <None Include="postprocess_stage_contrast_adaptive_sharpening.ps" />
     <None Include="postprocess_stage_depth_of_field_pass_horizontal_filter.ps" />
     <None Include="postprocess_stage_depth_of_field_pass_poisson_filter.ps" />
@@ -266,9 +265,6 @@
     <None Include="postprocess_stage_distortion.ps" />
     <None Include="postprocess_stage_motion_blur_pass_combine.ps" />
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
-    <None Include="postprocess_stage_sepia.ps" />
-    <None Include="postprocess_stage_vignette_pass_dynamic.ps" />
-    <None Include="postprocess_stage_vignette_pass_static.ps" />
     <None Include="scene_combine_stage.ps" />
     <None Include="scene_combine_stage.vs" />
     <None Include="scene_combine_stage_debug.ps" />
@@ -315,9 +311,7 @@
     <ClInclude Include="alpha_test.h" />
     <ClInclude Include="ambient_light.h" />
     <ClInclude Include="BRDF.h" />
-    <ClInclude Include="chromatic_abberation.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="common_constants.h" />
     <ClInclude Include="common_shared.h" />
     <ClInclude Include="common_defines.h" />
     <ClInclude Include="common_define_associations.h" />
@@ -327,7 +321,6 @@
     <ClInclude Include="common_samplers.h" />
     <ClInclude Include="common_uniforms.h" />
     <ClInclude Include="contrast_adaptive_sharpening.h" />
-    <ClInclude Include="depth_of_field_common.h" />
     <ClInclude Include="displacement.h" />
     <ClInclude Include="dlaa.h" />
     <ClInclude Include="filters.h" />
