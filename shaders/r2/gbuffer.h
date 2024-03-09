@@ -48,20 +48,6 @@ float3 UnpackNormal(float2 norm)
    return res;
 }
 
-float LinearizeDepth(float depth)
-{
-	return 2.0 * pos_decompression_params.z * pos_decompression_params.w 
-		/ (pos_decompression_params.w + pos_decompression_params.z - (depth * 2.0 - 1.0) 
-		* (pos_decompression_params.w - pos_decompression_params.z));
-}
-
-float DelinearizeDepth(float depth)
-{
-	return 0.5 * ((pos_decompression_params.w + pos_decompression_params.z) 
-		/ (pos_decompression_params.w - pos_decompression_params.z) - (2.0 * pos_decompression_params.z / depth) 
-		/ (pos_decompression_params.w - pos_decompression_params.z) + 1.0);
-}
-
 float PackPosition(float3 position)
 {
    return position.z;
