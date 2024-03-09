@@ -3,6 +3,8 @@
 //	Author		: Deathman, Mihan-323
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_zb;
+////////////////////////////////////////////////////////////////////////////
 float LinearizeDepth(float depth)
 {
 	return 2.0f * pos_decompression_params.z * pos_decompression_params.w
@@ -25,6 +27,6 @@ float GetZBufferFromINTZ(float2 TexCoords)
 float GetZBufferFromRAWZ(float2 TexCoords)
 {
 	float4 BGRA = tex2D(s_zb, TexCoords);
-	return dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5);
+	return dot(BGRA.arg, float3(0.9960938, 0.0038909, 1.5199185e-5));
 }
 ////////////////////////////////////////////////////////////////////////////
