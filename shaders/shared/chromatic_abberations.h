@@ -1,9 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Function from R.E.B.I.R.T.H. Shaders
 // Tweaked to NSPX by Deathman
-// Date: 29.01.2023
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "common.h"
+// Date: 09.03.2024
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Contants table
 #define fvChroma float3(1.000h, 0.997h, 1.007h) // displacement scales of red, green and blue respectively
@@ -11,7 +9,7 @@
 #define fFalloffRadius 1.8h                    // over this radius the effects is maximal
 #define fChromaPower 0.5h
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 ChromaticAberration(float3 ImageColor, float2 tex)
+float3 ChromaticAberration(sampler2D Image, float3 ImageColor, float2 tex)
 {
     float d = distance(tex, float2(0.5h, 0.5h));
     float f = smoothstep(fBaseRadius, fFalloffRadius, d + 0.075h * d);
@@ -21,8 +19,8 @@ float3 ChromaticAberration(float3 ImageColor, float2 tex)
     float2 tg = ((2.0h * tex - 1.0h) * chroma.g) * 0.5h + 0.5h;
     float2 tb = ((2.0h * tex - 1.0h) * chroma.b) * 0.5h + 0.5h;
 
-    float3 color = float3(tex2D(s_base, tr).r, tex2D(s_base, tg).g, tex2D(s_base, tb).b) * (1.0h - f);
+    float3 color = float3(tex2D(Image, tr).r, tex2D(Image, tg).g, tex2D(Image, tb).b) * (1.0h - f);
 
-    return lerp(ImageColor, float3(color.r, color.g, color.b), 0.35h);
+    return lerp(ImageColor, color, 0.35h);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

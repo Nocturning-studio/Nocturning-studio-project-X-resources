@@ -14,6 +14,7 @@
 //Effects
 #include <fog.h>
 #include <depth_of_field_common.h>
+#include <chromatic_abberations.h>
 
 //Skiining
 #include <skinning.h>

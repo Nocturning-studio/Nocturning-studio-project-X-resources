@@ -1,6 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-#include "chromatic_abberation.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 struct v2p
 {
@@ -73,7 +72,7 @@ float4 main (v2p I): COLOR
     float3 image = (t_0 + t_1) * 0.5h;
     
 #ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (image.rgb, (I.tc0 + I.tc1) * 0.5h);
+    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5h);
 #endif
     
 #ifdef USE_HDR
