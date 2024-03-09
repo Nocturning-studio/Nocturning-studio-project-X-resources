@@ -4,6 +4,8 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 //Common
+#include <shared_math.h>
+#include <shared_defines.h>
 #include <shared_uniforms.h>
 #include <shared_iostructs.h>
 #include <shared_functions.h>
@@ -13,3 +15,4 @@
 
 //Skiining
 #include <skinning.h>
+////////////////////////////////////////////////////////////////////////////
