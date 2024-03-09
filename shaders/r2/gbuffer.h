@@ -11,6 +11,10 @@
 // 2 - full,      'INTZ'  BGRA8 + BGRA8              = 64bit
 // 3 - full,      'RAWZ'  BGRA8 + BGRA8              = 64bit
 ////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_gbuffer_albedo;
+uniform sampler2D s_gbuffer_position;
+uniform sampler2D s_gbuffer_normal;
+////////////////////////////////////////////////////////////////////////////
 struct GBuffer
 {
     float3 Position;

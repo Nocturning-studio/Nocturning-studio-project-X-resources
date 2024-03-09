@@ -36,17 +36,11 @@ uniform sampler2D s_blue_noise;   // Blue noise (textures\\noise\\blue_noise_tex
 uniform sampler2D s_perlin_noise; // Perlin noise (textures\\noise\\perlin_noise_texture)
 //////////////////////////////////////////////////////////////////////////////////////////
 // Lighting/shadowing phase
-uniform sampler2D s_depth;
-uniform sampler2D s_gbuffer_position;
-uniform sampler2D s_zb;
-uniform sampler2D s_position_blurred; // Blurred position for ao
-uniform sampler2D s_gbuffer_normal;
 uniform sampler s_smap;               // 2D/cube shadowmap
 uniform sampler s_lmap;               // 2D/cube projector lightmap
 uniform sampler3D s_material;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Combine phase
-uniform sampler2D s_gbuffer_albedo;   // rgb.a = diffuse.gloss
 uniform sampler2D s_accumulator;
 uniform sampler2D s_diffuse_accumulator;
 uniform sampler2D s_specular_accumulator;
