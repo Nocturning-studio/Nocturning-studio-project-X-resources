@@ -39,7 +39,7 @@ Interpolators main (VertexData Input)
     pos.x = dot (m0, Input.Position);
     pos.y = dot (m1, Input.Position);
     pos.z = dot (m2, Input.Position);
-    pos.w = 1.0h;
+    pos.w = 1.0f;
 
     float base = m1.w;
     float dp = calc_cyclic (dot (pos, wave));
@@ -47,7 +47,7 @@ Interpolators main (VertexData Input)
     float frac = Input.Misc.z * consts.x; // fractional
     float inten = H * dp;
 	float2 result = calc_xz_wave (dir2D.xz * inten, frac);
-    pos = float4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0h);
+    pos = float4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0f);
 
 	// Normal in world coords
 	float3 norm;

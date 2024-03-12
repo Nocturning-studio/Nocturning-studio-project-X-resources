@@ -94,12 +94,12 @@ float2 rand_2_0004(in float2 uv)
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 calc_proj(float3 P)
 {
-    return mul(m_P, float4(P, 1.0h));
+    return mul(m_P, float4(P, 1.0f));
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 float2 projection_to_screen(float4 proj)
 {
     float2 screen = proj.xy / proj.w;
-    return (screen + float2(1.0h, -1.0h)) * float2(0.5h, -0.5h);
+    return (screen + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 }
 ////////////////////////////////////////////////////////////////////////////

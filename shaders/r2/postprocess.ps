@@ -23,7 +23,7 @@ float4 main (v2p I): COLOR
 	float3 image = (t_0 + t_1) * .5;
     
 #ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5h);
+    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5f);
 #endif
     
     float gray = dot (image, I.gray);
@@ -37,7 +37,7 @@ float4 main (v2p I): COLOR
     
 #ifdef VIGNETTE_MODE
 #if VIGNETTE_MODE == 1
-    float VignettePower = 0.5h;  
+    float VignettePower = 0.5f;  
 #elif VIGNETTE_MODE == 2
     float VignettePower = vignette_power;
 #endif

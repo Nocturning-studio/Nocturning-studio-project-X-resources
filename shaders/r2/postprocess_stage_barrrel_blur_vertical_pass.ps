@@ -18,7 +18,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
     float4 BlurredImageColor = NULL;
     for (int i = -(SAMPLES_COUNT / 2); i < SAMPLES_COUNT / 2; i++)
     {
-        BlurredImageColor += tex2Dlod0 (s_image, TexCoords + (0.0h, i) * screen_res.zw);
+        BlurredImageColor += tex2Dlod0 (s_image, TexCoords + (0.0f, i) * screen_res.zw);
     }
     BlurredImageColor /= SAMPLES_COUNT;
     
@@ -26,6 +26,6 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
     float4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords);
     
     // Blending blurred and unblurred image colors by blur map
-    return (UnblurredImageColor * VignetteColor) + (BlurredImageColor * (1.0h - VignetteColor));
+    return (UnblurredImageColor * VignetteColor) + (BlurredImageColor * (1.0f - VignetteColor));
 }
 ///////////////////////////////////////////////////////////////////////////////////

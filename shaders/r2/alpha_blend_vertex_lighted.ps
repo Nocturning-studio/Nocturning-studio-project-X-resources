@@ -34,7 +34,7 @@ PixelShaderOutputStruct main (v2p I)
     // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
     Albedo = lerp (Albedo, fog_params.rgb, Fog);
-    Opacity *= 1.0h - pow(Fog, 2.2h);
+    Opacity *= 1.0f - pow(Fog, 2.2f);
     
     Albedo = Calc_hdr (Albedo);
     

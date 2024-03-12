@@ -38,13 +38,13 @@ GBufferPacked main (Interpolators Input)
 	
     GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
 
-    GBuffer.BakedAO = 1.0h;
+    GBuffer.BakedAO = 1.0f;
 
     GBuffer.Normal = normalize (Input.Normal.xyz);
 
 	GBuffer.Position = Input.Position;
 	
-    GBuffer.Glossiness = 0.0h;
+    GBuffer.Glossiness = 0.0f;
 	
     return PackGBuffer (GBuffer);
 }

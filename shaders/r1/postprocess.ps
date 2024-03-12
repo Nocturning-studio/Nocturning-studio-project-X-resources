@@ -35,7 +35,7 @@ float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
     {
         float2 RaySize = screen_res.zw;
         float3 SummaryImageColor = 0;
-        float Contribution = 0.0h;
+        float Contribution = 0.0f;
 	
         for (int i = 0; i < 16; i++)
         {
@@ -51,7 +51,7 @@ float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
         }
 	
         float3 BlurredImageColor = (SummaryImageColor / Contribution) * BlurPower;
-        float3 UnblurredImageColor = ImageColor * (1.0h - BlurPower);
+        float3 UnblurredImageColor = ImageColor * (1.0f - BlurPower);
 
         return BlurredImageColor + UnblurredImageColor;
     }
@@ -62,17 +62,17 @@ float4 main (v2p I): COLOR
 {
 #ifdef USE_DISTORTION
     float4 distort = tex2D(s_distort, I.tc0);
-	float2 offset = (distort.xy - 0.5h) * def_distort;
+	float2 offset = (distort.xy - 0.5f) * def_distort;
 #else
-    float2 offset = float2 (0.0h, 0.0h);
+    float2 offset = float2 (0.0f, 0.0f);
 #endif
     
     float3 t_0 = tex2Dlod0(s_base, I.tc0 + offset);
     float3 t_1 = tex2Dlod0(s_base, I.tc1 + offset);
-    float3 image = (t_0 + t_1) * 0.5h;
+    float3 image = (t_0 + t_1) * 0.5f;
     
 #ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5h);
+    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5f);
 #endif
     
 #ifdef USE_HDR
@@ -81,12 +81,12 @@ float4 main (v2p I): COLOR
     const float fWhiteIntensity = hdr_params.x;
     const float fWhiteIntensitySQR = fWhiteIntensity * fWhiteIntensity;
 
-    image = float3 (((image * (1.0h + image / fWhiteIntensitySQR)) / (image + 1.0h)));
+    image = float3 (((image * (1.0f + image / fWhiteIntensitySQR)) / (image + 1.0f)));
 #endif    
 
 #ifdef VIGNETTE_MODE
 #if VIGNETTE_MODE == 1
-    float VignettePower = 0.5h;  
+    float VignettePower = 0.5f;  
 #elif VIGNETTE_MODE == 2
     float VignettePower = vignette_power;
 #endif
@@ -102,11 +102,11 @@ float4 main (v2p I): COLOR
     image = lerp (gray, image, I.gray.w);
 
     float4 t_noise = tex2D (s_noise, I.tc2);
-    float3 noised = image * t_noise * 2.0h;
+    float3 noised = image * t_noise * 2.0f;
     image = lerp (noised, image, I.color.w);
     
-    image = (image * I.color + c_brightness) * 2.0h;
+    image = (image * I.color + c_brightness) * 2.0f;
     
-    return float4 (image, 1.0h);
+    return float4 (image, 1.0f);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

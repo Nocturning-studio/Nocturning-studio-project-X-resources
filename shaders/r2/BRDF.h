@@ -23,10 +23,10 @@ float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
     float vDotN = saturate(dot(Normal, v));
 
     // Index of refraction for common dielectrics. Corresponds to f0 4%
-    float IOR = 1.5h;
+    float IOR = 1.5f;
     // Reflectance of the surface when looking straight at it along the negative normal
-    float F0 = float(pow(IOR - 1.0h, 2.0h) / pow(IOR + 1.0h, 2.0h));
-    // F0 = lerp(F0, 1.0h, Metalness);
+    float F0 = float(pow(IOR - 1.0f, 2.0f) / pow(IOR + 1.0f, 2.0f));
+    // F0 = lerp(F0, 1.0f, Metalness);
 
     float3 F = fresnelSchlickRoughness(vDotN, F0.xxx, Roughness);
     float2 brdf = tex2D(s_brdf_lut, float2(vDotN, Roughness));
@@ -35,14 +35,14 @@ float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
 ////////////////////////////////////////////////////////////////////////////
 float Fresnel(float Specular, float3 ViewDirection, float3 floatAngle)
 {
-    return (Specular + (1.0h - Specular) * pow(1.0h - saturate(dot(ViewDirection, floatAngle)), 5.0h));
+    return (Specular + (1.0f - Specular) * pow(1.0f - saturate(dot(ViewDirection, floatAngle)), 5.0f));
 }
 ////////////////////////////////////////////////////////////////////////////
 float Blinn_Phong_Specular(float3 floatAngle, float3 Normal)
 {
-    float Specular = max(0.0h, dot(floatAngle, Normal));
+    float Specular = max(0.0f, dot(floatAngle, Normal));
 
-    return pow(Specular, 16.0h);
+    return pow(Specular, 16.0f);
 }
 ////////////////////////////////////////////////////////////////////////////
 // https://www.shadertoy.com/view/ltfyD8
@@ -53,11 +53,11 @@ float Oren_Nayar_Diffuse(float3 LightDirection, float3 ViewDirection, float3 Nor
     float NdotL = saturate(dot(Normal, LightDirection));
     float VdotL = dot(ViewDirection, LightDirection);
     float NdotV = abs(dot(Normal, ViewDirection)) + 0.1f;
-    float RoughnessSqr = pow(1.0h - Glossiness, 2);
+    float RoughnessSqr = pow(1.0f - Glossiness, 2);
 
     float s = VdotL - NdotL * NdotV;
-    float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0h, s));
-    return NdotL * ((1.0h - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) +
+    float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
+    return NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) +
                     (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -69,8 +69,8 @@ float2 Calculate_Lighting_Model(float Glossiness, float3 Point, float3 Normal,
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
-    float VdotN = max(0.0h, dot(ViewDirection, Normal));
-    float NdotL = max(0.0h, dot(LightDirection, Normal));
+    float VdotN = max(0.0f, dot(ViewDirection, Normal));
+    float NdotL = max(0.0f, dot(LightDirection, Normal));
     float3 floatAngle = normalize(LightDirection + ViewDirection);
 
     // --Indirect specular from light--
@@ -90,7 +90,7 @@ float CalculateAttenuation(float3 Point, float3 LightPosition, float LightSource
     // Calculate standard X-Ray Engine light attenuation
     float3 LightDirection = Point - LightPosition;
     float LightRadiusSquared = dot(LightDirection, LightDirection);
-    float AttenuationFactor = saturate(1.0h - LightRadiusSquared * LightSourceRange);
+    float AttenuationFactor = saturate(1.0f - LightRadiusSquared * LightSourceRange);
 
     // Make attenuation more realistic - light brightness falls down with pow 2.2
     //  Need work with lighting on game levels

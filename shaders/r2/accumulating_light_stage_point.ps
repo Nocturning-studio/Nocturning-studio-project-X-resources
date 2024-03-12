@@ -29,19 +29,19 @@ Accumulator main (Interpolators Input)
     float3 Diffuse = LightingModel.xxx;
     float3 Specular = LightingModel.yyy;
     
-    float4 Position = float4 (GBuffer.Position, 1.0h);
+    float4 Position = float4 (GBuffer.Position, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
   
 #ifdef USE_SHADOW_MAPPING
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
 #else
-    float ShadowMap = 1.0h;
+    float ShadowMap = 1.0f;
 #endif
     
 #ifdef USE_LIGHT_MAPPING
     float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
 #else
-    float3 LightMap = float3 (1.0h, 1.0h, 1.0h);
+    float3 LightMap = float3 (1.0f, 1.0f, 1.0f);
 #endif
     
     LightMap *= ShadowMap * AttenuationFactor;

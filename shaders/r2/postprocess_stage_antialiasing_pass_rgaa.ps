@@ -36,14 +36,14 @@ http://blog.demofox.org/2015/04/23/4-rook-antialiasing-rgss/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
-    const float S = 1.0h / 8.0h;
-    const float L = 3.0h / 8.0h;
+    const float S = 1.0f / 8.0f;
+    const float L = 3.0f / 8.0f;
     
     float4 SampleColor0 = tex2Dlod0 (s_image, TexCoords + float2 (S, -L) / screen_res.xy);
     float4 SampleColor1 = tex2Dlod0 (s_image, TexCoords + float2 (L, S) / screen_res.xy);
     float4 SampleColor2 = tex2Dlod0 (s_image, TexCoords + float2 (-S, -L) / screen_res.xy);
     float4 SampleColor3 = tex2Dlod0 (s_image, TexCoords + float2 (-L, -S) / screen_res.xy);
     
-    return (SampleColor0 + SampleColor1 + SampleColor2 + SampleColor3) * 0.25h;
+    return (SampleColor0 + SampleColor1 + SampleColor2 + SampleColor3) * 0.25f;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

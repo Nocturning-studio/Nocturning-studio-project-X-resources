@@ -24,7 +24,7 @@ struct PixelShaderOutputStruct
 PixelShaderOutputStruct main (v2p I)
 {
 	float4 distort = tex2D (s_distort, I.tc0);
-    float factor = distort.a * dot (I.c.rgb, 0.33h);
+    float factor = distort.a * dot (I.c.rgb, 0.33f);
 
 #ifdef	USE_SOFT_PARTICLES
 	float2	zero = float2( 0.5, 0.5);
@@ -38,7 +38,7 @@ PixelShaderOutputStruct main (v2p I)
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
     distort.rgb = lerp (distort.rgb, fog_params.rgb, Fog);
-    factor *= 1.0h - pow (Fog, 2.2h);
+    factor *= 1.0f - pow (Fog, 2.2f);
 	
     factor = Calc_hdr (factor);
 	

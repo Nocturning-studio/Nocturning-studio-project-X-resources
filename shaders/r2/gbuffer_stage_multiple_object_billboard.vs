@@ -37,7 +37,7 @@ Interpolators main (VertexData Input)
     float HightToLowQualityTransitionFactor = Input.SunOcclusionWithOpacityAndTransition.w;
 
 	float3 InterpolatedVertexPosition = lerp (Input.Position0, Input.Position1, HightToLowQualityTransitionFactor);
-	float4 VertexPosition = float4 (InterpolatedVertexPosition, 1.0h);
+	float4 VertexPosition = float4 (InterpolatedVertexPosition, 1.0f);
 
     float Ambient = lerp (Input.ColorWithAmbient0.w, Input.ColorWithAmbient1.w, HightToLowQualityTransitionFactor);
 

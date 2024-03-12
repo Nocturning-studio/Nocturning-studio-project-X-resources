@@ -54,7 +54,7 @@ float3 GetViewVector(float3 Position, float3x3 TBN)
 float4 GetDetailMask(float2 UV)
 {
     float4 Mask = tex2D(s_mask, UV);
-    return Mask / dot(Mask, 1.0h);
+    return Mask / dot(Mask, 1.0f);
 }
 
 float3 GetDetailAlbedo(float4 Mask, float2 UV)
@@ -119,14 +119,14 @@ float2 CalculateDetailParallaxOcclusionMapping(float3 Position, float3x3 TBN, fl
         // Calculate number of steps
         float nNumSteps = lerp(TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, TERRAIN_STEEP_PARALLAX_MIN_SAMPLES, ViewVector.z);
 
-        float fStepSize = 1.0h / nNumSteps;
+        float fStepSize = 1.0f / nNumSteps;
         float2 vDelta = -ViewVector.xy * constant_terrain_parallax_scale.x;
         float2 vTexOffsetPerStep = fStepSize * vDelta;
 
         // Prepare start data for cycle
         float2 vTexCurrentOffset = UV;
-        float fCurrHeight = 0.0h;
-        float fCurrentBound = 1.0h;
+        float fCurrHeight = 0.0f;
+        float fCurrentBound = 1.0f;
 
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
@@ -145,7 +145,7 @@ float2 CalculateDetailParallaxOcclusionMapping(float3 Position, float3x3 TBN, fl
         float fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
         float fParallaxFade = smoothstep(TERRAIN_STEEP_PARALLAX_STOP_FADE, TERRAIN_STEEP_PARALLAX_START_FADE, Position.z);
 
-        UV += vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
+        UV += vDelta * ((1.0f - fParallaxAmount) * fParallaxFade);
     }
 
     return UV;

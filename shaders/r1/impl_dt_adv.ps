@@ -35,7 +35,7 @@ float4 main (v2p I): COLOR
 
 	// calc D-texture
     float4 mask = tex2D (s_mask, I.tc0);
-    mask = mask / dot (mask, 1.0h);
+    mask = mask / dot (mask, 1.0f);
     float3 red_detail = tex2D (s_dt_r, I.tc2) * mask.r;
     float3 green_detail = tex2D (s_dt_g, I.tc2) * mask.g;
     float3 blue_detail = tex2D (s_dt_b, I.tc2) * mask.b;

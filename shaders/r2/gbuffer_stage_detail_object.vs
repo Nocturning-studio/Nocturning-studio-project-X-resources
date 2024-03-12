@@ -37,7 +37,7 @@ Interpolators main (VertexData Input)
     pos.x = dot (m0, Input.Position);
     pos.y = dot (m1, Input.Position);
     pos.z = dot (m2, Input.Position);
-    pos.w = 1.0h;
+    pos.w = 1.0f;
 
 	// Normal in world coords
 	float3 norm;

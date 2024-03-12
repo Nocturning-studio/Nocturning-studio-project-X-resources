@@ -8,14 +8,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
 #define USE_ATTENUATION
-#define SSAO_ATTENUATION_DISTANCE 0.5h
+#define SSAO_ATTENUATION_DISTANCE 0.5f
 #define SSAO_NORMAL float(0.0050)
 #define SSAO_POWER  float(2.2)
 #define	SSAO_RADIUS float(0.4)
 //////////////////////////////////////////////////////////////////////////////////////////
 // Presets
 #define SSAO_SAMPLES 6
-#define SSAO_RENDER_DISTANCE 50.0h
+#define SSAO_RENDER_DISTANCE 50.0f
 //////////////////////////////////////////////////////////////////////////////////////////
 float2 hash22 (float2 p)
 {
@@ -37,7 +37,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     
     if (P.z > SSAO_RENDER_DISTANCE)
     {
-        return float4 (1.0h, 1.0h, 1.0h, 1.0h);
+        return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
     else
     {
@@ -101,7 +101,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
         occ = pow (1 - occ / SSAO_SAMPLES, SSAO_POWER);
         
         // Create smooth render distance border
-        float FarFadingFactor = smoothstep (SSAO_RENDER_DISTANCE * 0.75h, SSAO_RENDER_DISTANCE, length (P));
+        float FarFadingFactor = smoothstep (SSAO_RENDER_DISTANCE * 0.75f, SSAO_RENDER_DISTANCE, length (P));
         occ = lerp (occ, 1.0f, FarFadingFactor);
 
         return occ;

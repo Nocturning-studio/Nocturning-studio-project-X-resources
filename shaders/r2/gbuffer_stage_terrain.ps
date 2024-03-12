@@ -37,7 +37,7 @@ GBufferPacked main (Interpolators Input)
 
 	// details albedo data, multiplicated by detail map
 	float3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
-    GBuffer.Albedo = 2.0h * DiffuseTextureData.rgb * DetailAlbedo;
+    GBuffer.Albedo = 2.0f * DiffuseTextureData.rgb * DetailAlbedo;
 
 	// Get DXT comressed normals + AO + glossmap for all details in 4 textures set
 	float4 DetailBumpData = GetDetailBump (Mask, DetailUV);
@@ -46,10 +46,10 @@ GBufferPacked main (Interpolators Input)
 	float4 DetailBumpDecompressionData = GetDetailBumpDecompression (Mask, DetailUV);
 
 	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
-	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0h);
+	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0f);
 
 	 // Reconstruct z component for normals (actually z component used for Baked AO)
-    NormalMap.z = sqrt (1.0h - dot (NormalMap.xy, NormalMap.xy));
+    NormalMap.z = sqrt (1.0f - dot (NormalMap.xy, NormalMap.xy));
 
     float HeightMap = DetailBumpDecompressionData.a;
 
@@ -60,7 +60,7 @@ GBufferPacked main (Interpolators Input)
 #endif
 
 	// Transformate height map from [0; 1] space to [1; 2] and make normals more power
-    NormalMap.xy *= HeightMap + 1.0h;
+    NormalMap.xy *= HeightMap + 1.0f;
 
 	// Make normals more power with heightmap
     NormalMap.z *= HeightMap;

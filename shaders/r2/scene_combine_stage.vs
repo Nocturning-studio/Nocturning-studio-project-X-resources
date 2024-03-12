@@ -15,7 +15,7 @@ Interpolators main (float4 VertexPosition: POSITION)
 {
     Interpolators Output;
     
-    Output.HomogeniousPosition = float4 (VertexPosition.x, -VertexPosition.y, 0.0h, 1.0h);
+    Output.HomogeniousPosition = float4 (VertexPosition.x, -VertexPosition.y, 0.0f, 1.0f);
     Output.TexCoords = VertexPosition.zw;
     
     return Output;

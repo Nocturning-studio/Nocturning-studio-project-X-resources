@@ -22,9 +22,9 @@ Accumulator PackLightingAccumulator(float3 Diffuse, float3 Specular)
 	Accumulator Output;
 
 	Output.DiffuseAccumulator.rgb = Diffuse;
-	Output.DiffuseAccumulator.a = 0.0h;
+	Output.DiffuseAccumulator.a = 0.0f;
 	Output.SpecularAccumulator.rgb = Specular;
-	Output.SpecularAccumulator.a = 0.0h;
+	Output.SpecularAccumulator.a = 0.0f;
 
 	return Output;
 }

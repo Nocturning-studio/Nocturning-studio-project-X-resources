@@ -122,14 +122,14 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
         // Calculate number of steps
         float nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, ViewVector.z);
 
-        float fStepSize = 1.0h / nNumSteps;
+        float fStepSize = 1.0f / nNumSteps;
         float2 vDelta = -ViewVector.xy * constant_parallax_scale.x;
         float2 vTexOffsetPerStep = fStepSize * vDelta;
 
         // Prepare start data for cycle
         float2 vTexCurrentOffset = UV;
-        float fCurrHeight = 0.0h;
-        float fCurrentBound = 1.0h;
+        float fCurrHeight = 0.0f;
+        float fCurrentBound = 1.0f;
 
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
@@ -148,7 +148,7 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
         float fParallaxAmount = (fCurrentBound * fDelta2 - (fCurrentBound + fStepSize) * fDelta1) / (fDelta2 - fDelta1);
         float fParallaxFade = smoothstep(StopFadingDistance, StartFadingDistance, Position.z);
 
-        UV += vDelta * ((1.0h - fParallaxAmount) * fParallaxFade);
+        UV += vDelta * ((1.0f - fParallaxAmount) * fParallaxFade);
     }
 
     return UV;

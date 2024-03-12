@@ -23,7 +23,7 @@ float4 diagonal_filter(sampler2D in_sampler, int numsamples, float2 texcoords)
         float4 sample = tex2Dlod0(in_sampler, texcoords + screen_res.zw * diagonal_coords[i]);
         output += sample;
     }
-    return output / (numsamples + 1.0h);
+    return output / (numsamples + 1.0f);
 }
 
 static const float2 box_coords[101] = {
@@ -86,7 +86,7 @@ float4 linear_filter(sampler2D in_sampler, float2 texcoords)
     float4 s0 = tex2Dlod0(in_sampler, texcoords + pixel * float2(1.5f, 0.5f));  //+1,  0
     float4 s1 = tex2Dlod0(in_sampler, texcoords + pixel * float2(-0.5f, 0.5f)); //-1,  0
 
-    return (s0 + s1) / 2.0h;
+    return (s0 + s1) / 2.0f;
 }
 
 // 2x2 filter
@@ -99,7 +99,7 @@ float4 bilinear_filter(sampler2D in_sampler, float2 texcoords)
     float4 s2 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-0.5f, -0.5f)); //-1, -1
     float4 s3 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-0.5f, 1.5f));  //-1, +1
 
-    return (s0 + s1 + s2 + s3) / 4.0h;
+    return (s0 + s1 + s2 + s3) / 4.0f;
 }
 
 float4 bilinear_filter_ao(sampler2D in_sampler, float2 texcoords)
@@ -111,7 +111,7 @@ float4 bilinear_filter_ao(sampler2D in_sampler, float2 texcoords)
     float4 s2 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-0.5f, -0.5f)); //-1, -1
     float4 s3 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-0.5f, 1.5f));  //-1, +1
 
-    return (s0 + s1 + s2 + s3) / 4.0h;
+    return (s0 + s1 + s2 + s3) / 4.0f;
 }
 
 // 3x3 filter
@@ -129,7 +129,7 @@ float4 trilinear_filter(sampler2D in_sampler, float2 texcoords)
     float4 s6 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-2.5f, 0.5f)); //-2,  0
     float4 s7 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(2.5f, 0.5f));  //+2,  0
 
-    return (s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7) / 8.0h;
+    return (s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7) / 8.0f;
 }
 
 float4 trilinear_filter_ao(sampler2D in_sampler, float2 texcoords)
@@ -146,7 +146,7 @@ float4 trilinear_filter_ao(sampler2D in_sampler, float2 texcoords)
     float4 s6 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(-2.5f, 0.5f)); //-2,  0
     float4 s7 = tex2Dlod0(in_sampler, texcoords + PixelSize * float2(2.5f, 0.5f));  //+2,  0
 
-    return (s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7) / 8.0h;
+    return (s0 + s1 + s2 + s3 + s4 + s5 + s6 + s7) / 8.0f;
 }
 
 static const float2 strided_coords[35] = {

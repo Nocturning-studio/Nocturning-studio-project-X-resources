@@ -58,26 +58,26 @@ PixelShaderOutputStruct main (vf I)
 
     float fresnel = saturate (dot (vreflect, v2point));
     float power = pow (fresnel, 9);
-    float amount = 0.15h + 0.25h * power; // 1=full env, 0=no env
+    float amount = 0.15f + 0.25f * power; // 1=full env, 0=no env
 	
 	float3 c_reflection = env * amount;
 	float3 final = lerp (c_reflection, base.rgb, base.a);
 
     final *= I.c0 * 2;
 	
-    float Opacity = 1.0h;
+    float Opacity = 1.0f;
 	
 #ifdef	NEED_SOFT_WATER
-	float	alpha	= 0.75h+0.25h*power;                        // 1=full env, 0=no env
+	float	alpha	= 0.75f+0.25f*power;                        // 1=full env, 0=no env
 
 	//	Igor: additional depth test
 	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float waterDepth = Depth-I.tctexgen.z;
 
 	//	water fog
-	float  fog_exp_intens = -4.0h;
+	float  fog_exp_intens = -4.0f;
 	float fog	= 1-exp(fog_exp_intens*waterDepth);
-	float3 Fc  	= float3( 0.1h, 0.1h, 0.1h) * water_intensity.r;
+	float3 Fc  	= float3( 0.1f, 0.1f, 0.1f) * water_intensity.r;
 	final 		= lerp (Fc, final, alpha);
 
 	alpha 		= min(alpha, saturate(waterDepth));
@@ -99,7 +99,7 @@ PixelShaderOutputStruct main (vf I)
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
-    Opacity *= 1.0h - pow (Fog, 2.2h);
+    Opacity *= 1.0f - pow (Fog, 2.2f);
 	
     final = Calc_hdr (final);
 	

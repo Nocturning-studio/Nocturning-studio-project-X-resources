@@ -26,7 +26,7 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
 
-    GBuffer.BakedAO = 1.0h;
+    GBuffer.BakedAO = 1.0f;
 
 	// Normal for Geometry Buffer
     GBuffer.Normal = normalize (Input.Normal);
@@ -35,7 +35,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Position = Input.Position;
 	
 	// Out glossiness
-    GBuffer.Glossiness = 0.0h;
+    GBuffer.Glossiness = 0.0f;
 	
     return PackGBuffer (GBuffer);
 }

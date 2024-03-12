@@ -39,11 +39,11 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Position = Input.Position;
     
-    GBuffer.AO = 0.5h;
+    GBuffer.AO = 0.5f;
     
-    GBuffer.BakedAO = 1.0h;
+    GBuffer.BakedAO = 1.0f;
     
-    GBuffer.Glossiness = 0.0h;
+    GBuffer.Glossiness = 0.0f;
     
     return PackGBuffer (GBuffer);
 }

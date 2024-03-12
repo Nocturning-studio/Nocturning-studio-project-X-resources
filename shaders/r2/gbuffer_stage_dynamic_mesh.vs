@@ -27,9 +27,9 @@ Interpolators _main (v_model Input)
     float3 Normal = Input.N;
     float3 Tangent = Input.T;
     float3 Bitangent = Input.B;
-    float3x3 TBN = mul ((float3x3)m_WV, float3x3 (2.0h * Tangent.x, 2.0h * Bitangent.x, 2.0h * Normal.x,
-												  2.0h * Tangent.y, 2.0h * Bitangent.y, 2.0h * Normal.y,
-												  2.0h * Tangent.z, 2.0h * Bitangent.z, 2.0h * Normal.z));
+    float3x3 TBN = mul ((float3x3)m_WV, float3x3 (2.0f * Tangent.x, 2.0f * Bitangent.x, 2.0f * Normal.x,
+												  2.0f * Tangent.y, 2.0f * Bitangent.y, 2.0f * Normal.y,
+												  2.0f * Tangent.z, 2.0f * Bitangent.z, 2.0f * Normal.z));
     Output.TBN0 = TBN[0];
     Output.TBN1 = TBN[1];
     Output.TBN2 = TBN[2];

@@ -38,10 +38,10 @@ Interpolators main (VertexData Input)
 	float inten = H * dp;									// intensity
 	float2 result = calc_xz_wave(wind.xz*inten, frac);
 #else
-    float2 result = 0.0h;
+    float2 result = 0.0f;
 #endif
 
-    float4 w_pos = float4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0h);
+    float4 w_pos = float4 (pos.x + result.x, pos.y, pos.z + result.y, 1.0f);
 
     Output.UV = (Input.UV * consts).xy;
     Output.HomogeniousPosition = mul (m_VP, w_pos);

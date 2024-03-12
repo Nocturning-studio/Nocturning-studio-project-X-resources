@@ -76,7 +76,7 @@ vf main (v_vert v)
     o.hpos = mul (m_VP, P); // xform, input in world coords
     o.position = mul (m_WV, P);
 
-    o.c0 = float4 (L_final, 0.0h);
+    o.c0 = float4 (L_final, 0.0f);
 
 //	Igor: for additional depth dest
 #ifdef	USE_SOFT_WATER

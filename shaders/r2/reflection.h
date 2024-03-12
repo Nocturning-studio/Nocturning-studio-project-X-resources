@@ -18,12 +18,12 @@ float3 BlurredSkyReflection(float3 Point, float3 Normal, float Roughness)
     float3 vreflectabs = abs(vreflect);
     float vreflectmax = max(vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
     vreflect /= vreflectmax;
-    if (vreflect.y < 0.99h)
+    if (vreflect.y < 0.99f)
 #endif
-        vreflect.y = vreflect.y * 2.0h - 1.0h;
+        vreflect.y = vreflect.y * 2.0f - 1.0f;
 
-    float3 Environment0 = texCUBElod(sky_s0, float4(vreflect, 4.0h * Roughness));
-    float3 Environment1 = texCUBElod(sky_s1, float4(vreflect, 4.0h * Roughness));
+    float3 Environment0 = texCUBElod(sky_s0, float4(vreflect, 4.0f * Roughness));
+    float3 Environment1 = texCUBElod(sky_s1, float4(vreflect, 4.0f * Roughness));
     float3 Environment = lerp(Environment0, Environment1, env_color.w);
 
     return lerp(Environment, fog_color.rgb, fog_sky_influence);

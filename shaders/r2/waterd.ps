@@ -17,7 +17,7 @@ struct PixelShaderOutputStruct
 	float4 Position: COLOR1;
 };
 
-#define POWER .5h
+#define POWER .5f
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 PixelShaderOutputStruct main (v2p I)
@@ -47,15 +47,15 @@ PixelShaderOutputStruct main (v2p I)
     faded = faded * POWER - .5 * POWER + 0.5;
     
 #ifdef	NEED_SOFT_WATER    
-    float3 final = float3(faded, 0.0h);
+    float3 final = float3(faded, 0.0f);
 #else
-    float3 final = float3 (faded, 0.08h);
+    float3 final = float3 (faded, 0.08f);
 #endif
     
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
-    alpha *= 1.0h - pow (Fog, 2.2h);
+    alpha *= 1.0f - pow (Fog, 2.2f);
     
     final = Calc_hdr (final);
     

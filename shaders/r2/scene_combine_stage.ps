@@ -22,21 +22,21 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r;
 #endif
     
-    float BakedAO = pow (saturate (GBuffer.BakedAO + 0.1h), 2.2h);
+    float BakedAO = pow (saturate (GBuffer.BakedAO + 0.1f), 2.2f);
     
     float3 DiffuseLighting = (AmbientLighting + Light.Diffuse) * BakedAO;
     
     //float3 SkyReflections = BlurredSkyReflection(GBuffer.Position, GBuffer.Normal, invert(GBuffer.Glossiness));
     
-    //float3 SpecularColor = lerp(GBuffer.Albedo + 0.5h, SkyReflections, GBuffer.Glossiness);
+    //float3 SpecularColor = lerp(GBuffer.Albedo + 0.5f, SkyReflections, GBuffer.Glossiness);
     
-    float3 SpecularLighting = Light.Specular * 1.5h;
+    float3 SpecularLighting = Light.Specular * 1.5f;
 	
     float3 SceneColor = mad (GBuffer.Albedo, DiffuseLighting, SpecularLighting) * BakedAO;
     
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
-    float Opacity = pow (Fog, 2.2h);
+    float Opacity = pow (Fog, 2.2f);
 	
     SceneColor = Calc_hdr (SceneColor);
     

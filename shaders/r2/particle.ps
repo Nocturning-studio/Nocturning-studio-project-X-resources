@@ -13,7 +13,7 @@ struct v2p
 };
 
 //	Must be less than view near
-#define	DEPTH_EPSILON	0.1h
+#define	DEPTH_EPSILON	0.1f
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 float4 main (v2p I): COLOR
@@ -24,8 +24,8 @@ float4 main (v2p I): COLOR
 #ifdef	USE_SOFT_PARTICLES
 	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float spaceDepth = Depth-I.tctexgen.z-DEPTH_EPSILON;
-	result.a *= Contrast( saturate(spaceDepth*1.3h), 2);
-	result.rgb *= Contrast( saturate(spaceDepth*1.3h), 2);
+	result.a *= Contrast( saturate(spaceDepth*1.3f), 2);
+	result.rgb *= Contrast( saturate(spaceDepth*1.3f), 2);
 #endif	//	USE_SOFT_PARTICLES
 	
     return result;

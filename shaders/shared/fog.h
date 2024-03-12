@@ -10,7 +10,7 @@ float CalcSqaredExponentialFog(float3 Position)
 {
 	float Distance = length(Position);
 	float FogDensity = fog_params.a * FOG_DENSITY_MULTIPLIER;
-	return saturate(1.0h - exp((-Distance * FogDensity) * (Distance * FogDensity)));
+	return saturate(1.0f - exp((-Distance * FogDensity) * (Distance * FogDensity)));
 }
 
 float CalcVertexFogness(float3 Position)

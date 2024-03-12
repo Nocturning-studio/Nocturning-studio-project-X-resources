@@ -21,7 +21,7 @@ Interpolators main (VertexData Input)
 {
     Interpolators Output;
     
-    Output.HomogeniousPosition = mul (m_WVP, mul (1000.0h, Input.Position));
+    Output.HomogeniousPosition = mul (m_WVP, mul (1000.0f, Input.Position));
     Output.HomogeniousPosition.z = Output.HomogeniousPosition.w;
     Output.UV0 = Input.UV0;
     Output.UV1 = Input.UV1;

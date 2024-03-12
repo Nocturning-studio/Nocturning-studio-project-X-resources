@@ -36,6 +36,6 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     else if (debug_mode == REAL_TIME_AO)
         OutputColor = tex2D (s_ao, TexCoords).rrr;
     
-    return float4 (OutputColor, 0.0h);
+    return float4 (OutputColor, 0.0f);
 }
 ////////////////////////////////////////////////////////////////////////////

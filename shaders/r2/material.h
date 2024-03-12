@@ -50,10 +50,10 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     float4 NormalMapDecompressionData = tex2D(s_bumpX, UV);
 
     // Transform normal map color from [0; 1] space to [-1; 1] with DXT decompressing
-    Material.Normal = (NormalMapData.abg + (NormalMapDecompressionData.rgb - 1.0h));
+    Material.Normal = (NormalMapData.abg + (NormalMapDecompressionData.rgb - 1.0f));
 
     // Reconstruct z component for normals (actually z component used for Baked AO)
-    Material.Normal.z = sqrt(1.0h - dot(Material.Normal.xy, Material.Normal.xy));
+    Material.Normal.z = sqrt(1.0f - dot(Material.Normal.xy, Material.Normal.xy));
 
     Material.AO = tex2D(s_baked_ao, UV).r;
 
@@ -79,16 +79,16 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     float4 DetailNormalMapDecompressionData = tex2D(s_detailBumpX, DetailUV);
 
     // Transform normal map color from [0; 1] space to [-1; 1] with decompressing
-    float3 DetailNormal = (DetailNormalMapData.abg + (DetailNormalMapDecompressionData.rgb - 1.0h));
+    float3 DetailNormal = (DetailNormalMapData.abg + (DetailNormalMapDecompressionData.rgb - 1.0f));
 
     // Reconstruct z component for normals (actually z component used for Baked AO)
-    DetailNormal.z = sqrt(1.0h - dot(DetailNormal.xy, DetailNormal.xy));
+    DetailNormal.z = sqrt(1.0f - dot(DetailNormal.xy, DetailNormal.xy));
 
     // Correctly blend two maps
     Material.Normal = Blend_Normal_Maps(Material.Normal, DetailNormal);
 
     // Combine main albedo with detail
-    Material.Albedo.rgb *= 2.0h * DetailAlbedo;
+    Material.Albedo.rgb *= 2.0f * DetailAlbedo;
 
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is
     // smaller
@@ -104,7 +104,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 #endif
 
     // Transformate height map from [0; 1] space to [1; 2] and make normals more power
-    Material.Normal.xy *= Material.Height + 1.0h;
+    Material.Normal.xy *= Material.Height + 1.0f;
 
     // Make normals more power with heightmap
     Material.Normal.z *= Material.Height;

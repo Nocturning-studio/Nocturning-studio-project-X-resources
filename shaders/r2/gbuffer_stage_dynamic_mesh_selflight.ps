@@ -17,7 +17,7 @@ struct Interpolators
 	float2 UV					: TEXCOORD4;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-#define EMISSIVE_POWER 2.0h
+#define EMISSIVE_POWER 2.0f
 ///////////////////////////////////////////////////////////////////////////////////
 GBufferPacked main (Interpolators Input)
 {
@@ -27,15 +27,15 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Albedo = tex2D (s_base, Input.UV) * EMISSIVE_POWER;
 
-    GBuffer.Normal = normalize (mul (TBN, float3 (0.5f, 0.5f, 1.0h)));
+    GBuffer.Normal = normalize (mul (TBN, float3 (0.5f, 0.5f, 1.0f)));
 
     GBuffer.Position = Input.Position;
 
     GBuffer.AO = EMISSIVE_POWER;
 	
-    GBuffer.BakedAO = 1.0h;
+    GBuffer.BakedAO = 1.0f;
 	
-    GBuffer.Glossiness = 0.0h;
+    GBuffer.Glossiness = 0.0f;
 	
     return PackGBuffer (GBuffer);
 }

@@ -11,17 +11,17 @@
 float4 main(float2 TexCoords: TEXCOORD0): COLOR
 {
     float center_depth = GetDepth(TexCoords);
-    float ao_sum = 0.0h;
-    float total_weight = 0.0h;
+    float ao_sum = 0.0f;
+    float total_weight = 0.0f;
 
     for (int i = -3; i < 3; i++)
     {
-        float2 sample_uv = TexCoords + float2 (0.0h, i + 0.5h) / screen_res.xy;
+        float2 sample_uv = TexCoords + float2 (0.0f, i + 0.5f) / screen_res.xy;
         
         float sample_ao = tex2Dlod0 (s_ao, sample_uv).r;
         float sample_depth = GetDepth(sample_uv);
 
-        float depth_result = 1.0h - saturate (pow ((sample_depth - center_depth), 2.0h) / (0.001h * center_depth)) + 0.2h;
+        float depth_result = 1.0f - saturate (pow ((sample_depth - center_depth), 2.0f) / (0.001f * center_depth)) + 0.2f;
 
         total_weight += depth_result;
 

@@ -87,16 +87,16 @@ float3 CAS(sampler2D tex_color, float2 tc, float contrast, float sharpening)
 	mxRGB += mxRGB2;
 
 	// Smooth minimum distance to signal limit divided by smooth max.
-	float3 rcpMRGB = 1.0h / mxRGB;
+	float3 rcpMRGB = 1.0f / mxRGB;
 	float3 ampRGB = saturate(min(mnRGB, 2.0 - mxRGB) * rcpMRGB);
 
 	// Shaping amount of sharpening.
 	ampRGB = rsqrt(ampRGB);
 
 	float peak = -3.0 * contrast + 8.0;
-	float3 wRGB = -(1.0h / (ampRGB * peak));
+	float3 wRGB = -(1.0f / (ampRGB * peak));
 
-	float3 rcpWeightRGB = 1.0h / (4.0 * wRGB + 1.0);
+	float3 rcpWeightRGB = 1.0f / (4.0 * wRGB + 1.0);
 
 	//						  0 w 0
 	//  Filter shape:		   w 1 w

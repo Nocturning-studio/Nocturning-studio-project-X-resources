@@ -22,15 +22,15 @@
 ////////////////////////////////////////////////////////////////////////////
 float sample_shadow_map(float4 TexCoords, float2 SampleBias)
 {
-    float ShadowMapPixelSize = 1.0h / float(SMAP_size);
-    float4 SampleTexCoords = float4(TexCoords + TexCoords.w * float4(SampleBias, 0.0h, 0.0h) * ShadowMapPixelSize);
+    float ShadowMapPixelSize = 1.0f / float(SMAP_size);
+    float4 SampleTexCoords = float4(TexCoords + TexCoords.w * float4(SampleBias, 0.0f, 0.0f) * ShadowMapPixelSize);
 
     return tex2Dproj(s_smap, SampleTexCoords).x;
 }
 
 float shadow_map_filter(float4 TexCoords)
 {
-    float ShadowMap = 0.0h;
+    float ShadowMap = 0.0f;
 
     for (int i = 0; i < SHADOW_FILTERING_SAMPLES_COUNT; i++)
     {

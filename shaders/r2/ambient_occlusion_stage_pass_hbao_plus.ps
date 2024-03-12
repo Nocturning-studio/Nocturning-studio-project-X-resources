@@ -25,7 +25,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     {
         float3 Normal = GetNormal(TexCoords);
         
-        float radiusPixels = (RADIUS * screen_res.y * 0.5h) / (Position.z * -pos_decompression_params.y);
+        float radiusPixels = (RADIUS * screen_res.y * 0.5f) / (Position.z * -pos_decompression_params.y);
 
 	    // Early exit if the projected radius is smaller than 1 full-res pixel
         if (radiusPixels < 1.0f)
@@ -43,23 +43,23 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             float2x2 rot = float2x2 (c, -s, s, c);
             
             int2 pos2d = Position2D; //TexCoords * screen_res.xy + 0.5;
-            float jitter = (pos2d.y % 4) * 0.25h + (pos2d.x % 4) * 0.0625h + 0.0625h;
+            float jitter = (pos2d.y % 4) * 0.25f + (pos2d.x % 4) * 0.0625f + 0.0625f;
 			
 			//return jitter;
 			
             float2 dir;
             sincos (5.0f * PI * jitter, dir.y, dir.x);
-            dir = lerp (dir, jitter, 0.5h);
+            dir = lerp (dir, jitter, 0.5f);
 	
             Position += Normal * BIAS;
 	
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
-            float stepSizePixels = (radiusPixels * 0.25h) / (STEPS + 1.0f);
+            float stepSizePixels = (radiusPixels * 0.25f) / (STEPS + 1.0f);
 		
             for (int i = 0; i < 4; ++i)
             {
                 float negInvR2 = -1.0f / (RADIUS * RADIUS);
-                float rayPixels = 0.5h * stepSizePixels + 1.0f;
+                float rayPixels = 0.5f * stepSizePixels + 1.0f;
 
                 float dirSum = 0.0f;
 		
@@ -100,7 +100,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             occ = saturate (pow (1.0f - occ * 0.25f, POWER));
 
             // Create smooth render distance border
-            float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75h, RENDER_DISTANCE, length (Position));
+            float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75f, RENDER_DISTANCE, length (Position));
             occ = lerp (occ, 1.0f, FarFadingFactor);
             
             return occ.xxxx;
