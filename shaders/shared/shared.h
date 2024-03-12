@@ -16,9 +16,6 @@
 #include <depth_of_field_common.h>
 #include <chromatic_abberations.h>
 
-//Skiining
-#include <skinning.h>
-
 //Z-Buffer
 #include <zbuffer.h>
 ////////////////////////////////////////////////////////////////////////////

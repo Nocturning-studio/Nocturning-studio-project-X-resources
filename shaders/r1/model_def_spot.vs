@@ -1,4 +1,5 @@
 #include "common.h"
+#include <skinning.h>
 
 vf_spot _main (v_model v)
 {
