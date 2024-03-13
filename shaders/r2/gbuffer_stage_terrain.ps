@@ -69,8 +69,7 @@ GBufferPacked main (Interpolators Input)
 	
 	// Out normal for Geometry buffer
     GBuffer.Normal = normalize (mul (TBN, NormalMap));
-
-	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
+	
     GBuffer.Position = Input.Position;
 
 	// Get light map ambient

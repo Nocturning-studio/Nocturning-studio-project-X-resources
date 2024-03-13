@@ -38,8 +38,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Albedo = Material.Albedo;
 
     GBuffer.Normal = normalize (mul (TBN, Material.Normal)).rgb;
-
-	// Multiply by heightmap for create some "bias" for light calculating and avoiding acne 
+	
     GBuffer.Position = Input.Position;
 	
 #ifdef USE_LIGHTMAP
