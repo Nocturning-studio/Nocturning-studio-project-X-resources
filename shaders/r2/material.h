@@ -78,7 +78,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     float2 DetailUV = UV * dt_params;
 
     // Calculate displacement for detail texture only if we have good quality for materials
-#if DETAIL_BUMP && BUMP_QUALITY >= MIDDLE_QUALITY
+#if USE_DETAIL_BUMP && BUMP_QUALITY >= MIDDLE_QUALITY
     DetailUV = GetDetailDisplacement(s_detailBumpX, Position, TBN, DetailUV);
 #endif // DETAIL_BUMP && BUMP_QUALITY >= MIDDLE_QUALITY
 
@@ -101,7 +101,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is
     // smaller
-    Material.Height += DetailNormalMapDecompressionData.a * 0.2f;
+    Material.Height += DetailNormalMapDecompressionData.a;
 
     Material.Glossiness = DetailNormalMapData.r * Material.Glossiness + Material.Glossiness;
 #endif // DETAIL_BUMP
