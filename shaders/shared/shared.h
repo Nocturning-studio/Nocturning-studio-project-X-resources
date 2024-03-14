@@ -15,6 +15,7 @@
 #include <fog.h>
 #include <depth_of_field_common.h>
 #include <chromatic_abberations.h>
+#include <tonemapping.h>
 
 //Z-Buffer
 #include <zbuffer.h>

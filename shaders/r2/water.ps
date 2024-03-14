@@ -1,6 +1,5 @@
 #include "common.h"
 #include "gbuffer.h"
-#include "tonemap.h"
 
 struct vf
 {
@@ -101,7 +100,7 @@ PixelShaderOutputStruct main (vf I)
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
     Opacity *= 1.0f - pow (Fog, 2.2f);
 	
-    final = Calc_hdr (final);
+    final = CalcTonemap (final);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

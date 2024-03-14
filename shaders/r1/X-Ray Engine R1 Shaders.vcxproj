@@ -279,8 +279,6 @@
     <None Include="water.vs" />
     <None Include="waterd.ps" />
     <None Include="waterd.vs" />
-    <None Include="waterd_soft.ps" />
-    <None Include="waterd_soft.vs" />
     <None Include="wmark.vs" />
     <None Include="wmark_point.vs" />
     <None Include="wmark_spot.vs" />

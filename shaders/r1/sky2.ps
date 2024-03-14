@@ -1,6 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-//#include "tonemap.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -21,7 +20,7 @@ float4 main (Interpolators Input): COLOR0
     float3 Sky = lerp (SkyActual, SkyNext, Input.Color.w);
     Sky = lerp (Sky, fog_color.rgb, fog_sky_influence);
     
-//    Sky = Calc_hdr (Sky);
+    Sky = CalcTonemap (Sky);
     
     return float4 (Sky, 1.0f);
 }

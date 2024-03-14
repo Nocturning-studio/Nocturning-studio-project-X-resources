@@ -25,6 +25,8 @@ float4 main (v2p I): COLOR
     float3 final = light * t_base * 2;
     final = ApplyFogness (final, I.fog);
 
+    final = CalcTonemap (final);
+    
 	// out
     return float4 (final.r, final.g, final.b, t_base.a);
 }

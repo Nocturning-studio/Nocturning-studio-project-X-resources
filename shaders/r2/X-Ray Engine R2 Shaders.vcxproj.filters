@@ -85,9 +85,6 @@
     <ClInclude Include="hashed_alpha.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="tonemap.h">
-      <Filter>Helpers\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="common_shared.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>

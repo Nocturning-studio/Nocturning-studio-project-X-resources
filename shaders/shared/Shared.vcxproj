@@ -30,6 +30,7 @@
     <ClInclude Include="shared_uniforms.h" />
     <ClInclude Include="fog.h" />
     <ClInclude Include="skinning.h" />
+    <ClInclude Include="tonemapping.h" />
     <ClInclude Include="zbuffer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

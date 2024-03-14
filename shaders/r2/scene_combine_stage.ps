@@ -9,7 +9,6 @@
 #include "ambient_light.h"
 #include "reflection.h"
 #include "BRDF.h"
-#include "tonemap.h"
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
@@ -38,7 +37,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
     float Opacity = pow (Fog, 2.2f);
 	
-    SceneColor = Calc_hdr (SceneColor);
+    SceneColor = CalcTonemap (SceneColor);
     
     return float4(SceneColor, Opacity);
 }

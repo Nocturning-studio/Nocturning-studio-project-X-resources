@@ -1,6 +1,5 @@
 #include "common.h"
 #include "fxaa_atoc.h"
-#include "tonemap.h"
 
 struct v2p
 {
@@ -36,7 +35,7 @@ PixelShaderOutputStruct main (v2p I)
     Albedo = lerp (Albedo, fog_params.rgb, Fog);
     Opacity *= 1.0f - pow(Fog, 2.2f);
     
-    Albedo = Calc_hdr (Albedo);
+    Albedo = CalcTonemap (Albedo);
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (Albedo, Opacity);

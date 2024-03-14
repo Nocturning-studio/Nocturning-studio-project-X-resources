@@ -16,6 +16,8 @@ float4 main (v2p I): COLOR
     t_base *= I.c;
 	//t_base.rgb = ApplyFogness(t_base.rgb, I.fog);
 
+    t_base.rgb = CalcTonemap (t_base.rgb);
+    
 	// out
     return t_base;
 }

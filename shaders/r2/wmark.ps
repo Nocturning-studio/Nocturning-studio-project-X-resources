@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 #include "gbuffer.h"
-#include "tonemap.h"
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 UV: TEXCOORD0): COLOR0
 {
@@ -12,7 +11,7 @@ float4 main (float2 UV: TEXCOORD0): COLOR0
     Albedo.rgb = lerp (Albedo.rgb, fog_params.rgb, Fog);
     Albedo *= 1.0f - pow (Fog, 2.2f);
     
-    Albedo.rgb = Calc_hdr (Albedo.rgb);
+    Albedo.rgb = CalcTonemap (Albedo.rgb);
     
     return Albedo;
 }

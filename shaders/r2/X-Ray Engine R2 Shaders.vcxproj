@@ -328,7 +328,6 @@
     <ClInclude Include="fxaa_atoc.h" />
     <ClInclude Include="gbuffer.h" />
     <ClInclude Include="hashed_alpha.h" />
-    <ClInclude Include="tonemap.h" />
     <ClInclude Include="height_map_to_normal.h" />
     <ClInclude Include="lightmap.h" />
     <ClInclude Include="material.h" />

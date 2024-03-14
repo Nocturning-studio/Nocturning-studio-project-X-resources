@@ -51,5 +51,8 @@
     <ClInclude Include="chromatic_abberations.h">
       <Filter>Effects</Filter>
     </ClInclude>
+    <ClInclude Include="tonemapping.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

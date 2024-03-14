@@ -1,6 +1,5 @@
 #include "common.h"
 #include "gbuffer.h"
-#include "tonemap.h"
 
 struct v2p
 {
@@ -40,7 +39,7 @@ PixelShaderOutputStruct main (v2p I)
     distort.rgb = lerp (distort.rgb, fog_params.rgb, Fog);
     factor *= 1.0f - pow (Fog, 2.2f);
 	
-    factor = Calc_hdr (factor);
+    factor = CalcTonemap (factor);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (distort.rgb, factor);

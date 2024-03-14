@@ -3,13 +3,9 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#include "common.h"
-////////////////////////////////////////////////////////////////////////////
-uniform float3 hdr_params;
-////////////////////////////////////////////////////////////////////////////
 //https://www.shadertoy.com/view/MdfXWr
 ////////////////////////////////////////////////////////////////////////////
-float3 lin2srgb(float3 color) 
+float3 lin2srgb(float3 color)
 {
     float3 S1 = sqrt(color);
     float3 S2 = sqrt(S1);
@@ -36,9 +32,9 @@ float3 ACES(const float3 x)
 ////////////////////////////////////////////////////////////////////////////
 static const float3 luminance_weights = float3(0.2125f, 0.7154f, 0.0721f);
 ////////////////////////////////////////////////////////////////////////////
-float get_luminance(float3 color)
+float get_luminance(float3 Color)
 {
-    return dot(color, luminance_weights);
+    return dot(Color, luminance_weights);
 }
 
 float3 exponential_tonemapping(float3 Color)
@@ -51,15 +47,11 @@ float3 exponential_tonemapping(float3 Color)
     return tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
 }
 ////////////////////////////////////////////////////////////////////////////
-float3 Calc_hdr(float3 Color)
+float3 CalcTonemap(float3 Color)
 {
-    float white = 1.7f;
+    float white = 1.5f;
     float whitesqr = white * white;
     Color = (Color * (1.0f + Color / whitesqr)) / (Color + 1.0f);
-
-    Color = pow(Color, hdr_params.y);
-
-    Color *= hdr_params.z;
 
     return Color;
 }

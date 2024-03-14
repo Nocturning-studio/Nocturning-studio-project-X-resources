@@ -217,12 +217,6 @@
     <None Include="waterd.vs">
       <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
     </None>
-    <None Include="waterd_soft.ps">
-      <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
-    </None>
-    <None Include="waterd_soft.vs">
-      <Filter>Forward rendering pipeline\Geometry stage\Water</Filter>
-    </None>
     <None Include="wmark.vs">
       <Filter>Forward rendering pipeline\Geometry stage\Wallmark</Filter>
     </None>
@@ -343,30 +337,6 @@
     <None Include="yuv2rgb.ps">
       <Filter>Forward rendering pipeline\UI\Video converting</Filter>
     </None>
-    <None Include="vert.ps">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert.vs">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_dt.ps">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_dt.vs">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_l.ps">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_l.vs">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_point.vs">
-      <Filter>Unsorted</Filter>
-    </None>
-    <None Include="vert_spot.vs">
-      <Filter>Unsorted</Filter>
-    </None>
     <None Include="add_point.ps">
       <Filter>Unsorted</Filter>
     </None>
@@ -425,7 +395,31 @@
       <Filter>Unsorted</Filter>
     </None>
     <None Include="portal.ps">
-      <Filter>Unsorted</Filter>
+      <Filter>Forward rendering pipeline\Portals %28Occlusion culling%29</Filter>
+    </None>
+    <None Include="vert.ps">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert.vs">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_dt.ps">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_dt.vs">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_l.ps">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_l.vs">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_point.vs">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
+    </None>
+    <None Include="vert_spot.vs">
+      <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -535,6 +529,9 @@
     </Filter>
     <Filter Include="Unsorted">
       <UniqueIdentifier>{1111a807-269d-4f84-80d9-676c42ffd714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted">
+      <UniqueIdentifier>{b5c2af48-a7ba-4b05-a8f5-9ce3306eb440}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
