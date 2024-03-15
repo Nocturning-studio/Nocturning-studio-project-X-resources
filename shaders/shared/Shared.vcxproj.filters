@@ -54,5 +54,14 @@
     <ClInclude Include="tonemapping.h">
       <Filter>Effects</Filter>
     </ClInclude>
+    <ClInclude Include="shared_textures.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_samplers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common_legacy.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
