@@ -4,6 +4,14 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 //Common
+#include <common_legacy.h>
+
+// original samplers
+sampler smp_nofilter; // point
+sampler smp_rtlinear; // bilinear
+sampler smp_linear; // trilinear (wrap)
+sampler smp_base; // anisotropic (wrap)
+
 #include <shared_math.h>
 #include <shared_constants.h>
 #include <shared_defines.h>

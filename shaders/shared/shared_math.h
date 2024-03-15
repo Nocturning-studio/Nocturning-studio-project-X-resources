@@ -28,7 +28,7 @@ float avg4(float4 tex)
 };
 ////////////////////////////////////////////////////////////////////////////
 // Tex2D functions
-float4 tex2Dlod0(sampler2D smp, float2 tc)
+float4 tex2Dlod0(type_sampler2D(smp), float2 tc)
 {
     return tex2Dlod(smp, float4(tc, 0.0f, 0.0f));
 }

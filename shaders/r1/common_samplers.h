@@ -3,10 +3,10 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_base;
-uniform samplerCUBE s_env;
-uniform sampler2D s_lmap;
-uniform sampler2D s_hemi;
-uniform sampler2D s_att;
-uniform sampler2D s_detail;
+uniform_sampler2D(s_base,   smp_base);
+uniform_sampler2D(s_lmap,   smp_linear);
+uniform_sampler2D(s_hemi,   smp_linear);
+uniform_sampler2D(s_att,    smp_linear);
+uniform_sampler2D(s_detail, smp_base);
+uniform_samplerCUBE(s_env,  smp_base);
 //////////////////////////////////////////////////////////////////////////////////////////

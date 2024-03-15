@@ -9,7 +9,7 @@
 #define fFalloffRadius 1.8f                    // over this radius the effects is maximal
 #define fChromaPower 0.5f
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 ChromaticAberration(sampler2D Image, float3 ImageColor, float2 tex)
+float3 ChromaticAberration(type_sampler2D(Image), float3 ImageColor, float2 tex)
 {
     float d = distance(tex, float2(0.5f, 0.5f));
     float f = smoothstep(fBaseRadius, fFalloffRadius, d + 0.075f * d);

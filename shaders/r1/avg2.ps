@@ -6,12 +6,12 @@ struct 	v2p
  	float2 	tc1: 		TEXCOORD1;	// base
 };
 
-uniform sampler2D 	s_base0;
-uniform sampler2D 	s_base1;
+uniform_sampler2D(s_base0, smp_nofilter);
+uniform_sampler2D(s_base1, smp_nofilter);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-float4 	main	( v2p I )	: COLOR
+float4 	main	( v2p I )	:SV_Target
 {
 	float4	t_0 	= tex2D		(s_base0,I.tc0);
 	float4	t_1 	= tex2D		(s_base1,I.tc1);

@@ -9,7 +9,7 @@ struct 	v2p
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-uniform sampler s_distort;
+uniform_sampler2D(s_distort, smp_nofilter);
 float4 	main	( v2p I )	: COLOR
 {
 	float4	distort	= tex2D		(s_distort,I.tc0);

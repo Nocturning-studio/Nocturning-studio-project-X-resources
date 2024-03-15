@@ -5,11 +5,11 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_dt_r;
-uniform sampler2D s_dt_g;
-uniform sampler2D s_dt_b;
-uniform sampler2D s_dt_a;
-uniform sampler2D s_mask;
+uniform_sampler2D(s_dt_r, smp_base);
+uniform_sampler2D(s_dt_g, smp_base);
+uniform_sampler2D(s_dt_b, smp_base);
+uniform_sampler2D(s_dt_a, smp_base);
+uniform_sampler2D(s_mask, smp_linear);
 ////////////////////////////////////////////////////////////////////////////
 struct v2p
 {
@@ -22,7 +22,7 @@ struct v2p
 };
 ////////////////////////////////////////////////////////////////////////////
 // Pixel
-float4 main (v2p I): COLOR
+float4 main (v2p I):SV_Target
 {
     float4 t_base = tex2D (s_base, I.tc0);
     float4 t_lmap = tex2D (s_lmap, I.tc1);

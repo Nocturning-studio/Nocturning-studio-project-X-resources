@@ -12,11 +12,11 @@ struct v2p
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-uniform sampler2D s_base0;
-uniform sampler2D s_base1;
-uniform sampler2D s_hemi0;
-uniform sampler2D s_hemi1;
-float4 main (v2p I): COLOR
+uniform_sampler2D(s_base0, smp_base);
+uniform_sampler2D(s_base1, smp_base);
+uniform_sampler2D(s_hemi0, smp_linear);
+uniform_sampler2D(s_hemi1, smp_linear);
+float4 main (v2p I):SV_Target
 {
     float4 base0 = tex2D (s_base0, I.tc0);
     float4 base1 = tex2D (s_base1, I.tc1);

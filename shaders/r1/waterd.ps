@@ -7,8 +7,8 @@ struct   v2p
 	float2	tdist1:		TEXCOORD2;  // d1
 };
 
-uniform sampler2D	s_distort0;
-uniform sampler2D	s_distort1;
+uniform_sampler2D(s_distort0, smp_nofilter);
+uniform_sampler2D(s_distort1, smp_nofilter);
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 float4	main	( v2p I )	: COLOR

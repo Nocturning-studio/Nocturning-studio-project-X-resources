@@ -10,10 +10,10 @@ struct v2p
     float2 tc2: TEXCOORD2; // base  (noise)
 };
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_noise;
-uniform sampler2D s_distort;
-uniform sampler2D s_vignette;
-uniform sampler2D s_depth;
+uniform_sampler2D(s_noise, smp_nofilter);
+uniform_sampler2D(s_distort, smp_nofilter);
+uniform_sampler2D(s_vignette, smp_nofilter);
+uniform_sampler2D(s_depth, smp_nofilter);
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform float4 c_brightness;
 uniform float3 hdr_params;
@@ -41,7 +41,7 @@ float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
         {
             float2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize * 2.5f;
 
-            float3 SampleColor = tex2Dlod0 (s_base, SampleCoords.xy);
+            float3 SampleColor = tex2D(s_base, SampleCoords.xy);
 
             float SampleContribution = DOFFactor (GetDepth (SampleCoords));
 
@@ -58,7 +58,7 @@ float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-float4 main (v2p I): COLOR
+float4 main (v2p I): SV_Target
 {
 #ifdef USE_DISTORTION
     float4 distort = tex2D(s_distort, I.tc0);
@@ -67,8 +67,8 @@ float4 main (v2p I): COLOR
     float2 offset = float2 (0.0f, 0.0f);
 #endif
     
-    float3 t_0 = tex2Dlod0(s_base, I.tc0 + offset);
-    float3 t_1 = tex2Dlod0(s_base, I.tc1 + offset);
+    float3 t_0 = tex2D(s_base, I.tc0 + offset);
+    float3 t_1 = tex2D(s_base, I.tc1 + offset);
     float3 image = (t_0 + t_1) * 0.5f;
     
 #ifdef USE_CHROMATIC_ABBERATION
