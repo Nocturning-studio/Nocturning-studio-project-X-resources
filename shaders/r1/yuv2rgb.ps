@@ -2,11 +2,11 @@
 
 float4	main	(float2 uv : TEXCOORD0):	SV_Target
 {
-	float3	YUV	= tex2D	(s_base, uv);
+	float3	YUV	= tex2D	(s_base, uv).bgr;
 
-	float	Y	= YUV.x;
-	float	U	= YUV.y;
-	float	V	= YUV.z;
+ 	float	Y	= YUV.x;
+ 	float	U	= YUV.y;
+ 	float	V	= YUV.z;
 
 	/*
 	float	_T = 1.16406f*Y;

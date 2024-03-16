@@ -1,6 +1,6 @@
 -- distort
 function normal		(shader, t_base, t_second, t_detail)
-	shader:begin	("null","distort")
+	shader:begin	("stub_notransform_t","distort")
 			: fog	(false)
 			: zb 	(false,false)
 	shader:sampler	("s_distort")  	:texture(t_distort)	: clamp() : f_linear ()
