@@ -4,6 +4,7 @@
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 ////////////////////////////////////////////////////////////////////////////
 #include "common_shared.h"
+#include "common_textures.h"
 #include "common_defines.h"
 #include "common_iostructs.h"
 #include "common_samplers.h"

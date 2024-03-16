@@ -307,9 +307,6 @@
     <None Include="distort.s">
       <Filter>Forward rendering pipeline\Postprocess stage\Distortion</Filter>
     </None>
-    <None Include="editor.vs">
-      <Filter>Forward rendering pipeline\Postprocess stage\Distortion</Filter>
-    </None>
     <None Include="effects_wallmarkblend.s">
       <Filter>Forward rendering pipeline\Geometry stage\Wallmark</Filter>
     </None>
@@ -421,6 +418,9 @@
     <None Include="vert_spot.vs">
       <Filter>Forward rendering pipeline\Geometry stage\Static mesh\Vertex lighted</Filter>
     </None>
+    <None Include="editor.vs">
+      <Filter>Unsorted</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -442,6 +442,9 @@
       <Filter>Helpers\Common</Filter>
     </ClInclude>
     <ClInclude Include="common_shared.h">
+      <Filter>Helpers\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common_textures.h">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
   </ItemGroup>
