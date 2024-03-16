@@ -3,6 +3,87 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 //////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+//	TL0uv
+struct	v_TL0uv_positiont
+{
+	float4	P		: POSITIONT;
+	float4	Color	: COLOR; 
+};
+
+struct	v_TL0uv
+{
+	float4	P		: POSITION;
+	float4	Color	: COLOR; 
+};
+
+struct	v2p_TL0uv
+{
+	float4	Color	: COLOR;
+	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
+struct	p_TL0uv
+{
+	float4	Color	: COLOR;
+//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
+////////////////////////////////////////////////////////////////
+//	TL
+struct	v_TL_positiont
+{
+	float4	P		: POSITIONT;
+	float2	Tex0	: TEXCOORD0;
+	float4	Color	: COLOR; 
+};
+
+struct	v_TL
+{
+	float4	P		: POSITION;
+	float2	Tex0	: TEXCOORD0;
+	float4	Color	: COLOR; 
+};
+
+struct	v2p_TL
+{
+	float2 	Tex0	: TEXCOORD0;
+	float4	Color	: COLOR;
+	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
+struct	p_TL
+{
+	float2 	Tex0	: TEXCOORD0;
+	float4	Color	: COLOR;
+//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
+////////////////////////////////////////////////////////////////
+//	TL2uv
+struct	v_TL2uv
+{
+	float4	P		: POSITIONT;
+	float2	Tex0	: TEXCOORD0;
+	float2	Tex1	: TEXCOORD1;
+	float4	Color	: COLOR; 
+};
+
+struct	v2p_TL2uv
+{
+	float2 	Tex0	: TEXCOORD0;
+	float2	Tex1	: TEXCOORD1;
+	float4	Color	: COLOR;
+	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
+struct	p_TL2uv
+{
+	float2 	Tex0	: TEXCOORD0;
+	float2	Tex1	: TEXCOORD1;
+	float4	Color	: COLOR;
+//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
 struct 	v_lmap
 {
 	float4 	P	: POSITION;	// (float,float,float,1)

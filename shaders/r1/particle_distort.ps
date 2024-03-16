@@ -10,7 +10,7 @@ struct 	v2p
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 uniform_sampler2D(s_distort, smp_nofilter);
-float4 	main	( v2p I )	: COLOR
+float4 	main	( v2p I )	:	SV_Target
 {
 	float4	distort	= tex2D		(s_distort,I.tc0);
 	float    factor	= distort.a * dot(I.c.rgb,0.33f);

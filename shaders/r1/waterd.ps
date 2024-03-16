@@ -11,7 +11,7 @@ uniform_sampler2D(s_distort0, smp_nofilter);
 uniform_sampler2D(s_distort1, smp_nofilter);
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-float4	main	( v2p I )	: COLOR
+float4	main	( v2p I )	:	SV_Target
 {
 	float4	t_base		= tex2D	(s_base,  	I.tbase  );
 
