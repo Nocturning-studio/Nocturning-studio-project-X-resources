@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chromatic_abberations.h" />
-    <ClInclude Include="common_legacy.h" />
     <ClInclude Include="depth_of_field_common.h" />
     <ClInclude Include="shared.h" />
     <ClInclude Include="shared_constants.h" />
@@ -28,8 +27,6 @@
     <ClInclude Include="shared_functions.h" />
     <ClInclude Include="shared_iostructs.h" />
     <ClInclude Include="shared_math.h" />
-    <ClInclude Include="shared_samplers.h" />
-    <ClInclude Include="shared_textures.h" />
     <ClInclude Include="shared_uniforms.h" />
     <ClInclude Include="fog.h" />
     <ClInclude Include="skinning.h" />
