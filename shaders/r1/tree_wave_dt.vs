@@ -4,7 +4,7 @@ struct av
 {
 	float4 	pos	: POSITION;	// (float,float,float,1)
 	float4 	nc	: NORMAL;	// (float,float,float,clr)
-	float4 	misc	: TEXCOORD0;	// (u(Q),v(Q),frac,???)
+	int4 	misc	: TEXCOORD0;	// (u(Q),v(Q),frac,???)
 };
 
 struct vf
@@ -14,13 +14,15 @@ struct vf
 	float2 tc1	: TEXCOORD1;		// detail
 	float4 c0	: COLOR0;		// c0=all lighting
 	float4 c1	: COLOR1;		// ps_1_1 read ports
-	float  fog	: FOG;
+	//float  fog	: FOG;
     float4 hpos: SV_Position;
 };
 
 vf main (av v)
 {
 	vf 		o;
+
+	v.nc = bgra_to_rgba(v.nc);
 
 	// Transform to world coords
 	float3 	pos	= mul	(m_xform, v.pos);
@@ -35,7 +37,7 @@ vf main (av v)
 	float4 	f_pos 	= float4(pos.x+result.x, pos.y, pos.z+result.y, 1);
 
 	// Calc fog
-	o.fog 		= CalcVertexFogness(f_pos);
+	//o.fog 		= CalcVertexFogness(f_pos);
 
 	// Final xform
 	o.hpos		= mul		(m_VP, f_pos);

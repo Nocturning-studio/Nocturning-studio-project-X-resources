@@ -20,13 +20,13 @@ struct	v_TL0uv
 struct	v2p_TL0uv
 {
 	float4	Color	: COLOR;
-	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 
 struct	p_TL0uv
 {
 	float4	Color	: COLOR;
-//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+//	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 
 ////////////////////////////////////////////////////////////////
@@ -49,14 +49,14 @@ struct	v2p_TL
 {
 	float2 	Tex0	: TEXCOORD0;
 	float4	Color	: COLOR;
-	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 
 struct	p_TL
 {
 	float2 	Tex0	: TEXCOORD0;
 	float4	Color	: COLOR;
-//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+//	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 
 ////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ struct	v2p_TL2uv
 	float2 	Tex0	: TEXCOORD0;
 	float2	Tex1	: TEXCOORD1;
 	float4	Color	: COLOR;
-	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 
 struct	p_TL2uv
@@ -82,7 +82,7 @@ struct	p_TL2uv
 	float2 	Tex0	: TEXCOORD0;
 	float2	Tex1	: TEXCOORD1;
 	float4	Color	: COLOR;
-//	float4 	HPos	: SV_Position;	// Clip-space position 	(for rasterization)
+//	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
 };
 struct 	v_lmap
 {

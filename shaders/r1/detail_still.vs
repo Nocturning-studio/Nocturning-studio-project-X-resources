@@ -3,9 +3,8 @@
 struct vf
 {
     // float4 hpos: POSITION;
-    float4 C: COLOR0;
     float2 tc: TEXCOORD0;
-    //float fog: FOG;
+    float4 C: COLOR0;
     float4 hpos: SV_Position;
 };
 
@@ -33,7 +32,6 @@ vf main (v_detail v)
     o.hpos = mul (m_WVP, pos);
     o.C = c0;
     o.tc.xy = (v.misc * consts).xy;
-    //o.fog = CalcVertexFogness (mul (m_W, pos));
     
     return o;
 }

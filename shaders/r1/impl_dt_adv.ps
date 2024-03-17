@@ -17,7 +17,7 @@ struct v2p
     float2 tc1: TEXCOORD1; // detail
     float4 c0: COLOR0; // hemi, c0.a * 
     float4 c1: COLOR1; // sun,  c1.a + 
-    float fog: FOG;
+    //float fog: FOG;
 };
 ////////////////////////////////////////////////////////////////////////////
 // Pixel
@@ -43,7 +43,7 @@ float4 main (v2p I):SV_Target
 	
 	// final-color
     float3 final = (light * t_base.rgb * 2) * detail * 2;
-    final = ApplyFogness (final, I.fog);
+    //final = ApplyFogness (final, I.fog);
 	
     final = CalcTonemap (final);
     

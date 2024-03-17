@@ -3,7 +3,7 @@
 struct v2p
 {
     float4 c: COLOR0;
-    float fog: FOG;
+    //float fog: FOG;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +11,7 @@ struct v2p
 float4 main (v2p I):SV_Target
 {
     float4 t_base = I.c;
-    t_base.rgb = ApplyFogness (t_base.rgb, I.fog);
+    //t_base.rgb = ApplyFogness (t_base.rgb, I.fog);
     
     t_base.rgb = CalcTonemap (t_base.rgb);
 

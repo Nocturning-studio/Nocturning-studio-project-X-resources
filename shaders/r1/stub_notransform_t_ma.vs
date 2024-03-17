@@ -6,13 +6,13 @@ v2p_TL main ( v_TL_positiont I )
 {
 	v2p_TL O;
 
-//	O.HPos = P;
+//	O.hpos = P;
 
 	{
 		I.P.xy += 0.5f;
-		O.HPos.x = I.P.x/1024 * 2 - 1;
-		O.HPos.y = (I.P.y/768 * 2 - 1)*-1;
-		O.HPos.zw = I.P.zw;
+		O.hpos.x = I.P.x/1024 * 2 - 1;
+		O.hpos.y = (I.P.y/768 * 2 - 1)*-1;
+		O.hpos.zw = I.P.zw;
 	}
 
 	O.Tex0 = I.Tex0;

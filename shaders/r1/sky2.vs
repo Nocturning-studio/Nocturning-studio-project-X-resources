@@ -11,11 +11,10 @@ struct VertexData
 
 struct Interpolators
 {
-    // float4 HomogeniousPosition: POSITION;
-    float4 Color: COLOR0;
     float3 UV0: TEXCOORD0;
     float3 UV1: TEXCOORD1;
     float4 hpos: SV_Position;
+    float4 Color: COLOR0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)

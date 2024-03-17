@@ -14,14 +14,13 @@ struct vv
 };
 struct vf
 {
-	// float4 	hpos	: POSITION;
  	float2 	tc0	: TEXCOORD0;	// base0
  	float2 	tc1	: TEXCOORD1;	// base1
  	float2 	tc2	: TEXCOORD2;	// hemi0
  	float2 	tc3	: TEXCOORD3;	// hemi1
 	float4 	c	: COLOR0;	// color.alpha
 	float4 	f	: COLOR1;	// factor
-	float  	fog	: FOG	;
+	//float  	fog	: FOG	;
     float4 hpos: SV_Position;
 };
 
@@ -30,6 +29,10 @@ struct vf
 vf main (vv v)
 {
 	vf 		o;
+
+	v.sun_af	= bgra_to_rgba(v.sun_af);
+	v.rgbh0		= bgra_to_rgba(v.rgbh0);
+	v.rgbh1		= bgra_to_rgba(v.rgbh1);
 
 	// lerp pos
 	float 	factor 	= v.sun_af.w	;
@@ -57,7 +60,7 @@ vf main (vv v)
 
 	o.c		= float4	(L_final,v.sun_af.z);
 	o.f 		= factor	;
-	o.fog 		= CalcVertexFogness(pos);					// fog, input in world coords
+	//o.fog 		= CalcVertexFogness(pos);					// fog, input in world coords
 
 	return o	;
 }

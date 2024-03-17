@@ -8,7 +8,7 @@ struct vf
     float4 tc1: TEXCOORD1; // projected lmap
     float3 c0: COLOR0; // sun-color
     float4 c1: COLOR1; // lq-color + factor
-    float fog: FOG;
+    //float fog: FOG;
     float4 hpos: SV_Position;
 };
 
@@ -25,7 +25,7 @@ vf _main (v_model v)
     o.tc1 = calc_model_lmap (pos_w); // 
     o.c0 = calc_sun (norm_w); // sun
     o.c1 = float4 (calc_model_lq_lighting (norm_w), m_plmap_clamp[0].w);
-    o.fog = CalcVertexFogness (pos_w); // fog, input in world coords
+    //o.fog = CalcVertexFogness (pos_w); // fog, input in world coords
 
     return o;
 }

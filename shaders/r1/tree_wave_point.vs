@@ -4,12 +4,14 @@ struct av
 {
 	float4 	pos	: POSITION;	// (float,float,float,1)
 	float4 	nc	: NORMAL;	// (float,float,float,clr)
-	float4 	misc	: TEXCOORD0;	// (u(Q),v(Q),frac,???)
+	int4 	misc	: TEXCOORD0;	// (u(Q),v(Q),frac,???)
 };
 
 vf_point main (av v)
 {
 	vf_point	o;
+
+	v.nc = bgra_to_rgba(v.nc);
 
 	// Transform to world coords
 	float3 	pos	= mul	(m_xform, v.pos);
