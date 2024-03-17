@@ -3,9 +3,24 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
+float4 bgra_to_rgba(float4 c)
+{
+	return c.bgra;
+}
+
+float3 bgr_to_rgb(float3 c)
+{
+	return c.bgr;
+}
+
 float3 unpack_normal(float3 v) 
 { 
 	return 2.0f * v - 1.0f;
+}
+
+float3 pack_bx2(float3 v) 
+{ 
+	return v * 0.5f + 0.5f;
 }
 
 float3 unpack_bx2(float3 v) 
