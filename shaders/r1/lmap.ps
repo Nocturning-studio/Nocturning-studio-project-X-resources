@@ -31,7 +31,7 @@ float4 main (v2p I):SV_Target
 	
     final = CalcTonemap (final);
     
-	clip(t_base.a - def_aref);
+	// clip(t_base.a - def_aref);
 	
 	// out
     return float4 (final, t_base.a);

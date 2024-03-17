@@ -4,7 +4,7 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 #define def_distort float(0.055f) // we get -0.5 .. 0.5 range, this is -512 .. 512 for 1024, so scale it
-#define def_aref float(100.0f/255.0f)
+#define def_aref float(200.0f/255.0f)
 ////////////////////////////////////////////////////////////////////////////
 // ex. Cloudconfig.h
 // note: timers has resolution (sec), where x=1, y=10, z=1/10,
