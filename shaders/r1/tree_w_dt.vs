@@ -9,12 +9,13 @@ struct av
 
 struct vf
 {
-	float4 HPOS	: POSITION;
+	// float4 hpos	: POSITION;
 	float2 tc0	: TEXCOORD0;
 	float2 tc1	: TEXCOORD1;		// detail
 	float4 c0	: COLOR0;		// c0=all lighting, c0.a needed for details
 	float4 c1	: COLOR1;		// ps_1_1 read ports
 	float  fog	: FOG;
+    float4 hpos: SV_Position;
 };
 
 vf main (av v)
@@ -37,7 +38,7 @@ vf main (av v)
 	o.fog 		= CalcVertexFogness(f_pos);
 
 	// Final xform
-	o.HPOS		= mul		(m_VP, f_pos);
+	o.hpos		= mul		(m_VP, f_pos);
 
 	// Lighting
 	float3 	N 	= mul (m_xform,  unpack_normal(v.nc));	//normalize 	(mul (m_xform,  unpack_normal(v.nc)));

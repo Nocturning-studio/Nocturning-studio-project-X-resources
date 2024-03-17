@@ -3,6 +3,8 @@
 
 	// 18.05.2020
 
+	#define USE_DX11
+
 	/*
 			You can use:
 
@@ -172,6 +174,8 @@
 			texCUBEARRAYbias(name, float3(tc, id), bias)
 
 	*/
+
+	#ifdef USE_DX11
 
 	//------------------------- STRUCTOR -------------------------
 
@@ -916,5 +920,24 @@
 			}
 
 	//-------------------------  -------------------------
+
+	#else
+		
+	#define type_sampler2D(name) 	\
+		sampler2D name
+	#define type_samplerCUBE(name) 	\
+		samplerCUBE name
+	
+	#define uniform_sampler2D( x, y ) \
+		uniform sampler2D x
+	#define uniform_sampler2DReg( x, y, num ) \
+		uniform sampler2D x : register( s##num )
+
+	#define uniform_samplerCUBE( x, y ) \
+		uniform samplerCUBE x
+	
+	#define SV_Target COLOR
+	
+	#endif
 
 #endif

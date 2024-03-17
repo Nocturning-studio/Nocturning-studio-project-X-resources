@@ -2,8 +2,9 @@
 
 struct vf
 {
-	float4 hpos	: POSITION;
+	// float4 hpos	: POSITION;
 	float4 c0	: COLOR0;		// c0=all lighting
+    float4 hpos: SV_Position;
 };
 
 vf main (v_vert v)

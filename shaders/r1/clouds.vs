@@ -9,10 +9,11 @@ struct vi
 
 struct 	vf
 {
-	float4 	hpos	: POSITION	;
+	// float4 	hpos	: POSITION	;
 	float4	color	: COLOR0	;	// rgb. intensity
   	float2	tc0	: TEXCOORD0	;
   	float2	tc1	: TEXCOORD1	;
+    float4 hpos: SV_Position;
 };
 
 vf main (vi v)

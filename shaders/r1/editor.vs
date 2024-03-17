@@ -2,8 +2,9 @@
 
 struct vf
 {
-	float4 P: POSITION	;
+	// float4 P: POSITION	;
 	float4 C: COLOR0	;
+    float4 P: SV_Position;
 };
 
 uniform float4 		tfactor;

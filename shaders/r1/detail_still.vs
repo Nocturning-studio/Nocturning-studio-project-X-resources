@@ -2,10 +2,11 @@
 
 struct vf
 {
-    float4 hpos: POSITION;
+    // float4 hpos: POSITION;
     float4 C: COLOR0;
     float2 tc: TEXCOORD0;
     //float fog: FOG;
+    float4 hpos: SV_Position;
 };
 
 uniform float4 array[200]: register(c10);

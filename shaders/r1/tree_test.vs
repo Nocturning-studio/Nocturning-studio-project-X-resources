@@ -9,10 +9,11 @@ struct av
 
 struct vf
 {
-	float4 HPOS	: POSITION;
+	// float4 hpos	: POSITION;
 	float3 COL0	: COLOR0;
 	float2 TEX0	: TEXCOORD0;
 	float  fog	: FOG;
+    float4 hpos: SV_Position;
 };
 
 vf main (av v)
@@ -35,7 +36,7 @@ vf main (av v)
 	o.fog 		= CalcVertexFogness(f_pos);
 
 	// Final xform
-	o.HPOS		= mul		(m_VP, f_pos);
+	o.hpos		= mul		(m_VP, f_pos);
 
 	// Lighting
 	float3 	N 	= mul (m_xform,  unpack_normal(v.nc)); 	//normalize 	(mul (m_xform,  unpack_normal(v.nc)));

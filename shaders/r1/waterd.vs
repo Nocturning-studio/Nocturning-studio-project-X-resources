@@ -2,10 +2,11 @@
 
 struct vf
 {
-	float4 hpos	: POSITION	;
+	// float4 hpos	: POSITION	;
 	float2 tbase	: TEXCOORD0	;
 	float2 tdist0	: TEXCOORD1	;
 	float2 tdist1	: TEXCOORD2	;
+    float4 hpos: SV_Position;
 };
 
 vf main (v_vert v)

@@ -2,12 +2,13 @@
 
 struct vf
 {
-	float4 hpos	: POSITION;
+	// float4 hpos	: POSITION;
 	float2 tc0	: TEXCOORD0;
 	float2 tc1	: TEXCOORD1;		// detail
 	float4 c0	: COLOR0;		// c0=all lighting
 	float4 c1	: COLOR1;		// ps_1_1 read ports
 	float  fog	: FOG;
+    float4 hpos: SV_Position;
 };
 
 vf main (v_vert v)

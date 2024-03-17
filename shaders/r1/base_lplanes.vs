@@ -2,9 +2,10 @@
 
 struct vf
 {
-	float4 hpos	: POSITION;
+	// float4 hpos	: POSITION;
 	float2 tc0	: TEXCOORD0;		// base
 	float4 c0	: COLOR0;		// color
+    float4 hpos: SV_Position;
 };
 
 vf main (v_vert v)

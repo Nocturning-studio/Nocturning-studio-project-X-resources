@@ -14,7 +14,7 @@ struct vv
 };
 struct vf
 {
-	float4 	hpos	: POSITION;
+	// float4 	hpos	: POSITION;
  	float2 	tc0	: TEXCOORD0;	// base0
  	float2 	tc1	: TEXCOORD1;	// base1
  	float2 	tc2	: TEXCOORD2;	// hemi0
@@ -22,6 +22,7 @@ struct vf
 	float4 	c	: COLOR0;	// color.alpha
 	float4 	f	: COLOR1;	// factor
 	float  	fog	: FOG	;
+    float4 hpos: SV_Position;
 };
 
 #define L_SCALE 	(1.55)

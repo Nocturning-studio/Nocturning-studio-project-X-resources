@@ -3,10 +3,11 @@
 
 struct vf
 {
-    float4 hpos: POSITION;
+    // float4 hpos: POSITION;
     float2 tc0: TEXCOORD0; // base
     float2 tc1: TEXCOORD1; // another
     float4 c0: COLOR0; // color
+    float4 hpos: SV_Position;
 };
 
 vf _main (v_model v)

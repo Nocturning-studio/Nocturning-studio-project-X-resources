@@ -11,18 +11,19 @@ struct VertexData
 
 struct Interpolators
 {
-    float4 HomogeniousPosition: POSITION;
+    // float4 HomogeniousPosition: POSITION;
     float4 Color: COLOR0;
     float3 UV0: TEXCOORD0;
     float3 UV1: TEXCOORD1;
+    float4 hpos: SV_Position;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 Interpolators main (VertexData Input)
 {
     Interpolators Output;
     
-    Output.HomogeniousPosition = mul (m_WVP, mul (1000.0f, Input.Position));
-    Output.HomogeniousPosition.z = Output.HomogeniousPosition.w;
+    Output.hpos = mul (m_WVP, mul (1000.0f, Input.Position));
+    Output.hpos.z = Output.hpos.w;
     Output.UV0 = Input.UV0;
     Output.UV1 = Input.UV1;
     Output.Color = Input.Color;

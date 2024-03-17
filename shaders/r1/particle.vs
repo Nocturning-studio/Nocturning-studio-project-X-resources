@@ -8,10 +8,11 @@ struct vv
 };
 struct vf
 {
-	float4 hpos	: POSITION;
+	// float4 hpos	: POSITION;
 	float2 tc	: TEXCOORD0;
 	float4 c	: COLOR0;
 	float  fog	: FOG;
+    float4 hpos: SV_Position;
 };
 
 vf main (vv v)

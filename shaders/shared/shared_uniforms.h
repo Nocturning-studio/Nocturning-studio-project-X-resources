@@ -4,7 +4,7 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 uniform float3x4 m_W;
-uniform float3x4 m_invW;
+// uniform float3x4 m_invW;
 uniform float3x4 m_V;
 uniform float4x4 m_P;
 uniform float3x4 m_WV;

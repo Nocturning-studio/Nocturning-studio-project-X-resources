@@ -3,13 +3,14 @@
 
 struct vf
 {
-    float4 hpos: POSITION;
+    // float4 hpos: POSITION;
     float2 tc0: TEXCOORD0; // base
     float3 tc1: TEXCOORD1; // environment
     float4 tc2: TEXCOORD2; // projected lmap
     float3 c0: COLOR0; // sun-color
     float4 c1: COLOR1; // lq-color + factor
     float fog: FOG;
+    float4 hpos: SV_Position;
 };
 
 vf _main (v_model v)

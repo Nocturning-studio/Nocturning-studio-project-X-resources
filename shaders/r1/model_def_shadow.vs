@@ -3,8 +3,9 @@
 
 struct vf
 {
-    float4 hpos: POSITION;
+    // float4 hpos: POSITION;
     float4 c0: COLOR0; // color
+    float4 hpos: SV_Position;
 };
 
 vf _main (v_model v)
