@@ -8,7 +8,7 @@ float4 bgra_to_rgba(float4 c)
 	return c.bgra;
 }
 
-float3 bgr_to_rgb(float3 c)
+float3 bgra_to_rgba(float3 c)
 {
 	return c.bgr;
 }

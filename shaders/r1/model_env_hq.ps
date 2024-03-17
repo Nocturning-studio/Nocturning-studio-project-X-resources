@@ -31,5 +31,6 @@ float4 main (v2p I):SV_Target
     final = CalcTonemap (final);
     
 	// out
-    return float4 (final.r, final.g, final.b, t_base.a);
+    return t_base*float4(0.5,0.5,0.5,1.0);
+    // return float4 (final.r, final.g, final.b, t_base.a);
 }

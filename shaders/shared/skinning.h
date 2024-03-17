@@ -1,33 +1,33 @@
 #ifndef	SKIN_H
 #define SKIN_H
 
-struct v_model_skinned_0
+struct 	v_model_skinned_0
 {
-    float4 P : POSITION;   // (float,float,float,1) - quantized	// short4
-    float3 N : NORMAL;     // normal				// DWORD
-    float3 T : TANGENT;    // tangent				// DWORD
-    float3 B : BINORMAL;   // binormal				// DWORD
-    float2 tc : TEXCOORD0; // (u,v)				// short2
+	int4 	P	: POSITION;	// (float,float,float,1) - quantized	// short4
+	float3	N	: NORMAL;	// normal				// DWORD
+	float3	T	: TANGENT;	// tangent				// DWORD
+	float3	B	: BINORMAL;	// binormal				// DWORD
+	int2	tc	: TEXCOORD0;// (u,v)				// short2
 };
-struct v_model_skinned_1 // 24 bytes
+struct 	v_model_skinned_1   		// 24 bytes
 {
-    float4 P : POSITION;   // (float,float,float,1) - quantized	// short4
-    int4 N : NORMAL;        // (nx,ny,nz,index)			// DWORD
-    float3 T : TANGENT;    // tangent				// DWORD
-    float3 B : BINORMAL;   // binormal				// DWORD
-    float2 tc : TEXCOORD0; // (u,v)				// short2
+	int4 	P	: POSITION;	// (float,float,float,1) - quantized	// short4
+	float4	N	: NORMAL;	// (nx,ny,nz,index)			// DWORD
+	float3	T	: TANGENT;	// tangent				// DWORD
+	float3	B	: BINORMAL;	// binormal				// DWORD
+	int2	tc	: TEXCOORD0;// (u,v)				// short2
 };
-struct v_model_skinned_2 // 28 bytes
+struct 	v_model_skinned_2		// 28 bytes
 {
-    float4 P : POSITION; // (float,float,float,1) - quantized	// short4
-    float4 N : NORMAL;   // (nx,ny,nz,weight)			// DWORD
-    float3 T : TANGENT;  // tangent				// DWORD
-    float3 B : BINORMAL; // binormal				// DWORD
-    int4 tc : TEXCOORD0;  // (u,v, w=m-index0, z=m-index1)  	// short4
+	int4 	P	: POSITION;	// (float,float,float,1) - quantized	// short4
+	float4 	N	: NORMAL;	// (nx,ny,nz,weight)	// DWORD
+	float3	T	: TANGENT;	// tangent				// DWORD
+	float3	B	: BINORMAL;	// binormal				// DWORD
+	int4 	tc	: TEXCOORD0;	// (u,v, w=m-index0, z=m-index1)  	// short4
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform float4 sbones_array[256 - 22];
+uniform float4 sbones_array[234];
 //////////////////////////////////////////////////////////////////////////////////////////
 float3 skinning_dir(float3 dir, float3 m0, float3 m1, float3 m2)
 {
@@ -42,6 +42,11 @@ float4 skinning_pos(float4 pos, float4 m0, float4 m1, float4 m2)
 
 v_model skinning_0(v_model_skinned_0 v)
 {
+	// dx9 to dx11
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+	
     // skinning
     v_model o;
     o.P = float4(v.P.xyz * (12.f / 32768.f), 1.f); // -12..+12
@@ -49,12 +54,18 @@ v_model skinning_0(v_model_skinned_0 v)
     o.T = unpack_normal(v.T);
     o.B = unpack_normal(v.B);
     o.tc = v.tc * (16.f / 32768.f); // -16..+16
+	
     return o;
 }
 v_model skinning_1(v_model_skinned_1 v)
 {
+	// dx9 to dx11
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+	
     // matrices
-    int mid = v.N.w * (int)255;
+    int mid = v.N.w * 255 + 0.3;
     float4 m0 = sbones_array[mid + 0];
     float4 m1 = sbones_array[mid + 1];
     float4 m2 = sbones_array[mid + 2];
@@ -66,15 +77,22 @@ v_model skinning_1(v_model_skinned_1 v)
     o.T = skinning_dir(v.T, m0, m1, m2);
     o.B = skinning_dir(v.B, m0, m1, m2);
     o.tc = v.tc * (16.f / 32768.f); // -16..+16
+	
     return o;
 }
 v_model skinning_2(v_model_skinned_2 v)
 {
+	// dx9 to dx11
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+	
     // matrices
     int id_0 = v.tc.z;
     float4 m0_0 = sbones_array[id_0 + 0];
     float4 m1_0 = sbones_array[id_0 + 1];
     float4 m2_0 = sbones_array[id_0 + 2];
+	
     int id_1 = v.tc.w;
     float4 m0_1 = sbones_array[id_1 + 0];
     float4 m1_1 = sbones_array[id_1 + 1];
@@ -93,11 +111,17 @@ v_model skinning_2(v_model_skinned_2 v)
     o.T = skinning_dir(v.T, m0, m1, m2);
     o.B = skinning_dir(v.B, m0, m1, m2);
     o.tc = v.tc * (16.f / 32768.f); // -16..+16
+	
     return o;
 }
 
 v_model skinning_2lq(v_model_skinned_2	v)
 {
+	// dx9 to dx11
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+	
     // matrices
     int 	id_0 = v.tc.z;
     float4  m0 = sbones_array[id_0 + 0];
