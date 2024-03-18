@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 //////////////////////////////////////////////////////////////////////////////////////////
-struct VertexData
+struct v_sky
 {
     float4 Position: POSITION;
     float4 Color: COLOR0;
@@ -9,7 +9,7 @@ struct VertexData
     float3 UV1: TEXCOORD1;
 };
 
-struct Interpolators
+struct vf
 {
     float3 UV0: TEXCOORD0;
     float3 UV1: TEXCOORD1;
@@ -17,16 +17,16 @@ struct Interpolators
     float4 Color: COLOR0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
-Interpolators main (VertexData Input)
+vf main (v_sky v)
 {
-    Interpolators Output;
+    vf o;
     
-    Output.hpos = mul (m_WVP, mul (1000.0f, Input.Position));
-    Output.hpos.z = Output.hpos.w;
-    Output.UV0 = Input.UV0;
-    Output.UV1 = Input.UV1;
-    Output.Color = Input.Color;
+    o.hpos = mul (m_WVP, mul (1000.0f, v.Position));
+    o.hpos.z = o.hpos.w;
+    o.UV0 = v.UV0;
+    o.UV1 = v.UV1;
+    o.Color = v.Color;
     
-    return Output;
+    return o;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,10 @@ vf main (v_lmap v)
 {
 	vf 		o;
 
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+
 	float2 	dt 	= calc_detail		(v.P);
 	float3	N 	= unpack_normal		(v.N);
 

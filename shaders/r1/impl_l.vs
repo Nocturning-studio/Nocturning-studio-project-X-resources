@@ -13,7 +13,10 @@ vf main (v_lmap v)
 {
 	vf 		o;
 
-	
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+
 	o.hpos 		= mul			(m_VP, v.P);	// xform, input in world coords
 	o.tc0		= unpack_tc_base	(v.uv0,v.T.w,v.B.w);		// copy tc
 	o.tc1		= o.tc0;				// copy tc 

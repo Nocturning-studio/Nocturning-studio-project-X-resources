@@ -30,7 +30,7 @@ vf main (vv v)
 {
 	vf 		o;
 
-	v.sun_af	= bgra_to_rgba(v.sun_af);
+	// v.sun_af	= bgra_to_rgba(v.sun_af);
 	v.rgbh0		= bgra_to_rgba(v.rgbh0);
 	v.rgbh1		= bgra_to_rgba(v.rgbh1);
 

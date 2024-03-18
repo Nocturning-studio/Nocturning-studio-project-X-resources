@@ -13,6 +13,10 @@ vf main (v_vert v)
 {
 	vf 		o;
 
+	v.N = bgra_to_rgba(v.N);
+	v.T = bgra_to_rgba(v.T);
+	v.B = bgra_to_rgba(v.B);
+
 	float4 	P 	= v.P;
 	float3 	N 	= unpack_normal		(v.N);
 		P 	= watermove		(P);

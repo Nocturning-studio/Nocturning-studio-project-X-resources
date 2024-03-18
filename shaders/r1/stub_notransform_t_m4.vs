@@ -20,7 +20,7 @@ v2p_TL main ( v_TL_positiont I )
 	}
 
 	O.Tex0 = I.Tex0;
-	O.Color = float4(I.Color.bgr*4, 1.0f);	//	swizzle vertex colour
+	O.Color = float4(I.Color.rgb*4, 1.0f);	//	swizzle vertex colour
 
  	return O;
 }

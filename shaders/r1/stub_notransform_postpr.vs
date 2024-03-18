@@ -24,8 +24,8 @@ v2p_postpr main ( v_postpr I )
 	O.Tex1	= I.Tex1;
 	O.Tex2	= I.Tex2;
 	
-	O.Color = I.Color.bgra;	//	swizzle vertex colour
-	O.Gray	= I.Gray.bgra;	//	swizzle vertex colour
+	O.Color = I.Color;	//	swizzle vertex colour
+	O.Gray	= I.Gray;	//	swizzle vertex colour
 
  	return O;
 }
