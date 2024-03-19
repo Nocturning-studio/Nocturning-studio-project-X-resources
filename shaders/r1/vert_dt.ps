@@ -14,6 +14,11 @@ struct v2p
 float4 main (v2p I):SV_Target
 {
     float4 t_base = tex2D (s_base, I.tc0);
+	
+#ifdef USE_AREF
+	clip(t_base.a - (200.f/255.f));
+#endif
+	
     float4 t_dt = tex2D (s_detail, I.tc1);
 
     float3 detail = t_dt * I.c0.a + I.c1.a;
@@ -22,8 +27,6 @@ float4 main (v2p I):SV_Target
 
     final = CalcTonemap (final);
     
-	// clip(t_base.a - def_aref);
-	
 	// out
     return float4 (final.r, final.g, final.b, t_base.a);
 }

@@ -49,7 +49,10 @@ float3 exponential_tonemapping(float3 Color)
 ////////////////////////////////////////////////////////////////////////////
 float3 CalcTonemap(float3 Color)
 {
-    float white = 1.0f;
+	// r1 hack
+	Color *= 2;
+	
+    float white = 1.7f;
     float whitesqr = white * white;
     Color = (Color * (1.0f + Color / whitesqr)) / (Color + 1.0f);
 

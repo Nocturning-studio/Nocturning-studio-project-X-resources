@@ -13,8 +13,8 @@ struct vf
 {
     float3 UV0: TEXCOORD0;
     float3 UV1: TEXCOORD1;
-    float4 hpos: SV_Position;
     float4 Color: COLOR0;
+    float4 hpos: SV_Position;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 vf main (v_sky v)

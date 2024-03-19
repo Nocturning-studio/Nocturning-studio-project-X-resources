@@ -13,13 +13,16 @@ struct v2p
 float4 main (v2p I):SV_Target
 {
     float4 t_base = tex2D (s_base, I.tc0);
+	
+#ifdef USE_AREF
+	clip(t_base.a - (200.f/255.f));
+#endif
+	
     float3 final = t_base * I.c0 * 2;
     //final = ApplyFogness (final, I.fog);
 
     final = CalcTonemap (final);
     
-	// clip(t_base.a - def_aref);
-	
 	// out
     return float4 (final, t_base.a);
 }

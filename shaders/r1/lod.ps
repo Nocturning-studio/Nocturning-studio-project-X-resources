@@ -24,6 +24,10 @@ float4 main (v2p I):SV_Target
     float4 hemi1 = tex2D (s_hemi1, I.tc3) * 0.5;
 
     float4 base = lerp (base0, base1, I.f.w) * I.c;
+	
+	// alpha test
+	clip(base.a - (96.f/255.f));
+  
     float hemi = lerp (hemi0, hemi1, I.f.w).w;
 
     float3 color = base * 2 * (0.5 + 0.5 * hemi);
