@@ -25,7 +25,7 @@ struct vf
 };
 
 #define L_SCALE 	(1.55)
-#define L_SUN_HACK 	(.7)
+#define L_SUN_HACK 	(1)
 vf main (vv v)
 {
 	vf 		o;
