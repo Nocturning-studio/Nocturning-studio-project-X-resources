@@ -6,7 +6,7 @@ struct vf
 	float2 tbase	: TEXCOORD0	;
 	float3 tenv	: TEXCOORD1	;
 	float4 c0	: COLOR0	;	// c0=all lighting, c0.a = refl amount
-	//float  fog	: FOG;
+	float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -34,7 +34,7 @@ vf main (v_vert v)
 
 	o.hpos 		= mul			(m_VP, P);			// xform, input in world coords
 	o.c0		= float4		(L_final,amount);
-	//o.fog 		= CalcVertexFogness(P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(P);				// fog, input in world coords
 
 	return o;
 }

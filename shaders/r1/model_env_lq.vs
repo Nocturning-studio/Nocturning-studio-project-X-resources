@@ -7,7 +7,7 @@ struct vf
     float2 tc0: TEXCOORD0; // base
     float3 tc1: TEXCOORD1; // environment
     float3 c0: COLOR0; // color
-    //float fog: FOG;
+    float fog: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -23,7 +23,7 @@ vf _main (v_model v)
     o.tc0 = v.tc.xy; // copy tc
     o.tc1 = calc_reflection (pos_w, norm_w);
     o.c0 = calc_model_lq_lighting (norm_w);
-    //o.fog = CalcVertexFogness (float4 (pos_w, 1)); // fog, input in world coords
+    o.fog = CalcVertexFogness (float4 (pos_w, 1)); // fog, input in world coords
 
     return o;
 }

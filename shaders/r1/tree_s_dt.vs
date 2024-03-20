@@ -14,7 +14,7 @@ struct vf
 	float2 tc1	: TEXCOORD1;		// detail
 	float4 COL0	: COLOR0;
 	float4	c1	: COLOR1;
-	//float  fog	: FOG;
+	float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -37,7 +37,7 @@ vf main (av v)
 	float4 	f_pos 	= float4(pos,1);//float4	(pos.x+result.x, pos.y, pos.z+result.y, 1);
 
 	// Calc fog
-	//o.fog 			= CalcVertexFogness(f_pos);
+	o.fog 			= CalcVertexFogness(f_pos);
 
 	// Final xform
 	o.hpos			= mul		(m_VP, f_pos);

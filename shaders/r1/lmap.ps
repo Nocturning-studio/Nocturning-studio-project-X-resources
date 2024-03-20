@@ -7,7 +7,7 @@ struct v2p
     float2 tc2: TEXCOORD2; // lmap-hemi
     float3 c0: COLOR0; // hemi
     float3 c1: COLOR1; // sun
-    //float fog: FOG;
+    float fog: COLOR2;
 };
 
 
@@ -32,7 +32,7 @@ float4 main (v2p I):SV_Target
 
 	// final-color
     float3 final = light * t_base * 2;
-    //final = ApplyFogness(final, I.fog);
+    final = ApplyFogness(final, I.fog);
 	
     final = CalcTonemap (final);
     

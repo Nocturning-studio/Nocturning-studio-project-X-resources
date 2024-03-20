@@ -20,7 +20,7 @@ struct vf
  	float2 	tc3	: TEXCOORD3;	// hemi1
 	float4 	c	: COLOR0;	// color.alpha
 	float4 	f	: COLOR1;	// factor
-	//float  	fog	: FOG	;
+	float  	fog	: COLOR2	;
     float4 hpos: SV_Position;
 };
 
@@ -60,7 +60,7 @@ vf main (vv v)
 
 	o.c		= float4	(L_final,v.sun_af.z);
 	o.f 		= factor	;
-	//o.fog 		= CalcVertexFogness(pos);					// fog, input in world coords
+	o.fog 		= CalcVertexFogness(pos);					// fog, input in world coords
 
 	return o	;
 }

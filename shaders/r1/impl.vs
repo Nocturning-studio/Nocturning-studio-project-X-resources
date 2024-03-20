@@ -7,7 +7,7 @@ struct vf
 	float2 tc1	: TEXCOORD1;
 	float3 c0	: COLOR0;		// c0=hemi, 			c0.a = dt*
 	float3 c1	: COLOR1;		// c1=sun,			c1.a = dt+
-	//float  fog	: FOG;
+	float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -25,7 +25,7 @@ vf main (v_lmap v)
 	o.tc1		= o.tc0;						// copy tc
 	o.c0		= v_hemi		(N);				// hemi
 	o.c1 		= v_sun			(N);  				// sun
-	//o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
+	o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
 
 	return o;
 }
