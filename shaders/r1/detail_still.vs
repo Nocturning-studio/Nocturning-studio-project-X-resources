@@ -8,7 +8,15 @@ struct vf
     float4 hpos: SV_Position;
 };
 
-uniform float4 array[200]: register(c10);
+// uniform float4 array[200]: register(c10);
+
+cbuffer CBufferDetails
+{
+	float4 det_array[4096 - 3];
+	float4 det_consts;
+	float4 det_wave;
+	float4 det_dir2D;
+}
 
 vf main (v_detail v)
 {
@@ -16,10 +24,10 @@ vf main (v_detail v)
 
 	// index
     int i = v.misc.w;
-    float4 m0 = array[i + 0];
-    float4 m1 = array[i + 1];
-    float4 m2 = array[i + 2];
-    float4 c0 = array[i + 3];
+    float4 m0 = det_array[i + 0];
+    float4 m1 = det_array[i + 1];
+    float4 m2 = det_array[i + 2];
+    float4 c0 = det_array[i + 3];
 
 	// Transform to world coords
     float4 pos;
@@ -31,7 +39,7 @@ vf main (v_detail v)
 	// Final out
     o.hpos = mul (m_WVP, pos);
     o.C = c0;
-    o.tc.xy = (v.misc * consts).xy;
+    o.tc.xy = (v.misc * det_consts).xy;
     
     return o;
 }

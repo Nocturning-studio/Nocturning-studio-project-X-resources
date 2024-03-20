@@ -12,6 +12,9 @@ struct v2p
 float4 main (v2p I):SV_Target
 {
     float4 t_base = tex2D (s_base, I.tc0);
+	
+	clip(t_base.a - (65.f/255.f));
+	
     float3 final = t_base * I.c0 * 2;
     
     final = CalcTonemap (final);
