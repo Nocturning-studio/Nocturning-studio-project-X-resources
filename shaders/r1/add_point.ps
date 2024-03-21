@@ -2,10 +2,11 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
+uniform_sampler2D(s_lmap_l,   smp_rtlinear);
 float4 	main	( vf_point I )	: SV_Target
 {
 	float4	t_base 	= tex2D		(s_base,	I.tc0);
-	float4 	t_att1 	= tex2D		(s_lmap, 	I.tc1);	// point-att
+	float4 	t_att1 	= tex2D		(s_lmap_l, 	I.tc1);	// point-att
 	float4 	t_att2 	= tex2D		(s_att, 	I.tc2);	// point-att
 	float4 	t_att 	= t_att1*t_att2;
 

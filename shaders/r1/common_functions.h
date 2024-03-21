@@ -10,7 +10,8 @@ float4 calc_spot (out float4 tc_lmap, out float2 tc_att, float4 w_pos, float3 w_
 	tc_att = s_pos.z; // z=distance * (1/range)
 	float3 L_dir_n = normalize(w_pos - L_dynamic_pos.xyz);
 	float L_scale = dot(w_norm, -L_dir_n);
-	return L_dynamic_color * L_scale * saturate(1.0f - CalcVertexFogness(w_pos));
+	// return L_dynamic_color * L_scale * saturate(1.0f - CalcVertexFogness(w_pos));
+	return L_dynamic_color * L_scale;
 }
 
 float4 calc_point (out float2 tc_att0, out float2 tc_att1, float4 w_pos, float3 w_norm)	

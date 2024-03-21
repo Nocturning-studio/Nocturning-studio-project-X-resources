@@ -6,7 +6,7 @@
 uniform_sampler2D(s_base,   smp_base);
 uniform_sampler2D(s_lmap,   smp_linear);
 uniform_sampler2D(s_hemi,   smp_linear);
-uniform_sampler2D(s_att,    smp_linear);
+uniform_sampler2D(s_att,    smp_nofilter);
 uniform_sampler2D(s_detail, smp_base);
 uniform_samplerCUBE(s_env,  smp_base);
 //////////////////////////////////////////////////////////////////////////////////////////
