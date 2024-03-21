@@ -9,7 +9,7 @@ struct vf
 	float2 tc2	: TEXCOORD3;
 	float4 c0	: COLOR0;		// c0=hemi+v-lights, 	c0.a = dt*
 	float4 c1	: COLOR1;		// c1=sun, 		c1.a = dt+
-	/float  fog	: COLOR2;
+	//float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
