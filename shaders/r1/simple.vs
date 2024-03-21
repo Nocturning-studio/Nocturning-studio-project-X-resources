@@ -4,7 +4,7 @@ struct vf
 {
 	// float4 hpos	: POSITION;
 	float2 tc0	: TEXCOORD0;
-	float  fog	: COLOR2;
+	//float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -14,7 +14,7 @@ vf main (v_vert v)
 
 	o.hpos 		= mul			(m_VP, v.P);			// xform, input in world coords
 	o.tc0		= unpack_tc_base	(v.uv,v.T.w,v.B.w);		// copy tc
-	o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
+	//o.fog 		= CalcVertexFogness(v.P);				// fog, input in world coords
 
 	return o;
 }

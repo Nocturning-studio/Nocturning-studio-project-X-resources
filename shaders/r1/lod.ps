@@ -8,7 +8,7 @@ struct v2p
     float2 tc3: TEXCOORD3; // hemi1
     float4 c: COLOR0; // color
     float4 f: COLOR1; // color
-    float fog: COLOR2;
+    //float fog: COLOR2;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
@@ -31,7 +31,7 @@ float4 main (v2p I):SV_Target
     float hemi = lerp (hemi0, hemi1, I.f.w).w;
 
     float3 color = base * 2 * (0.5 + 0.5 * hemi);
-    color = ApplyFogness (color, I.fog);
+    //color = ApplyFogness (color, I.fog);
     
     color = CalcTonemap (color);
     

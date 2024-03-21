@@ -5,7 +5,7 @@ struct v2p
     float2 tc0: TEXCOORD0; // base
     float2 tc1: TEXCOORD1; // lmap
     float3 c0: COLOR0; // sun
-    float fog: COLOR2;
+    //float fog: COLOR2;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -16,11 +16,11 @@ float4 main (v2p I):SV_Target
 
     float3 light = I.c0;
     float3 final = light * t_base * 2;
-    final = ApplyFogness (final, I.fog);
+    //final = ApplyFogness (final, I.fog);
 
     final = CalcTonemap (final);
     
 	// out
-    return t_base*float4(0.5,0.5,0.5,1.0);
-    // return float4 (final.r, final.g, final.b, t_base.a);
+    // return t_base*float4(0.5,0.5,0.5,1.0);
+    return float4 (final.r, final.g, final.b, t_base.a);
 }

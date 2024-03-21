@@ -5,7 +5,7 @@ struct v2p
     float2 tbase: TEXCOORD0; // base
     float3 tenv: TEXCOORD1; // env
     float4 c0: COLOR0;
-    float fog: COLOR2;
+    //float fog: COLOR2;
 };
 
 
@@ -25,7 +25,7 @@ float4 main (v2p I):SV_Target
     float alpha_add = alpha_shift * alpha_shift;
     float alpha = t_base.a;
 	
-    final = ApplyFogness (final, I.fog);
+    //final = ApplyFogness (final, I.fog);
     
     final = CalcTonemap (final);
     

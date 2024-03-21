@@ -5,7 +5,7 @@ struct vf
 	// float4 hpos	: POSITION;
 	float2 tc0	: TEXCOORD0;
 	float3 c0	: COLOR0;		// c0=all lighting
-	float  fog	: COLOR2;
+	//float  fog	: COLOR2;
     float4 hpos: SV_Position;
 };
 
@@ -24,7 +24,7 @@ vf main (v_vert v)
 	float3 		L_final	= L_rgb + L_hemi + L_sun + L_ambient;
 
 	o.c0		= 	L_final;
-	o.fog 		= 	CalcVertexFogness(P);				// fog, input in world coords
+	//o.fog 		= 	CalcVertexFogness(P);				// fog, input in world coords
 
 	return o;
 }
