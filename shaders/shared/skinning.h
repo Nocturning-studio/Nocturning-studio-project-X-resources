@@ -43,9 +43,9 @@ float4 skinning_pos(float4 pos, float4 m0, float4 m1, float4 m2)
 v_model skinning_0(v_model_skinned_0 v)
 {
 	// dx9 to dx11
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 	
     // skinning
     v_model o;
@@ -60,9 +60,9 @@ v_model skinning_0(v_model_skinned_0 v)
 v_model skinning_1(v_model_skinned_1 v)
 {
 	// dx9 to dx11
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 	
     // matrices
     int mid = v.N.w * 255 + 0.3;
@@ -83,9 +83,9 @@ v_model skinning_1(v_model_skinned_1 v)
 v_model skinning_2(v_model_skinned_2 v)
 {
 	// dx9 to dx11
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 	
     // matrices
     int id_0 = v.tc.z;
@@ -118,9 +118,9 @@ v_model skinning_2(v_model_skinned_2 v)
 v_model skinning_2lq(v_model_skinned_2	v)
 {
 	// dx9 to dx11
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 	
     // matrices
     int 	id_0 = v.tc.z;
