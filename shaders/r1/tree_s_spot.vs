@@ -11,7 +11,7 @@ vf_spot main (av v)
 {
 	vf_spot		o;
 
-	v.nc = bgra_to_rgba(v.nc);
+	// v.nc = bgra_to_rgba(v.nc);
 
 	// Transform to world coords
 	float3 	pos	= mul	(m_xform, v.pos);

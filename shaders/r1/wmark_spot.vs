@@ -4,9 +4,9 @@ vf_spot main 	(v_vert v)
 {
 	vf_spot 	o;
 
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 
 	float3 	N 	= 	unpack_normal	(v.N);
 	float4 	P 	= 	wmark_shift		(v.P,N);

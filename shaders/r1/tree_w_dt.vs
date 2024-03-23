@@ -22,7 +22,7 @@ vf main (av v)
 {
 	vf 		o;
 
-	v.nc = bgra_to_rgba(v.nc);
+	// v.nc = bgra_to_rgba(v.nc);
 
 	// Transform to world coords
 	float3 	pos	= mul	(m_xform, v.pos);

@@ -16,9 +16,9 @@ vf main (v_lmap v)
 {
 	vf 		o;
 
-	v.N = bgra_to_rgba(v.N);
-	v.T = bgra_to_rgba(v.T);
-	v.B = bgra_to_rgba(v.B);
+	// v.N = bgra_to_rgba(v.N);
+	// v.T = bgra_to_rgba(v.T);
+	// v.B = bgra_to_rgba(v.B);
 
 	float3	N 	= unpack_normal		(v.N);
 	o.hpos 		= mul			(m_VP, v.P);			// xform, input in world coords
