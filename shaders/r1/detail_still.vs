@@ -10,9 +10,13 @@ struct vf
 
 // uniform float4 array[200]: register(c10);
 
+cbuffer CBufferDetailsArray
+{
+    float4 det_array[4096 - 3];
+}
+
 cbuffer CBufferDetails
 {
-	float4 det_array[4096 - 3];
 	float4 det_consts;
 	float4 det_wave;
 	float4 det_dir2D;
