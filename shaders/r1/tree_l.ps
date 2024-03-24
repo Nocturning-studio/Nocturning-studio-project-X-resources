@@ -1,0 +1,15 @@
+#include "common.h"
+
+struct 	v2p
+{
+	float2 TEX0	: TEXCOORD0;
+	float3 COL0	: COLOR0;
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Pixel
+float4 	main	( v2p I )	:	SV_Target
+{
+	return  float4(I.COL0,I.COL0.g);
+}

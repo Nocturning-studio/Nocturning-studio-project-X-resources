@@ -26,14 +26,17 @@ float4 main (v2p I):SV_Target
     float4 base = lerp (base0, base1, I.f.w) * I.c;
 	
 	// alpha test
-	clip(base.a - (96.f/255.f));
+	// clip(base.a - (96.f/255.f));
   
     float hemi = lerp (hemi0, hemi1, I.f.w).w;
 
     float3 color = base * 2 * (0.5 + 0.5 * hemi);
+	float val = 0.5;
+	float alpha = base.a + val;
+	alpha = sqrt(mad(alpha, alpha, -val));
     //color = ApplyFogness (color, I.fog);
     
     color = CalcTonemap (color);
     
-    return float4 (color, base.a);
+    return float4 (color, alpha);
 }
