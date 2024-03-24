@@ -1,6 +1,6 @@
 -- normal pp
 function normal	(shader, t_base, t_second, t_detail)
-	shader:begin("null","postprocess")
+	shader:begin("stub_notransform_postpr","postprocess")
 			: fog(false)
 			: zb (false,false)
 	shader:sampler("s_base") :texture(t_rt) : clamp() : f_linear ()

@@ -10,7 +10,7 @@ struct v2p
     float4 gray: COLOR1; // (.3,.3,.3.,amount)
 };
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform_sampler2D(s_noise, smp_nofilter);
+uniform_sampler2D(s_noise, smp_linear);
 uniform_sampler2D(s_distort, smp_nofilter);
 uniform_sampler2D(s_vignette, smp_nofilter);
 uniform_sampler2D(s_depth, smp_nofilter);

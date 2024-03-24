@@ -1,6 +1,6 @@
 -- distort
 function normal	(shader, t_base, t_second, t_detail)
-	shader:begin("null","postprocess_d")
+	shader:begin("stub_notransform_postpr","postprocess_d")
 			: fog(false)
 			: zb (false,false)
 	shader:sampler("s_distort") :texture(t_distort) : clamp() : f_linear ()

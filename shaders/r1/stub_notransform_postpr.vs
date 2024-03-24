@@ -2,6 +2,25 @@
 
 uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
 
+struct	v_postpr
+{
+	float4	P		: POSITIONT;
+	float2 	Tex0	: TEXCOORD0;	// base1 (duality)	
+	float2	Tex1	: TEXCOORD1;	// base2 (duality)
+	float2	Tex2	: TEXCOORD2;	// base  (noise)
+	float4	Color	: COLOR0;		// multiplier, color.w = noise_amount
+	float4	Gray	: COLOR1;		// (.3,.3,.3.,amount)
+};
+struct	v2p_postpr
+{
+	float2 	Tex0	: TEXCOORD0;	// base1 (duality)	
+	float2	Tex1	: TEXCOORD1;	// base2 (duality)
+	float2	Tex2	: TEXCOORD2;	// base  (noise)
+	float4	Color	: COLOR0;		// multiplier, color.w = noise_amount
+	float4	Gray	: COLOR1;		// (.3,.3,.3.,amount)
+	float4 	hpos	: SV_Position;	// Clip-space position 	(for rasterization)
+};
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vertex
 v2p_postpr main ( v_postpr I )
