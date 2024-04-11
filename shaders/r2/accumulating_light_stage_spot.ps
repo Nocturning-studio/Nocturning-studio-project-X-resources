@@ -22,10 +22,10 @@ Accumulator main (Interpolators Input)
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
     float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
-    float2 LightingModel = Calculate_Lighting_Model (GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, LightDirection);
+    LightComponents Light = Calculate_Lighting_Model (1.0f - GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
     
-    float3 Diffuse = LightingModel.xxx;
-    float3 Specular = LightingModel.yyy;
+    float3 Diffuse = Light.Diffuse;
+    float3 Specular = Light.Specular;
     
     float4 Position = float4 (GBuffer.Position, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);

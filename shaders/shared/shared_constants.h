@@ -6,8 +6,8 @@
 #define NULL float4(0.0f, 0.0f, 0.0f, 0.0f)
 #define EXP 2.7182818284f
 #define PI 3.1415926535f
-#define INV_PI 0.31830988618
-#define INV_TWO_PI 0.15915494309
+#define INV_PI 3.14159265358979323846
+#define INV_TWO_PI PI * 0.5
 ////////////////////////////////////////////////////////////////////////////
 static const float2 poissonDisk_12[12] = {
 	float2(-0.326212f, -0.405810f), float2(-0.840144f, -0.073580f), float2(-0.695914f, 0.457137f),

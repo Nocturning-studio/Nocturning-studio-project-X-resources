@@ -20,15 +20,14 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
         OutputColor = GBuffer.Albedo;
     else if (debug_mode == GBUFFER_POSITION)
         OutputColor = GBuffer.Position;
-        // OutputColor = tex2D(s_zb, TexCoords);
     else if (debug_mode == GBUFFER_NORMAL)
         OutputColor = normalize (GBuffer.Normal * 0.5f + 0.5f);
     else if (debug_mode == GBUFFER_GLOSSINESS)
-        OutputColor = GBuffer.Glossiness;
+        OutputColor = 1.0f - GBuffer.Glossiness;
     else if (debug_mode == GBUFFER_LIGHTMAP_AO)
         OutputColor = GBuffer.AO;
     else if (debug_mode == GBUFFER_BAKED_AO)
-        OutputColor = GBuffer.BakedAO;
+        OutputColor = (GBuffer.BakedAO + 1.0f) * 0.5f;
     else if (debug_mode == ACCUMULATOR_DIFFUSE)
         OutputColor = Light.Diffuse;
     else if (debug_mode == ACCUMULATOR_SPECULAR)
