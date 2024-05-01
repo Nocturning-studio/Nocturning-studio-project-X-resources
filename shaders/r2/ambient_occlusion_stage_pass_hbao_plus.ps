@@ -16,8 +16,8 @@
 float4 main (float2 TexCoords: TEXCOORD0, float4 Position2D: VPOS): COLOR
 {
     float3 Position = GetPosition (TexCoords);
-    
-    if (Position.z > RENDER_DISTANCE)
+    return 1;
+    /*if (Position.z > RENDER_DISTANCE)
     {
         return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
@@ -97,7 +97,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float4 Position2D: VPOS): COLOR
                 occ += dirSum;
             }
 
-            occ = saturate (pow (1.0f - occ * 0.25f, POWER));
+            occ = pow (saturate (1.0f - occ * 0.25f), POWER);
 
             // Create smooth render distance border
             float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75f, RENDER_DISTANCE, length (Position));
@@ -105,6 +105,6 @@ float4 main (float2 TexCoords: TEXCOORD0, float4 Position2D: VPOS): COLOR
             
             return occ.xxxx;
         }
-    }
+    }*/
 }
 //////////////////////////////////////////////////////////////////////////////////////////
