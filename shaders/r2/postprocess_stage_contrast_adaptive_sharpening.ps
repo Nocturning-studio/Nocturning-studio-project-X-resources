@@ -10,6 +10,7 @@ uniform float2 cas_params;
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    return float4 (CAS(s_image, TexCoords, cas_params.x, cas_params.y), 1.0f);
+    //return float4 (CAS(s_image, TexCoords, cas_params.x, cas_params.y), 1.0f);
+    return tex2D(s_image,TexCoords); // TODO: fix CAS
 }
 ////////////////////////////////////////////////////////////////////////////

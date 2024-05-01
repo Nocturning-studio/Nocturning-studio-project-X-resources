@@ -1,0 +1,28 @@
+#include "common.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// Vertex
+v2p_filter main ( v_filter I )
+{
+	v2p_filter O;
+
+//	O.hpos = I.P;
+	{
+		I.P.xy += 0.5f;	//	Bugs with rasterizer??? Possible float-pixel shift.
+//		O.hpos.x = I.P.x/1024 * 2 - 1;
+//		O.hpos.y = (I.P.y/768 * 2 - 1)*-1;
+		O.hpos.x = I.P.x * screen_res.z * 2 - 1;
+		O.hpos.y = (I.P.y * screen_res.w * 2 - 1)*-1;
+		O.hpos.zw = I.P.zw;
+	}
+	O.Tex0 = I.Tex0;
+	O.Tex1 = I.Tex1;
+	O.Tex2 = I.Tex2;
+	O.Tex3 = I.Tex3;
+	O.Tex4 = I.Tex4;
+	O.Tex5 = I.Tex5;
+	O.Tex6 = I.Tex6;
+	O.Tex7 = I.Tex7;
+
+ 	return O;
+}

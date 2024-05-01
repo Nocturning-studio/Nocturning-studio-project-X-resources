@@ -44,11 +44,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void calc_fxaa_atoc(float2 TexCoords, out float3 Albedo, out float Opacity)
 {
-    float2 rcpFrame = float2(1.0f / ALBEDO_TEXTURE_RESOLUTION.x, 1.0f / ALBEDO_TEXTURE_RESOLUTION.y);
-
-    float4 TextureColor = FxaaPixelShader(TexCoords, s_base, rcpFrame, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
-
-    Albedo = TextureColor.rgb;
-    Opacity = TextureColor.a;
+	// TODO: fix FXAA
+    //float2 rcpFrame = float2(1.0f / ALBEDO_TEXTURE_RESOLUTION.x, 1.0f / ALBEDO_TEXTURE_RESOLUTION.y);
+	//
+    //float4 TextureColor = FxaaPixelShader(TexCoords, s_base, rcpFrame, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
+	//
+    //Albedo = TextureColor.rgb;
+    //Opacity = TextureColor.a;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

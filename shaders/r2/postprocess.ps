@@ -40,6 +40,8 @@ float4 main (v2p I): COLOR
     float VignettePower = 0.5f;  
 #elif VIGNETTE_MODE == 2
     float VignettePower = vignette_power;
+#else
+	float VignettePower  =0;
 #endif
     float Vignette = tex2D (s_vignette, I.tc1).r;
     image *= Vignette + (1.0f - Vignette) * (1.0f - VignettePower);
