@@ -36,7 +36,7 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Albedo = Albedo;
 	
-    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS - 0.1f;
+    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
 
     GBuffer.BakedAO = 1.0f;
 

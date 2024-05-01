@@ -24,7 +24,7 @@ GBufferPacked main (Interpolators Input)
 	float4 Albedo = tex2D (s_base, Input.UV);
     GBuffer.Albedo = 2 * Albedo * tex2D (s_detail, Input.DetailUV);
 
-    GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * (AO_BRIGHTNESS - 0.2f);
+    GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * AO_BRIGHTNESS;
 
     GBuffer.BakedAO = 1.0f;
 

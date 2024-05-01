@@ -28,6 +28,9 @@ uniform float4 fog_params;
 uniform float3 fog_color;
 uniform float fog_sky_influence;
 
+uniform float vertical_fog_density;
+uniform float vertical_fog_height;
+
 uniform float3 water_intensity; 
 uniform float3 sun_shafts_intensity;
 uniform float4 rain_density;

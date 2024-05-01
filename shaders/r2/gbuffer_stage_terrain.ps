@@ -73,7 +73,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Position = Input.Position;
 
 	// Get light map ambient
-    GBuffer.AO = tex2D (s_base, Input.UV).a * (AO_BRIGHTNESS - 0.2f);
+    GBuffer.AO = tex2D (s_base, Input.UV).a * AO_BRIGHTNESS;
 
 	// Get baked ao from details
     GBuffer.BakedAO = DetailBumpData.g;

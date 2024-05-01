@@ -10,6 +10,12 @@
 ////////////////////////////////////////////////////////////////////////////
 // Myltiply add
 #define mad(m, a, b) m * a + b
+
+// Multiply + Saturation
+#define mul_sat(a, b) saturate(mul(a, b))
+
+// Multiply add + Saturation
+#define mad_sat(m, a, b) saturate(mad(m, a, b))
 ////////////////////////////////////////////////////////////////////////////
 // Average functions
 float avg2(float2 tex)

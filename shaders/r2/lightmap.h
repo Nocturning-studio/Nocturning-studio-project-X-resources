@@ -17,8 +17,7 @@ LightMapData Unpack_LightMap(float2 LightMapUV)
 
     float4 LightmapData = tex2D(s_hemi, LightMapUV);
 
-    float AO = avg3(LightmapData.rgb);
-    Output.AO = AO * AO_BRIGHTNESS;
+    Output.AO = avg3(LightmapData.rgb) * AO_BRIGHTNESS;
     Output.Sun = LightmapData.a;
 
     return Output;

@@ -36,7 +36,7 @@ GBufferPacked main (Interpolators Input)
 	float4 NormalAndAO1 = tex2D (s_hemi, Input.TexCoords1);
 	float4 NormalAndAO = lerp (NormalAndAO0, NormalAndAO1, Input.TransitionFactor);
 
-    GBuffer.AO = NormalAndAO.a * (AO_BRIGHTNESS - 0.1f);
+    GBuffer.AO = NormalAndAO.a * AO_BRIGHTNESS;
 
     GBuffer.BakedAO = 1.0f;
     

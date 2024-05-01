@@ -48,7 +48,7 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.AO = LightMap.AO;
 #else//USE_LIGHTMAP
-    GBuffer.AO = Input.Lighting.x * (AO_BRIGHTNESS - 0.25f);
+    GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
 #endif//USE_LIGHTMAP
 
 	// Apply baked ao for light map ao
