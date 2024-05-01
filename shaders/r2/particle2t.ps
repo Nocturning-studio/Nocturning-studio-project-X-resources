@@ -9,7 +9,7 @@ struct v2p
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
-uniform sampler2D s_another;
+uniform_sampler2D(s_another, smp_linear);
 float4 main (v2p I): COLOR
 {
  float3 base = I.c * tex2D (s_base, I.tc0);

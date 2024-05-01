@@ -31,7 +31,7 @@ float hash13 (float3 p3)
     return frac ((p3.x + p3.y) * p3.z);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
+float4 main (float2 TexCoords: TEXCOORD0, float4 Position2D: VPOS): COLOR
 {
     float3 P = GetPosition (TexCoords);
     

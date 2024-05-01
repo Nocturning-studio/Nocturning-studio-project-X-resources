@@ -22,10 +22,10 @@ struct PixelShaderOutputStruct
 	float4 Position: COLOR1;
 };
 
-uniform sampler2D s_nmap;
-uniform samplerCUBE s_env0;
-uniform samplerCUBE s_env1;
-uniform sampler2D s_leaves;
+uniform_sampler2D(s_nmap, smp_linear);
+uniform_sampler2D(s_leaves, smp_linear);
+uniform_samplerCUBE(s_env0, smp_base);
+uniform_samplerCUBE(s_env1, smp_base);
 
 ////////////////////////////////////////////////////////////////////////////////
 PixelShaderOutputStruct main (vf I)

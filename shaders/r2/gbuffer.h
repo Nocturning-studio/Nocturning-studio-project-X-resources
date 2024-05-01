@@ -9,11 +9,11 @@
 // 0 - none,			  BGRA8 + RGBA16F + RGBA16F  = 160bit
 // 1 - partial,           BGRA8 + BGRA8   + R16F     = 80bit
 // 2 - full,      'INTZ'  BGRA8 + BGRA8              = 64bit
-// 3 - full,      'RAWZ'  BGRA8 + BGRA8              = 64bit
+// 3 - full,      'RAWZ'  BGRA8 + BGRA8              = 64bit (60bit)
 ////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_gbuffer_albedo;
-uniform sampler2D s_gbuffer_position;
-uniform sampler2D s_gbuffer_normal;
+uniform_sampler2D(s_gbuffer_albedo		, smp_nofilter);
+uniform_sampler2D(s_gbuffer_position	, smp_nofilter);
+uniform_sampler2D(s_gbuffer_normal		, smp_nofilter);
 ////////////////////////////////////////////////////////////////////////////
 struct GBuffer
 {

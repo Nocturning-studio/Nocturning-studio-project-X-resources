@@ -53,7 +53,7 @@
 
 // X-Ray Engine implementation to StalkerDWM by Mihan323
 // Ported to Shader Model 3.0 and integration to NS Project X by Deathman
-float3 CAS(sampler2D tex_color, float2 tc, float contrast, float sharpening)
+float3 CAS(type_sampler2D(tex_color), float2 tc, float contrast, float sharpening)
 {
 	// fetch a 3x3 neighborhood around the pixel 'e',
 	//  a b c

@@ -11,6 +11,9 @@ sampler smp_nofilter; // point
 sampler smp_rtlinear; // bilinear
 sampler smp_linear; // trilinear (wrap)
 sampler smp_base; // anisotropic (wrap)
+sampler smp_material; // 128x256x4 3D material texture
+sampler smp_jitter; // point wrap
+sampler smp_smap; // shadow-map comparator DX11 sampler
 
 #include <shared_math.h>
 #include <shared_constants.h>

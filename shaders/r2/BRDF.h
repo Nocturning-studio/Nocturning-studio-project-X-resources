@@ -10,7 +10,7 @@
 // https://github.com/Zackin5/StalkerCop-FxaaShaders + https://learnopengl.com/PBR/IBL/Specular-IBL +
 // https://www.shadertoy.com/view/3tlBW7
 ////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_brdf_lut;
+uniform_sampler2D(s_brdf_lut, smp_linear);
 ////////////////////////////////////////////////////////////////////////////
 float3 fresnelSchlickRoughness(float NdotL, float3 F0, float roughness)
 {

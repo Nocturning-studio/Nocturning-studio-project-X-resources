@@ -88,12 +88,12 @@ float3 GetViewVector(float3 Position, float3x3 TBN)
     return normalize(mul(TBN, -Position));
 }
 
-float GetHeight(sampler2D HeightmapSampler, float2 UV)
+float GetHeight(type_sampler2D(HeightmapSampler), float2 UV)
 {
     return tex2Dlod0(HeightmapSampler, UV).a;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float2 CalculateParallaxMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
+float2 CalculateParallaxMapping(type_sampler2D(HeightmapSampler), float3 Position, float3x3 TBN, float2 UV,
                                  float StartFadingDistance, float StopFadingDistance)
 {
     if (Position.z < StopFadingDistance)
@@ -111,7 +111,7 @@ float2 CalculateParallaxMapping(sampler2D HeightmapSampler, float3 Position, flo
     return UV;
 }
 
-float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
+float2 CalculateParallaxOcclusionMapping(type_sampler2D(HeightmapSampler), float3 Position, float3x3 TBN, float2 UV,
                                          float StartFadingDistance, float StopFadingDistance,
                                          int MinimalSamplesCount, int MaximalSamplesCount)
 {
@@ -154,7 +154,7 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
     return UV;
 }
 
-float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
+float2 GetDisplacement(type_sampler2D(Heightmap), float3 Position, float3x3 TBN, float2 UV)
 {
 #if defined(USE_STEEP_PARALLAX_MAPPING)
     UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, STEEP_PARALLAX_START_FADE,
@@ -167,7 +167,7 @@ float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float
     return UV;
 }
 
-float2 GetDetailDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
+float2 GetDetailDisplacement(type_sampler2D(Heightmap), float3 Position, float3x3 TBN, float2 UV)
 {
 #if defined(USE_STEEP_PARALLAX_MAPPING)
     UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, DETAIL_STEEP_PARALLAX_START_FADE,

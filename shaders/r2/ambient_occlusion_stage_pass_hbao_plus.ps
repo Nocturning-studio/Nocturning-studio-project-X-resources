@@ -13,7 +13,7 @@
 #define STEPS 2
 #define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
+float4 main (float2 TexCoords: TEXCOORD0, float4 Position2D: VPOS): COLOR
 {
     float3 Position = GetPosition (TexCoords);
     

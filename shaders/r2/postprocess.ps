@@ -10,9 +10,9 @@ struct v2p
  	float2 tc2: TEXCOORD2; // base  (noise)
 };
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform sampler2D s_base0;
-uniform sampler2D s_base1;
-uniform sampler2D s_noise;
+uniform_sampler2D(s_base0, smp_rtlinear);
+uniform_sampler2D(s_base1, smp_rtlinear);
+uniform_sampler2D(s_noise, smp_rtlinear);
 uniform float4 c_brightness;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
