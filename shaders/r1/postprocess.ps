@@ -10,6 +10,7 @@ struct v2p
     float4 gray: COLOR1; // (.3,.3,.3.,amount)
 };
 //////////////////////////////////////////////////////////////////////////////////////////
+uniform_sampler2D(s_image, smp_rtlinear); // dx11 hack...
 uniform_sampler2D(s_noise, smp_linear);
 uniform_sampler2D(s_distort, smp_nofilter);
 uniform_sampler2D(s_vignette, smp_nofilter);
@@ -41,7 +42,7 @@ float3 CalcDepthOfField(float3 ImageColor, float2 TexCoords)
         {
             float2 SampleCoords = TexCoords + poissonDisk_16[i] * RaySize * 2.5f;
 
-            float3 SampleColor = tex2D(s_base, SampleCoords.xy);
+            float3 SampleColor = tex2D(s_image, SampleCoords.xy);
 
             float SampleContribution = DOFFactor (GetDepth (SampleCoords));
 
@@ -67,13 +68,13 @@ float4 main (v2p I): SV_Target
     float2 offset = float2 (0.0f, 0.0f);
 #endif
     
-    float3 t_0 = tex2D(s_base, I.tc0 + offset);
-    float3 t_1 = tex2D(s_base, I.tc1 + offset);
+    float3 t_0 = tex2D(s_image, I.tc0 + offset);
+    float3 t_1 = tex2D(s_image, I.tc1 + offset);
     float3 image = (t_0 + t_1) * 0.5f;
     
-#ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5f);
-#endif
+// #ifdef USE_CHROMATIC_ABBERATION
+    // image.rgb = ChromaticAberration (s_image, image.rgb, (I.tc0 + I.tc1) * 0.5f);
+// #endif
     
 #ifdef USE_HDR
     image = pow(image, hdr_params.y);
