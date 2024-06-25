@@ -54,7 +54,7 @@ GBufferPacked main (Interpolators Input)
     float HeightMap = DetailBumpDecompressionData.a;
 
 	// If we have good material quality - create MORE relief by convertation height to normal map
-#if BUMP_QUALITY == ULTRA_QUALITY
+#if MATERIAL_QUALITY == ULTRA_QUALITY
 	float3 NormalMapFromHeight = convert_height_to_normal(HeightMap);
 	NormalMap /= NormalMapFromHeight;
 #endif

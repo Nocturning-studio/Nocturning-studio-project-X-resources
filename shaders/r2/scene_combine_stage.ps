@@ -17,9 +17,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     
     float3 AmbientLighting = CalculateAmbientWithBlurredEnvironment (GBuffer.AO, GBuffer.Normal, invert (GBuffer.Glossiness)) * GBuffer.BakedAO;
     
-#ifdef AO_ENABLED
     AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r;
-#endif
     
     float3 DiffuseLighting = AmbientLighting + Light.Diffuse;
 	

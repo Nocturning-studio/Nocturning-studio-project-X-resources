@@ -132,7 +132,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 N
     float NdotV = abs(dot(Normal, ViewDirection)) + 0.1f;
     float NdotH = dot(Normal, HalfWay);
     float HdotV = dot(HalfWay, ViewDirection);
-    float RoughnessSqr = pow(Roughness, 1.0f);
+    float RoughnessSqr = pow(Roughness, 2.0f);
     float BakedAO = (AO + 1.0f) * 0.5f;
 
     // Oren-Nayar diffuse model
@@ -144,7 +144,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 N
     float G = GGX_PartialGeometry(NdotV, RoughnessSqr) * GGX_PartialGeometry(NdotL, RoughnessSqr);
     float D = GGX_Distribution(NdotH, RoughnessSqr);
     float3 F = FresnelSchlick(F0 * BakedAO, HdotV);
-    float3 Specular = saturate(G * D * F * 0.25f / NdotV);
+    float3 Specular = G * D * F * 0.25f / NdotV;
 
     Light.Diffuse = Diffuse * BakedAO;
     Light.Specular = pow(Specular, 1.5f);

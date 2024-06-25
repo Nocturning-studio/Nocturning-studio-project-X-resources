@@ -213,9 +213,6 @@
     <None Include="postprocess_stage_autoexposure_pass_combine.ps">
       <Filter>Forward rendering pipeline\Postprocess\Autoexposure</Filter>
     </None>
-    <None Include="postprocess_stage_antialiasing_pass_dlaa.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
-    </None>
     <None Include="postprocess_stage_antialiasing_pass_fxaa.ps">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
     </None>
@@ -245,15 +242,6 @@
     </None>
     <None Include="postprocess.s">
       <Filter>Forward rendering pipeline\Postprocess\Effectors</Filter>
-    </None>
-    <None Include="overlay_stage_cinema_borders.ps">
-      <Filter>Forward rendering pipeline\Overlays</Filter>
-    </None>
-    <None Include="overlay_stage_photo_grid.ps">
-      <Filter>Forward rendering pipeline\Overlays</Filter>
-    </None>
-    <None Include="overlay_stage_watermark.ps">
-      <Filter>Forward rendering pipeline\Overlays</Filter>
     </None>
     <None Include="alpha_blend_lightmap_lighted.ps">
       <Filter>Forward rendering pipeline\Editor blenders\Alpha blend\Lightmap lighted</Filter>
@@ -531,9 +519,6 @@
     <None Include="ambient_occlusion_blurring_stage_pass_vertical_filter.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Blurring</Filter>
     </None>
-    <None Include="postprocess_stage_antialiasing_pass_rgaa.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
-    </None>
     <None Include="postprocess_stage_depth_of_field_pass_horizontal_filter.ps">
       <Filter>Forward rendering pipeline\Postprocess\Depth of field</Filter>
     </None>
@@ -575,6 +560,9 @@
     </None>
     <None Include="accumulating_light_stage_direct.ps">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
+    </None>
+    <None Include="overlay_stage_apply.ps">
+      <Filter>Forward rendering pipeline\Overlays</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@
 #define constant_parallax_scale float2(PARALLAX_H, -PARALLAX_H / 2)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Quality
-#if BUMP_QUALITY == UNDEFINED_QUALITY
+#if MATERIAL_QUALITY == UNDEFINED_QUALITY
 #define STEEP_PARALLAX_START_FADE 5
 #define STEEP_PARALLAX_STOP_FADE 10
 #define PARALLAX_START_FADE 15
@@ -24,7 +24,7 @@
 #define DETAIL_PARALLAX_STOP_FADE 15
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 1
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
-#elif BUMP_QUALITY == LOW_QUALITY
+#elif MATERIAL_QUALITY == LOW_QUALITY
 #define STEEP_PARALLAX_START_FADE 5
 #define STEEP_PARALLAX_STOP_FADE 10
 #define PARALLAX_START_FADE 15
@@ -38,7 +38,7 @@
 #define DETAIL_PARALLAX_STOP_FADE 15
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 1
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
-#elif BUMP_QUALITY == MIDDLE_QUALITY
+#elif MATERIAL_QUALITY == MIDDLE_QUALITY
 #define STEEP_PARALLAX_START_FADE 7
 #define STEEP_PARALLAX_STOP_FADE 12
 #define PARALLAX_START_FADE 17
@@ -52,7 +52,7 @@
 #define DETAIL_PARALLAX_STOP_FADE 20
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 2
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
-#elif BUMP_QUALITY == HIGHT_QUALITY
+#elif MATERIAL_QUALITY == HIGHT_QUALITY
 #define STEEP_PARALLAX_START_FADE 10
 #define STEEP_PARALLAX_STOP_FADE 15
 #define PARALLAX_START_FADE 20
@@ -66,7 +66,7 @@
 #define DETAIL_PARALLAX_STOP_FADE 20
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 2
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
-#elif BUMP_QUALITY == ULTRA_QUALITY
+#elif MATERIAL_QUALITY == ULTRA_QUALITY
 #define STEEP_PARALLAX_START_FADE 15
 #define STEEP_PARALLAX_STOP_FADE 20
 #define PARALLAX_START_FADE 25
@@ -156,7 +156,7 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
 
 float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
 {
-#if defined(USE_STEEP_PARALLAX_MAPPING)
+#if defined(USE_PARALLAX_OCCLUSION_MAPPING)
     UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, STEEP_PARALLAX_START_FADE,
                                                 STEEP_PARALLAX_STOP_FADE, STEEP_PARALLAX_MIN_SAMPLES,
                                                 STEEP_PARALLAX_MAX_SAMPLES);
@@ -169,7 +169,7 @@ float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float
 
 float2 GetDetailDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
 {
-#if defined(USE_STEEP_PARALLAX_MAPPING)
+#if defined(USE_PARALLAX_OCCLUSION_MAPPING)
     UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, DETAIL_STEEP_PARALLAX_START_FADE,
                                                 DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
                                                 DETAIL_STEEP_PARALLAX_MAX_SAMPLES);

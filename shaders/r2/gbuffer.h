@@ -121,6 +121,11 @@ float3 GetNormal(float2 TexCoords)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
+float3 GetAlbedo(float2 TexCoords)
+{
+    return tex2D(s_gbuffer_albedo, TexCoords).rgb;
+}
+////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
 {
     GBufferPacked GBuffer;

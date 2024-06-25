@@ -224,9 +224,7 @@
     <None Include="model_distort_inv.vs" />
     <None Include="model_env_lq.ps" />
     <None Include="model_env_lq.vs" />
-    <None Include="overlay_stage_cinema_borders.ps" />
-    <None Include="overlay_stage_photo_grid.ps" />
-    <None Include="overlay_stage_watermark.ps" />
+    <None Include="overlay_stage_apply.ps" />
     <None Include="particle-clip.vs" />
     <None Include="particle.ps" />
     <None Include="particle.vs" />
@@ -244,9 +242,7 @@
     <None Include="portal.vs" />
     <None Include="postprocess.ps" />
     <None Include="postprocess.s" />
-    <None Include="postprocess_stage_antialiasing_pass_dlaa.ps" />
     <None Include="postprocess_stage_antialiasing_pass_fxaa.ps" />
-    <None Include="postprocess_stage_antialiasing_pass_rgaa.ps" />
     <None Include="postprocess_stage_autoexposure_pass_combine.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_1.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_2.ps" />

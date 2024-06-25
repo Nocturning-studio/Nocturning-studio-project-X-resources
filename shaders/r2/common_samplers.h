@@ -64,11 +64,6 @@ uniform sampler2D s_debug_diagonal_mask;
 uniform sampler2D s_debug_triple_mask;
 uniform sampler2D s_debug_quadro_mask;
 
-// Overlay
-uniform sampler2D s_photo_grid;
-uniform sampler2D s_cinema_borders;
-uniform sampler2D s_watermark;
-
 // Visual posteffects
 uniform sampler2D s_vignette;
 //////////////////////////////////////////////////////////////////////////////////////////

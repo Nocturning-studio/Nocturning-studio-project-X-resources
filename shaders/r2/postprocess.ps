@@ -35,7 +35,7 @@ float4 main (v2p I): COLOR
     
     image = (image * I.color + c_brightness) * 2;
     
-#ifdef VIGNETTE_MODE
+#if VIGNETTE_MODE >= 1
 #if VIGNETTE_MODE == 1
     float VignettePower = 0.5f;  
 #elif VIGNETTE_MODE == 2

@@ -11,17 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 uniform float3 fxaa_params;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#if AA_QUALITY == UNDEFINED_QUALITY
-#define FXAA_QUALITY__PRESET 10
-#elif AA_QUALITY == LOW_QUALITY
-#define FXAA_QUALITY__PRESET 13
-#elif AA_QUALITY == MIDDLE_QUALITY
-#define FXAA_QUALITY__PRESET 20
-#elif AA_QUALITY == HIGHT_QUALITY
-#define FXAA_QUALITY__PRESET 25
-#elif AA_QUALITY == ULTRA_QUALITY
 #define FXAA_QUALITY__PRESET 39
-#endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FXAA settings
 
@@ -61,10 +51,6 @@ uniform float3 fxaa_params;
 // Pixel
 float4 main (float2 TexCoords : TEXCOORD0): COLOR
 {
-#if AA_TYPE == FXAA
     return FxaaPixelShader(TexCoords, s_image, screen_res.zw, FXAA_Subpix, FXAA_EdgeThreshold, FXAA_EdgeThresholdMin);
-#else
-    return tex2D(s_image, TexCoords);
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

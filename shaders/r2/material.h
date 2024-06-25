@@ -78,9 +78,9 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     float2 DetailUV = UV * dt_params;
 
     // Calculate displacement for detail texture only if we have good quality for materials
-#if USE_DETAIL_BUMP && BUMP_QUALITY >= MIDDLE_QUALITY
+#if USE_DETAIL_BUMP && MATERIAL_QUALITY >= MIDDLE_QUALITY
     DetailUV = GetDetailDisplacement(s_detailBumpX, Position, TBN, DetailUV);
-#endif // DETAIL_BUMP && BUMP_QUALITY >= MIDDLE_QUALITY
+#endif // DETAIL_BUMP && MATERIAL_QUALITY >= MIDDLE_QUALITY
 
     // Combine main albedo with detail
     float3 DetailAlbedo = tex2D(s_detail, DetailUV);
@@ -109,7 +109,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 
 #if defined(USE_BUMP) || defined(USE_DETAIL_BUMP)
     // If we have good material quality - create MORE relief by convertation height to normal map
-#if BUMP_QUALITY == ULTRA_QUALITY
+#if MATERIAL_QUALITY == ULTRA_QUALITY
     float3 NormalFromHeight = convert_height_to_normal(Material.Height);
     Material.Normal /= NormalFromHeight;
 #endif
