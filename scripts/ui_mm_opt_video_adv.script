@@ -33,11 +33,6 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 	xml:InitCheck("video_adv:check_npc_torch", _st)
 
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_rt_format", _st)
-	xml:InitComboBox("video_adv:list_r2_rt_format", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
 	xml:InitStatic("video_adv:cap_light_distance", _st)
 	xml:InitTrackBar("video_adv:track_light_distance", _st)
 	handler.m_preconditions[_st] = r2
@@ -47,29 +42,19 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 	xml:InitComboBox("video_adv:list_r2_ao_quality", _st)
 	handler.m_preconditions[_st] = r2
 
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_ao_type", _st)
-	xml:InitComboBox("video_adv:list_r2_ao_type", _st)
-	handler.m_preconditions[_st] = r2
+	--_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
+	--xml:InitStatic("video_adv:cap_r2_shadow_filtering", _st)
+	--xml:InitComboBox("video_adv:list_r2_shadow_filtering", _st)
+	--handler.m_preconditions[_st] = r2
+
+	--_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
+	--xml:InitStatic("video_adv:cap_r2_sun_quality", _st)
+	--xml:InitComboBox("video_adv:list_r2_sun_quality", _st)
+	--handler.m_preconditions[_st] = r2
 
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_shadow_filtering", _st)
-	xml:InitComboBox("video_adv:list_r2_shadow_filtering", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_sun_quality", _st)
-	xml:InitComboBox("video_adv:list_r2_sun_quality", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_bump_quality", _st)
-	xml:InitComboBox("video_adv:list_r2_bump_quality", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_bump_mode", _st)
-	xml:InitComboBox("video_adv:list_r2_bump_mode", _st)
+	xml:InitStatic("video_adv:cap_r2_material_quality", _st)
+	xml:InitComboBox("video_adv:list_r2_material_quality", _st)
 	handler.m_preconditions[_st] = r2
 
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
@@ -176,23 +161,18 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 	handler.m_preconditions[_st] = r1
 
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_aa_transluency", _st)
-	xml:InitComboBox("video_adv:list_r2_aa_transluency", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_aa_quality", _st)
-	xml:InitComboBox("video_adv:list_r2_aa_quality", _st)
-	handler.m_preconditions[_st] = r2
-
-	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
 	xml:InitStatic("video_adv:cap_r1_aa_type", _st)
 	xml:InitComboBox("video_adv:list_r1_aa_type", _st)
 	handler.m_preconditions[_st] = r1
 
+	--_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
+	--xml:InitStatic("video_adv:cap_r2_anti_aliasing_alpha_test", _st)
+	--xml:InitCheck("video_adv:check_r2_anti_aliasing_alpha_test", _st)
+	--handler.m_preconditions[_st] = r2
+
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
-	xml:InitStatic("video_adv:cap_r2_aa_type", _st)
-	xml:InitComboBox("video_adv:list_r2_aa_type", _st)
+	xml:InitStatic("video_adv:cap_r2_anti_aliasing", _st)
+	xml:InitCheck("video_adv:check_r2_anti_aliasing", _st)
 	handler.m_preconditions[_st] = r2
 
 	_st = xml:InitStatic("video_adv:templ_item", self.scroll_v)
