@@ -50,7 +50,8 @@ float3 GetViewVector(float3 Position, float3x3 TBN)
     TBN = transpose(TBN);
     return normalize(mul(TBN, -Position));
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Material components
 float4 GetDetailMask(float2 UV)
 {
     float4 Mask = tex2D(s_mask, UV);
@@ -92,7 +93,8 @@ float GetDetailHeight(float4 Mask, float2 UV)
     float AlphaChannelHeight = tex2Dlod0(s_dn_aX, UV).a * Mask.a;
     return RedChannelHeight + GreenChannelHeight + BlueChannelHeight + AlphaChannelHeight;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Displacement
 float2 CalculateDetailParallaxMapping(float3 Position, float3x3 TBN, float2 UV, float4 Mask)
 {
     if (Position.z < TERRAIN_PARALLAX_STOP_FADE)

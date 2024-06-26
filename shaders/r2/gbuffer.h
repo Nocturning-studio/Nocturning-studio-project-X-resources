@@ -22,7 +22,7 @@ struct GBuffer
     float3 Normal;
     float AO;
     float3 Albedo;
-    float Glossiness;
+    float Roughness;
 };
 struct GBufferPacked
 {
@@ -121,23 +121,18 @@ float3 GetNormal(float2 TexCoords)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
-float3 GetAlbedo(float2 TexCoords)
-{
-    return tex2D(s_gbuffer_albedo, TexCoords).rgb;
-}
-////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
 {
     GBufferPacked GBuffer;
 
 #if GBUFFER_OPT_MODE > 0
-    GBuffer.rt_Albedo = float4(Input.Albedo, Input.Glossiness); // .rgb = Albedo, .a = Gloss
+    GBuffer.rt_Albedo = float4(Input.Albedo, Input.Roughness); // .rgb = Albedo, .a = Roughness
     GBuffer.rt_Normal = float4(PackNormal(Input.Normal), Input.AO, Input.BakedAO); // .rg = Normal, .b = Hemi, .a = BackedAO
  #if GBUFFER_OPT_MODE == 1
     GBuffer.rt_Position = float4(PackPosition(Input.Position), 0, 0, 0); // .r = Depth
  #endif
 #else
-    GBuffer.rt_Albedo   = float4(Input.Albedo,   Input.Glossiness); // .rgb = Albedo,   .a = Gloss
+    GBuffer.rt_Albedo   = float4(Input.Albedo,   Input.Roughness); // .rgb = Albedo,   .a = Roughness
     GBuffer.rt_Normal   = float4(Input.Normal,   Input.AO);         // .rgb = Normal,   .a = Hemi
     GBuffer.rt_Position = float4(Input.Position, Input.BakedAO);    // .rgb = Position, .a = BackedAO
 #endif
@@ -150,7 +145,7 @@ GBuffer UnpackGBuffer(float2 TexCoords)
     GBuffer GBuffer;
 
 #if GBUFFER_OPT_MODE > 0
-	float4 rt_Albedo   = tex2D(s_gbuffer_albedo,   TexCoords); // .rgb = Albedo, .a = Gloss
+	float4 rt_Albedo   = tex2D(s_gbuffer_albedo,   TexCoords); // .rgb = Albedo, .a = Roughness
 	float4 rt_Normal   = tex2D(s_gbuffer_normal,   TexCoords); // .rg = Normal, .b = Hemi, .a = BackedAO
 	
  #if GBUFFER_OPT_MODE == 1
@@ -167,18 +162,18 @@ GBuffer UnpackGBuffer(float2 TexCoords)
  #endif
 
     GBuffer.Albedo     = rt_Albedo.rgb;
-    GBuffer.Glossiness = rt_Albedo.a;
+    GBuffer.Roughness = rt_Albedo.a;
     GBuffer.Normal     = UnpackNormal(rt_Normal.rg);
     GBuffer.AO         = rt_Normal.b;
     GBuffer.Position   = UnpackPosition(rt_Depth, TexCoords);
     GBuffer.BakedAO    = rt_Normal.a;
 #else
-	float4 rt_Albedo   = tex2D(s_gbuffer_albedo,   TexCoords); // .rgb = Albedo,   .a = Gloss
+	float4 rt_Albedo   = tex2D(s_gbuffer_albedo,   TexCoords); // .rgb = Albedo,   .a = Roughness
 	float4 rt_Normal   = tex2D(s_gbuffer_normal,   TexCoords); // .rgb = Normal,   .a = Hemi
 	float4 rt_Position = tex2D(s_gbuffer_position, TexCoords); // .rgb = Position, .a = BackedAO
 	
     GBuffer.Albedo     = rt_Albedo.rgb;
-    GBuffer.Glossiness = rt_Albedo.a;
+    GBuffer.Roughness = rt_Albedo.a;
     GBuffer.Normal     = rt_Normal.rgb;
     GBuffer.AO         = rt_Normal.a;
     GBuffer.Position   = rt_Position.rgb;

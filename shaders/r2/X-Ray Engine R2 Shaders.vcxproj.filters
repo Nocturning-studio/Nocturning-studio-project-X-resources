@@ -4,16 +4,10 @@
     <ClInclude Include="accumulation_helper.h">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="BRDF.h">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="gbuffer.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="displacement.h">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="height_map_to_normal.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="lightmap.h">
@@ -22,7 +16,7 @@
     <ClInclude Include="material.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="normal_map_blending.h">
+    <ClInclude Include="normal_map_functions.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ambient_light.h">
@@ -87,6 +81,15 @@
     </ClInclude>
     <ClInclude Include="common_shared.h">
       <Filter>Helpers\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="BRDF.h">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ao_from_height.h">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="material_components.h">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

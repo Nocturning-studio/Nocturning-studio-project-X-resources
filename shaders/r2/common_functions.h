@@ -103,3 +103,9 @@ float2 projection_to_screen(float4 proj)
     return (screen + float2(1.0f, -1.0f)) * float2(0.5f, -0.5f);
 }
 ////////////////////////////////////////////////////////////////////////////
+//TODO Deathman to all - replace with more faster noise
+float random(float2 st)
+{
+    return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
+}
+////////////////////////////////////////////////////////////////////////////

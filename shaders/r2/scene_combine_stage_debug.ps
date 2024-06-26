@@ -22,8 +22,8 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
         OutputColor = GBuffer.Position;
     else if (debug_mode == GBUFFER_NORMAL)
         OutputColor = normalize (GBuffer.Normal * 0.5f + 0.5f);
-    else if (debug_mode == GBUFFER_GLOSSINESS)
-        OutputColor = 1.0f - GBuffer.Glossiness;
+    else if (debug_mode == GBUFFER_ROUGHNESS)
+        OutputColor = GBuffer.Roughness;
     else if (debug_mode == GBUFFER_LIGHTMAP_AO)
         OutputColor = GBuffer.AO;
     else if (debug_mode == GBUFFER_BAKED_AO)

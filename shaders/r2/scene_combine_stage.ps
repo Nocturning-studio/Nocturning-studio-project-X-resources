@@ -15,9 +15,10 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
     
-    float3 AmbientLighting = CalculateAmbientWithBlurredEnvironment (GBuffer.AO, GBuffer.Normal, invert (GBuffer.Glossiness)) * GBuffer.BakedAO;
+    float3 AmbientLighting = CalculateAmbientWithBlurredEnvironment (GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
     
-    AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r;
+    float HalfAO = GBuffer.BakedAO + 1.0f * 0.5f;
+    AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r * HalfAO;
     
     float3 DiffuseLighting = AmbientLighting + Light.Diffuse;
 	

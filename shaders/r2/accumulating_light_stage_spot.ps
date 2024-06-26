@@ -22,7 +22,7 @@ Accumulator main (Interpolators Input)
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
     float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
-    LightComponents Light = Calculate_Lighting_Model (1.0f - GBuffer.Glossiness, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
     
     float3 Diffuse = Light.Diffuse;
     float3 Specular = Light.Specular;

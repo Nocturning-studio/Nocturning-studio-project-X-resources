@@ -44,11 +44,17 @@
 #define GBUFFER_ALBEDO 1
 #define GBUFFER_POSITION 2
 #define GBUFFER_NORMAL 3
-#define GBUFFER_GLOSSINESS 4
+#define GBUFFER_ROUGHNESS 4
 #define GBUFFER_LIGHTMAP_AO 5
 #define GBUFFER_BAKED_AO 6
 #define ACCUMULATOR_DIFFUSE 7
 #define ACCUMULATOR_SPECULAR 8
 #define REAL_TIME_AO 9
+
+////////////////////////////////////////////////////////////////////////////
+// Material types
+#define BASE_MATERIAL 0
+#define DETAIL_MATERIAL 1
+#define TERRAIN_MATERIAL 2
 
 ////////////////////////////////////////////////////////////////////////////

@@ -12,6 +12,10 @@ uniform sampler2D s_detailBump;
 uniform sampler2D s_detailBumpX; // (Error for bump detail)
 uniform sampler2D s_hemi;
 uniform sampler2D s_mask;
+uniform sampler2D s_baked_ao;        // Baked AO - From texture
+uniform sampler2D s_detail_baked_ao; // Baked detail texture AO - From texture
+uniform sampler2D s_custom_normal;
+uniform sampler2D s_custom_roughness;
 //////////////////////////////////////////////////////////////////////////////////////////
 // For terrain mask
 uniform sampler2D s_dt_r;
@@ -51,8 +55,6 @@ uniform sampler2D s_autoexposure;   // actually MidleGray / exp(Lw + eps)
 uniform sampler2D s_vollight;
 
 // AO
-uniform sampler2D s_baked_ao;        // Baked AO - From texture
-uniform sampler2D s_detail_baked_ao; // Baked detail texture AO - From texture
 uniform sampler2D s_ao;              // Raw real time ao
 uniform sampler2D s_ao_base;
 uniform sampler2D s_ao_blurred1;

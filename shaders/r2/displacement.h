@@ -4,9 +4,10 @@
 //	Noctuning Studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
+#include "material_components.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Constant table
-#define PARALLAX_H 0.03f
+#define PARALLAX_H 0.02f
 #define constant_parallax_scale float2(PARALLAX_H, -PARALLAX_H / 2)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Quality
@@ -24,6 +25,13 @@
 #define DETAIL_PARALLAX_STOP_FADE 15
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 1
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
+
+#define TERRAIN_STEEP_PARALLAX_START_FADE 8
+#define TERRAIN_STEEP_PARALLAX_STOP_FADE 12
+#define TERRAIN_PARALLAX_START_FADE 15
+#define TERRAIN_PARALLAX_STOP_FADE 20
+#define TERRAIN_STEEP_PARALLAX_MIN_SAMPLES 3
+#define TERRAIN_STEEP_PARALLAX_MAX_SAMPLES 5
 #elif MATERIAL_QUALITY == LOW_QUALITY
 #define STEEP_PARALLAX_START_FADE 5
 #define STEEP_PARALLAX_STOP_FADE 10
@@ -38,6 +46,13 @@
 #define DETAIL_PARALLAX_STOP_FADE 15
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 1
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
+
+#define TERRAIN_STEEP_PARALLAX_START_FADE 8
+#define TERRAIN_STEEP_PARALLAX_STOP_FADE 12
+#define TERRAIN_PARALLAX_START_FADE 15
+#define TERRAIN_PARALLAX_STOP_FADE 20
+#define TERRAIN_STEEP_PARALLAX_MIN_SAMPLES 5
+#define TERRAIN_STEEP_PARALLAX_MAX_SAMPLES 10
 #elif MATERIAL_QUALITY == MIDDLE_QUALITY
 #define STEEP_PARALLAX_START_FADE 7
 #define STEEP_PARALLAX_STOP_FADE 12
@@ -52,6 +67,13 @@
 #define DETAIL_PARALLAX_STOP_FADE 20
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 2
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
+
+#define TERRAIN_STEEP_PARALLAX_START_FADE 10
+#define TERRAIN_STEEP_PARALLAX_STOP_FADE 15
+#define TERRAIN_PARALLAX_START_FADE 17
+#define TERRAIN_PARALLAX_STOP_FADE 22
+#define TERRAIN_STEEP_PARALLAX_MIN_SAMPLES 8
+#define TERRAIN_STEEP_PARALLAX_MAX_SAMPLES 14
 #elif MATERIAL_QUALITY == HIGHT_QUALITY
 #define STEEP_PARALLAX_START_FADE 10
 #define STEEP_PARALLAX_STOP_FADE 15
@@ -66,6 +88,13 @@
 #define DETAIL_PARALLAX_STOP_FADE 20
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 2
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 4
+
+#define TERRAIN_STEEP_PARALLAX_START_FADE 12
+#define TERRAIN_STEEP_PARALLAX_STOP_FADE 17
+#define TERRAIN_PARALLAX_START_FADE 20
+#define TERRAIN_PARALLAX_STOP_FADE 25
+#define TERRAIN_STEEP_PARALLAX_MIN_SAMPLES 10
+#define TERRAIN_STEEP_PARALLAX_MAX_SAMPLES 17
 #elif MATERIAL_QUALITY == ULTRA_QUALITY
 #define STEEP_PARALLAX_START_FADE 15
 #define STEEP_PARALLAX_STOP_FADE 20
@@ -80,27 +109,35 @@
 #define DETAIL_PARALLAX_STOP_FADE 20
 #define DETAIL_STEEP_PARALLAX_MIN_SAMPLES 5
 #define DETAIL_STEEP_PARALLAX_MAX_SAMPLES 10
+
+#define TERRAIN_STEEP_PARALLAX_START_FADE 15
+#define TERRAIN_STEEP_PARALLAX_STOP_FADE 20
+#define TERRAIN_PARALLAX_START_FADE 25
+#define TERRAIN_PARALLAX_STOP_FADE 30
+#define TERRAIN_STEEP_PARALLAX_MIN_SAMPLES 15
+#define TERRAIN_STEEP_PARALLAX_MAX_SAMPLES 20
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 GetViewVector(float3 Position, float3x3 TBN)
-{
-    TBN = transpose(TBN);
-    return normalize(mul(TBN, -Position));
-}
-
-float GetHeight(sampler2D HeightmapSampler, float2 UV)
-{
-    return tex2Dlod0(HeightmapSampler, UV).a;
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float2 CalculateParallaxMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
-                                 float StartFadingDistance, float StopFadingDistance)
+float2 CalculateParallaxMapping(float3 Position, float3 ViewVector, float2 UV, 
+                                float StartFadingDistance, float StopFadingDistance, int MaterialType
+#ifdef USE_FOR_TERRAIN_MATERIAL
+    , float4 Mask
+#endif
+)
 {
     if (Position.z < StopFadingDistance)
     {
-        float3 ViewVector = GetViewVector(Position, TBN);
+        float height = 0.0f;
 
-        float height = GetHeight(HeightmapSampler, UV);
+#ifdef USE_FOR_TERRAIN_MATERIAL
+        height = GetTerrainDetailHeight(Mask, UV);
+#else
+        if(MaterialType == BASE_MATERIAL)
+            height = GetHeight(UV);
+        else if (MaterialType == DETAIL_MATERIAL)
+            height = GetDetailHeight(UV);
+#endif
+
         height *= constant_parallax_scale.x;
         height += constant_parallax_scale.y;
 
@@ -111,14 +148,16 @@ float2 CalculateParallaxMapping(sampler2D HeightmapSampler, float3 Position, flo
     return UV;
 }
 
-float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Position, float3x3 TBN, float2 UV,
-                                         float StartFadingDistance, float StopFadingDistance,
-                                         int MinimalSamplesCount, int MaximalSamplesCount)
+float2 CalculateParallaxOcclusionMapping(float3 Position, float3 ViewVector, float2 UV,
+                                         float StartFadingDistance, float StopFadingDistance, 
+                                         int MinimalSamplesCount, int MaximalSamplesCount, int MaterialType
+#ifdef USE_FOR_TERRAIN_MATERIAL
+    , float4 Mask
+#endif
+)
 {
     if (Position.z < StopFadingDistance)
     {
-        float3 ViewVector = GetViewVector(Position, TBN);
-
         // Calculate number of steps
         float nNumSteps = lerp(MaximalSamplesCount, MinimalSamplesCount, ViewVector.z);
 
@@ -134,13 +173,30 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
         for (; fCurrHeight < fCurrentBound; fCurrentBound -= fStepSize)
         {
             vTexCurrentOffset += vTexOffsetPerStep;
-            float HeightMap = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
-            fCurrHeight = HeightMap;
+
+#ifdef USE_FOR_TERRAIN_MATERIAL
+            fCurrHeight = GetTerrainDetailHeight(Mask, vTexCurrentOffset);
+#else
+            if (MaterialType == BASE_MATERIAL)
+                fCurrHeight = GetHeight(vTexCurrentOffset);
+            else if (MaterialType == DETAIL_MATERIAL)
+                fCurrHeight = GetDetailHeight(vTexCurrentOffset);
+#endif
         }
 
         // Reconstruct previouse step's data
         vTexCurrentOffset -= vTexOffsetPerStep;
-        float fPrevHeight = GetHeight(HeightmapSampler, vTexCurrentOffset.xy);
+
+        float fPrevHeight = 0.0f;
+
+#ifdef USE_FOR_TERRAIN_MATERIAL
+        fPrevHeight = GetTerrainDetailHeight(Mask, vTexCurrentOffset);
+#else
+        if (MaterialType == BASE_MATERIAL)
+            fPrevHeight = GetHeight(vTexCurrentOffset);
+        else if (MaterialType == DETAIL_MATERIAL)
+            fPrevHeight = GetDetailHeight(vTexCurrentOffset);
+#endif
 
         // Smooth tc position between current and previouse step
         float fDelta2 = ((fCurrentBound + fStepSize) - fPrevHeight);
@@ -154,28 +210,51 @@ float2 CalculateParallaxOcclusionMapping(sampler2D HeightmapSampler, float3 Posi
     return UV;
 }
 
-float2 GetDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
+#ifndef USE_FOR_TERRAIN_MATERIAL
+float2 GetDisplacement(float3 Position, float3 ViewVector, float2 UV, int MaterialType)
 {
 #if defined(USE_PARALLAX_OCCLUSION_MAPPING)
-    UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, STEEP_PARALLAX_START_FADE,
-                                                STEEP_PARALLAX_STOP_FADE, STEEP_PARALLAX_MIN_SAMPLES,
-                                                STEEP_PARALLAX_MAX_SAMPLES);
+    UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV,
+                                           STEEP_PARALLAX_START_FADE, 
+                                           STEEP_PARALLAX_STOP_FADE, STEEP_PARALLAX_MIN_SAMPLES, 
+                                           STEEP_PARALLAX_MAX_SAMPLES, MaterialType);
 #elif defined(USE_PARALLAX_MAPPING)
-    UV = CalculateParallaxMapping(Heightmap, Position, TBN, UV, PARALLAX_START_FADE, PARALLAX_STOP_FADE);
+    UV = CalculateParallaxMapping(Position, ViewVector, UV,
+                                  PARALLAX_START_FADE, 
+                                  PARALLAX_STOP_FADE, MaterialType);
 #endif
 
     return UV;
 }
 
-float2 GetDetailDisplacement(sampler2D Heightmap, float3 Position, float3x3 TBN, float2 UV)
+float2 GetDetailDisplacement(float3 Position, float3 ViewVector, float2 UV, int MaterialType)
 {
 #if defined(USE_PARALLAX_OCCLUSION_MAPPING)
-    UV = CalculateParallaxOcclusionMapping(Heightmap, Position, TBN, UV, DETAIL_STEEP_PARALLAX_START_FADE,
-                                                DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
-                                                DETAIL_STEEP_PARALLAX_MAX_SAMPLES);
+    UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV, DETAIL_STEEP_PARALLAX_START_FADE,
+                                           DETAIL_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
+                                           DETAIL_STEEP_PARALLAX_MAX_SAMPLES, MaterialType);
 #elif defined(USE_PARALLAX_MAPPING)
-    UV = CalculateParallaxMapping(Heightmap, Position, TBN, UV, DETAIL_PARALLAX_START_FADE, DETAIL_PARALLAX_STOP_FADE);
+    UV = CalculateParallaxMapping(Position, ViewVector, UV,
+                                  DETAIL_PARALLAX_START_FADE, 
+                                  DETAIL_PARALLAX_STOP_FADE, MaterialType);
 #endif
+
     return UV;
 }
+#else
+float2 GetTerrainDisplacement(float3 Position, float3 ViewVector, float2 UV, float4 Mask, int MaterialType)
+{
+#if defined(USE_PARALLAX_OCCLUSION_MAPPING)
+    UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV, TERRAIN_STEEP_PARALLAX_START_FADE,
+        TERRAIN_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
+        TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, MaterialType, Mask);
+#elif defined(USE_PARALLAX_MAPPING)
+    UV = CalculateParallaxMapping(Position, ViewVector, UV,
+        TERRAIN_PARALLAX_START_FADE,
+        TERRAIN_PARALLAX_STOP_FADE, MaterialType, Mask);
+#endif
+
+    return UV;
+}
+#endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

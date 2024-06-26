@@ -306,6 +306,7 @@
     <ClInclude Include="accumulation_helper.h" />
     <ClInclude Include="alpha_test.h" />
     <ClInclude Include="ambient_light.h" />
+    <ClInclude Include="ao_from_height.h" />
     <ClInclude Include="BRDF.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="common_shared.h" />
@@ -324,10 +325,10 @@
     <ClInclude Include="fxaa_atoc.h" />
     <ClInclude Include="gbuffer.h" />
     <ClInclude Include="hashed_alpha.h" />
-    <ClInclude Include="height_map_to_normal.h" />
     <ClInclude Include="lightmap.h" />
     <ClInclude Include="material.h" />
-    <ClInclude Include="normal_map_blending.h" />
+    <ClInclude Include="material_components.h" />
+    <ClInclude Include="normal_map_functions.h" />
     <ClInclude Include="reflection.h" />
     <ClInclude Include="shadow_filtering.h" />
     <ClInclude Include="TBN.h" />

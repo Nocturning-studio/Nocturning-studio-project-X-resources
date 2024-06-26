@@ -10,6 +10,7 @@
 // https://github.com/Zackin5/StalkerCop-FxaaShaders + https://learnopengl.com/PBR/IBL/Specular-IBL +
 // https://www.shadertoy.com/view/3tlBW7
 ////////////////////////////////////////////////////////////////////////////
+/*
 uniform sampler2D s_brdf_lut;
 ////////////////////////////////////////////////////////////////////////////
 float3 fresnelSchlickRoughness(float NdotL, float3 F0, float roughness)
@@ -32,6 +33,7 @@ float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
     float2 brdf = tex2D(s_brdf_lut, float2(vDotN, Roughness));
     return F * (brdf.x + brdf.y);
 }
+*/
 ////////////////////////////////////////////////////////////////////////////
 float Fresnel(float Specular, float3 ViewDirection, float3 floatAngle)
 {
@@ -45,54 +47,50 @@ float Blinn_Phong_Specular(float3 floatAngle, float3 Normal)
     return pow(Specular, 16.0f);
 }
 ////////////////////////////////////////////////////////////////////////////
-//https://habr.com/ru/articles/326852/
+// https://www.shadertoy.com/view/WscyRl
 ////////////////////////////////////////////////////////////////////////////
-#define F0 float3(1.0, 0.86, 0.56)
-////////////////////////////////////////////////////////////////////////////
-float GGX_PartialGeometry(float cosThetaN, float alpha)
+float DistributionGGX(float3 N, float3 H, float roughness)
 {
-    float cosTheta_sqr = saturate(cosThetaN * cosThetaN);
-    float tan2 = (1 - cosTheta_sqr) / cosTheta_sqr;
-    float GP = 2 / (1 + sqrt(1 + alpha * alpha * tan2));
-    return GP;
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return a2 / denom;
 }
 
-float GGX_Distribution(float cosThetaNH, float alpha)
+float GeometrySchlickGGX(float NdotV, float roughness)
 {
-    float alpha2 = alpha * alpha;
-    float NH_sqr = saturate(cosThetaNH * cosThetaNH);
-    float den = NH_sqr * alpha2 + (1.0 - NH_sqr);
-    return alpha2 / (PI * den * den);
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+
+    float num = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return num / denom;
 }
 
-float3 FresnelSchlick(float3 f0, float cosTheta)
+float GeometrySmith(float3 N, float3 V, float3 L, float roughness)
 {
-    return f0 + (1.0 - f0) * pow(1.0 - saturate(cosTheta), 5.0);
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
 }
 
-float3 CookTorrance_GGX(float3 n, float3 l, float3 v, float Roughness)
+float3 fresnelSchlick(float3 F0, float cosTheta)
 {
-    n = normalize(n);
-    v = normalize(v);
-    l = normalize(l);
-    float3 h = normalize(v + l);
-    //precompute dots
-    float NL = saturate(dot(n, l));
-    float NV = abs(dot(n, v)) + 0.1f;
-    float NH = dot(n, h);
-    float HV = dot(h, v);
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
 
-    //precompute roughness square
-    float roug_sqr = pow(Roughness, 2.0f);
-
-    //calc coefficients
-    float G = GGX_PartialGeometry(NV, roug_sqr) * GGX_PartialGeometry(NL, roug_sqr);
-    float D = GGX_Distribution(NH, roug_sqr);
-    float3 F = FresnelSchlick(F0, HV);
-
-    //mix
-    float3 specK = G * D * F * 0.25f / NV;
-    return saturate(specK);
+float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
+{
+    return F0 + (max(1.0 - roughness, F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 ////////////////////////////////////////////////////////////////////////////
 // https://www.shadertoy.com/view/ltfyD8
@@ -133,21 +131,26 @@ LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 N
     float NdotH = dot(Normal, HalfWay);
     float HdotV = dot(HalfWay, ViewDirection);
     float RoughnessSqr = pow(Roughness, 2.0f);
-    float BakedAO = (AO + 1.0f) * 0.5f;
 
     // Oren-Nayar diffuse model
     float s = VdotL - NdotL * NdotV;
     float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
     float Diffuse = NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) + (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
 
-    // Cook-Torrance GGX Specular model
-    float G = GGX_PartialGeometry(NdotV, RoughnessSqr) * GGX_PartialGeometry(NdotL, RoughnessSqr);
-    float D = GGX_Distribution(NdotH, RoughnessSqr);
-    float3 F = FresnelSchlick(F0 * BakedAO, HdotV);
-    float3 Specular = G * D * F * 0.25f / NdotV;
+    float3 F0 = 0.04;
+    //F0 = mix(F0, albedo, metalness);
 
-    Light.Diffuse = Diffuse * BakedAO;
-    Light.Specular = pow(Specular, 1.5f);
+    float D = DistributionGGX(Normal, HalfWay, Roughness);
+    float3 F = fresnelSchlick(F0, HdotV);
+    float G = GeometrySmith(Normal, ViewDirection, LightDirection, Roughness);
+
+    float3 numerator = (D * G) * F;
+    float denominator = 4.0 * NdotV * NdotL;
+
+    float Specular = numerator / max(denominator, 0.001f);
+
+    Light.Diffuse = Diffuse;
+    Light.Specular = Specular;
 
     return Light;
 }

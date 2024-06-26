@@ -12,12 +12,12 @@ float3 lin2srgb(float3 color)
     float3 S3 = sqrt(S2);
     return 0.585122381f * S1 + 0.783140355f * S2 - 0.368262736f * S3;
 }
-
+////////////////////////////////////////////////////////////////////////////
 float3 ff_filmic_gamma3(float3 Color) {
     float3 x = max(0.0, Color - 0.004);
     return (x * (x * 6.2 + 0.5)) / (x * (x * 6.2 + 1.7) + 0.06);
 }
-
+////////////////////////////////////////////////////////////////////////////
 float3 ACES(const float3 x)
 {
     const float a = 2.51f;
@@ -47,12 +47,17 @@ float3 exponential_tonemapping(float3 Color)
     return tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
 }
 ////////////////////////////////////////////////////////////////////////////
-float3 CalcTonemap(float3 Color)
+//S.T.A.L.K.E.R: Clear Sky tonemapping
+////////////////////////////////////////////////////////////////////////////
+float3 X_Ray_Tonemap(float3 Color)
 {
     float white = 1.0f;
     float whitesqr = white * white;
     Color = (Color * (1.0f + Color / whitesqr)) / (Color + 1.0f);
-
-    return Color;
+}
+////////////////////////////////////////////////////////////////////////////
+float3 CalcTonemap(float3 Color)
+{
+    return ACES(Color);
 }
 ////////////////////////////////////////////////////////////////////////////

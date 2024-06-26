@@ -3,10 +3,14 @@
 // Autor: Deathman
 // Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////////
+#define USE_FOR_TERRAIN_MATERIAL
+////////////////////////////////////////////////////////////////////////////////
 #include "common.h"
-#include "height_map_to_normal.h"
-#include "terrain_helper.h"
+#include "material_components.h"
+#include "normal_map_functions.h"
+#include "displacement.h"
 #include "gbuffer.h"
+#include "ao_from_height.h"
 ////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -24,7 +28,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Get detail textures map (4 channels = 4 textures)
-	float4 Mask = GetDetailMask (Input.UV);
+	float4 Mask = GetTerrainDetailMask (Input.UV);
 
 	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
 	float3 DiffuseTextureData = tex2D (s_base, Input.UV);
@@ -32,18 +36,20 @@ GBufferPacked main (Interpolators Input)
 	// Combine transform matrix for displacement and normal mapping
 	float3x3 TBN = float3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
 
+	float3 ViewVector = GetViewVector(Input.Position, TBN);
+
 	// Choose displacement type and calculate UV displacement
-	float2 DetailUV = GetDisplacement (Input.Position, TBN, Input.DetailUV, Mask);
+	float2 DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, Mask, TERRAIN_MATERIAL);
 
 	// details albedo data, multiplicated by detail map
-	float3 DetailAlbedo = GetDetailAlbedo (Mask, DetailUV);
+	float3 DetailAlbedo = GetTerrainDetailAlbedo (Mask, DetailUV);
     GBuffer.Albedo = 2.0f * DiffuseTextureData.rgb * DetailAlbedo;
 
-	// Get DXT comressed normals + AO + glossmap for all details in 4 textures set
-	float4 DetailBumpData = GetDetailBump (Mask, DetailUV);
+	// Get DXT comressed normals + AO + Roughness for all details in 4 textures set
+	float4 DetailBumpData = GetTerrainDetailBump (Mask, DetailUV);
 
 	// Get DXT decompressing data + heightmap for all details in 4 textures set
-	float4 DetailBumpDecompressionData = GetDetailBumpDecompression (Mask, DetailUV);
+	float4 DetailBumpDecompressionData = GetTerrainDetailBumpDecompression (Mask, DetailUV);
 
 	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
 	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0f);
@@ -52,12 +58,6 @@ GBufferPacked main (Interpolators Input)
     NormalMap.z = sqrt (1.0f - dot (NormalMap.xy, NormalMap.xy));
 
     float HeightMap = DetailBumpDecompressionData.a;
-
-	// If we have good material quality - create MORE relief by convertation height to normal map
-#if MATERIAL_QUALITY == ULTRA_QUALITY
-	float3 NormalMapFromHeight = convert_height_to_normal(HeightMap);
-	NormalMap /= NormalMapFromHeight;
-#endif
 
 	// Transformate height map from [0; 1] space to [1; 2] and make normals more power
     NormalMap.xy *= HeightMap + 1.0f;
@@ -76,10 +76,10 @@ GBufferPacked main (Interpolators Input)
     GBuffer.AO = tex2D (s_base, Input.UV).a * AO_BRIGHTNESS;
 
 	// Get baked ao from details
-    GBuffer.BakedAO = DetailBumpData.g;
+    GBuffer.BakedAO = AOfromHeight(DetailUV, Input.Position.z, Mask);
 
 	// Create glossiness from details
-    GBuffer.Glossiness = DetailBumpData.r;
+    GBuffer.Roughness = invert(DetailBumpData.r);
 	
     return PackGBuffer (GBuffer);
 }

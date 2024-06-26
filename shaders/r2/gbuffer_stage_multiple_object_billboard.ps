@@ -44,7 +44,7 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Position = Input.Position;
 
-    GBuffer.Glossiness = 0.0f;
+    GBuffer.Roughness = 1.0f;
     
     return PackGBuffer (GBuffer);
 }
