@@ -14,20 +14,35 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
-    
-    float3 AmbientLighting = CalculateAmbientWithBlurredEnvironment (GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
-    
+
+    float NdotV = max(dot(GBuffer.Normal, -normalize(GBuffer.Position)), 0.0);
+
+    float3 F0 = 0.04; 
+    F0 = lerp(F0, GBuffer.Albedo, GBuffer.Metallness);
+    float3 F = fresnelSchlickRoughness(F0, NdotV, GBuffer.Roughness);
+    float3 kS = F;
+    float3 kD = 1.0 - kS;
+    kD *= 1.0 - GBuffer.Metallness;
+
+    float3 SkyDiffuse = CalculateAmbientWithBlurredEnvironment (GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
+
     float HalfAO = GBuffer.BakedAO + 1.0f * 0.5f;
-    AmbientLighting *= tex2Dlod0(s_ao, TexCoords).r * HalfAO;
-    
-    float3 DiffuseLighting = AmbientLighting + Light.Diffuse;
-	
-    float3 SceneColor = mad (GBuffer.Albedo, DiffuseLighting, Light.Specular);
+    SkyDiffuse *= tex2Dlod0(s_ao, TexCoords).r * HalfAO;
+
+    float3 diffuseIBL = kD * GBuffer.Albedo * (SkyDiffuse + Light.Diffuse);
+
+    float3 SkySpecular = BlurredSkyReflection(GBuffer.Position, GBuffer.Normal, GBuffer.Roughness);
+
+    float2 envBRDF = tex2Dlod0(s_brdf_lut, float2(NdotV, GBuffer.Roughness)).rg;
+
+    float3 specularIBL = SkySpecular * (F * envBRDF.x + envBRDF.y) * kS;
+
+    float3 SceneColor = diffuseIBL + specularIBL + Light.Specular;
     
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
     float Opacity = pow (Fog, 2.2f);
-	
+
     SceneColor = CalcTonemap (SceneColor);
     
     return float4 (SceneColor, Opacity);

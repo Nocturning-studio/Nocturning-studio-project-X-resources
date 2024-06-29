@@ -22,6 +22,7 @@ struct MaterialParams
     float3 Normal;
     float Height;
     float Roughness;
+    float Metallness;
     float AO;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,8 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     Material.Height = GetHeight(UV);
 
     Material.Roughness = GetRoughness(UV);
+
+    Material.Metallness = GetMetallness(UV);
 
 #if USE_BAKED_AO
     Material.AO = GetBakedAO(UV);
@@ -72,7 +75,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is smaller
     Material.Height += GetDetailHeight(DetailUV) * 0.2f;
 
-    Material.Roughness *= 2.0f * GetDetailRoughness(DetailUV);
+    //Material.Roughness *= 2.0f * GetDetailRoughness(DetailUV);
 #endif // DETAIL_BUMP
 #endif // USE_TDETAIL
 

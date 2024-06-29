@@ -99,11 +99,11 @@ PixelShaderOutputStruct main (vf I)
     float Fog = CalcFogness (I.position);
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
     Opacity *= 1.0f - pow (Fog, 2.2f);
-	
+
     final = CalcTonemap (final);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);
-    Output.Position = float4 (I.position, 1.0);
+    Output.Position = PackPositionAndNormal(I.position, NULL);
     return Output;
 }

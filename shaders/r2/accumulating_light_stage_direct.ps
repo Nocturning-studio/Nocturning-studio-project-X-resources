@@ -24,7 +24,7 @@ Accumulator main (Interpolators Input)
     
     GBuffer.Position += GBuffer.Normal * 0.00075f;
 
-    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
     
     float3 Diffuse = Light.Diffuse;
     float3 Specular = Light.Specular;

@@ -15,7 +15,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
-    float3 Position = GetPosition (TexCoords);
+    float3 Position, Normal;
+    GetPositionAndNormal (TexCoords, Position, Normal);
     
     if (Position.z > RENDER_DISTANCE)
     {
@@ -23,8 +24,6 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     }
     else
     {
-        float3 Normal = GetNormal(TexCoords);
-        
         float radiusPixels = (RADIUS * screen_res.y * 0.5f) / (Position.z * -pos_decompression_params.y);
 
 	    // Early exit if the projected radius is smaller than 1 full-res pixel

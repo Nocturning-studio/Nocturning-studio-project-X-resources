@@ -16,6 +16,7 @@ uniform sampler2D s_baked_ao;        // Baked AO - From texture
 uniform sampler2D s_detail_baked_ao; // Baked detail texture AO - From texture
 uniform sampler2D s_custom_normal;
 uniform sampler2D s_custom_roughness;
+uniform sampler2D s_custom_metallness;
 //////////////////////////////////////////////////////////////////////////////////////////
 // For terrain mask
 uniform sampler2D s_dt_r;

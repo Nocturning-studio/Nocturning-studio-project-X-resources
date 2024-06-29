@@ -3,16 +3,6 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-//https://www.shadertoy.com/view/MdfXWr
-////////////////////////////////////////////////////////////////////////////
-float3 lin2srgb(float3 color)
-{
-    float3 S1 = sqrt(color);
-    float3 S2 = sqrt(S1);
-    float3 S3 = sqrt(S2);
-    return 0.585122381f * S1 + 0.783140355f * S2 - 0.368262736f * S3;
-}
-////////////////////////////////////////////////////////////////////////////
 float3 ff_filmic_gamma3(float3 Color) {
     float3 x = max(0.0, Color - 0.004);
     return (x * (x * 6.2 + 0.5)) / (x * (x * 6.2 + 1.7) + 0.06);
@@ -47,6 +37,17 @@ float3 exponential_tonemapping(float3 Color)
     return tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation);
 }
 ////////////////////////////////////////////////////////////////////////////
+float3 uncharted2(float3 x)
+{
+    float A = 0.15f;
+    float B = 0.50f;
+    float C = 0.10f;
+    float D = 0.20f;
+    float E = 0.02f;
+    float F = 0.30f;
+    return (((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F);
+}
+////////////////////////////////////////////////////////////////////////////
 //S.T.A.L.K.E.R: Clear Sky tonemapping
 ////////////////////////////////////////////////////////////////////////////
 float3 X_Ray_Tonemap(float3 Color)
@@ -58,6 +59,6 @@ float3 X_Ray_Tonemap(float3 Color)
 ////////////////////////////////////////////////////////////////////////////
 float3 CalcTonemap(float3 Color)
 {
-    return ACES(Color);
+    return exponential_tonemapping(Color);
 }
 ////////////////////////////////////////////////////////////////////////////

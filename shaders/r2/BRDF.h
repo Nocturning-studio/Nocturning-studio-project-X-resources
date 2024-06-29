@@ -10,9 +10,9 @@
 // https://github.com/Zackin5/StalkerCop-FxaaShaders + https://learnopengl.com/PBR/IBL/Specular-IBL +
 // https://www.shadertoy.com/view/3tlBW7
 ////////////////////////////////////////////////////////////////////////////
-/*
 uniform sampler2D s_brdf_lut;
 ////////////////////////////////////////////////////////////////////////////
+/*
 float3 fresnelSchlickRoughness(float NdotL, float3 F0, float roughness)
 {
     return F0 + (max((1.0 - roughness), F0) - F0) * pow(1.0 - NdotL, 5.0);
@@ -117,7 +117,7 @@ struct LightComponents
     float Specular;
 };
 
-LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 Normal, float AO, float3 LightDirection)
+LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
 
@@ -138,7 +138,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 N
     float Diffuse = NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) + (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
 
     float3 F0 = 0.04;
-    //F0 = mix(F0, albedo, metalness);
+    F0 = lerp(F0, Albedo, Metallness);
 
     float D = DistributionGGX(Normal, HalfWay, Roughness);
     float3 F = fresnelSchlick(F0, HdotV);
@@ -149,7 +149,10 @@ LightComponents Calculate_Lighting_Model(float Roughness, float3 Point, float3 N
 
     float Specular = numerator / max(denominator, 0.001f);
 
-    Light.Diffuse = Diffuse;
+    float3 kS = F;
+    float3 kD = 1.0f - kS;
+
+    Light.Diffuse = Diffuse * kD;
     Light.Specular = Specular;
 
     return Light;

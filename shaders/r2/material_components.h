@@ -64,6 +64,15 @@ float GetRoughness(float2 UV)
 #endif
 }
 
+float GetMetallness(float2 UV)
+{
+#if USE_CUSTOM_METALLNESS
+    return tex2D(s_custom_metallness, UV).r;
+#else
+    return 0.0f;
+#endif
+}
+
 float GetBakedAO(float2 UV)
 {
     return tex2D(s_baked_ao, UV).r;

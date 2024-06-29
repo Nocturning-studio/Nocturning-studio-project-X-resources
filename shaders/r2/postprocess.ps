@@ -48,7 +48,7 @@ float4 main (v2p I): COLOR
 #ifdef USE_SEPIA
     image *= sepia_params.rgb + (1.0f - sepia_params.rgb) * (1.0f - sepia_params.a);
 #endif
-    
+
     return float4 (image, 1);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,8 @@ float hash13 (float3 p3)
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 {
-    float3 P = GetPosition (TexCoords);
+    float3 P, N;
+    GetPositionAndNormal (TexCoords, P, N);
     
     if (P.z > SSAO_RENDER_DISTANCE)
     {
@@ -41,8 +42,6 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
     }
     else
     {
-        float3 N = GetNormal(TexCoords);
-		
         int2 pos2d4 = Position2D;
         pos2d4 %= 4;
 

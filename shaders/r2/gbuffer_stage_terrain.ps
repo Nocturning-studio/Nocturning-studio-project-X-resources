@@ -81,6 +81,8 @@ GBufferPacked main (Interpolators Input)
 	// Create glossiness from details
     GBuffer.Roughness = invert(DetailBumpData.r);
 	
+	GBuffer.Metallness = 0.0f;
+
     return PackGBuffer (GBuffer);
 }
 ////////////////////////////////////////////////////////////////////////////////
