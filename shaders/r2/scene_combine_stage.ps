@@ -29,15 +29,17 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     float HalfAO = GBuffer.BakedAO + 1.0f * 0.5f;
     SkyDiffuse *= tex2Dlod0(s_ao, TexCoords).r * HalfAO;
 
-    float3 diffuseIBL = kD * GBuffer.Albedo * (SkyDiffuse + Light.Diffuse);
+    float3 diffuseIBL = kD * (SkyDiffuse + Light.Diffuse);
 
     float3 SkySpecular = BlurredSkyReflection(GBuffer.Position, GBuffer.Normal, GBuffer.Roughness);
 
+    SkySpecular = sRgbToLinear(SkySpecular);
+
     float2 envBRDF = tex2Dlod0(s_brdf_lut, float2(NdotV, GBuffer.Roughness)).rg;
 
-    float3 specularIBL = SkySpecular * (F * envBRDF.x + envBRDF.y) * kS;
+    float3 specularIBL = SkySpecular * F * envBRDF.x;// * (F * envBRDF.x + envBRDF.y);
 
-    float3 SceneColor = diffuseIBL + specularIBL + Light.Specular;
+    float3 SceneColor = GBuffer.Albedo * diffuseIBL + specularIBL + Light.Specular;
     
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
