@@ -26,6 +26,8 @@ Accumulator main (Interpolators Input)
 
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
     
+    float3 Subsurface = SubsurfaceScattering(GBuffer.Normal, GBuffer.Position, GBuffer.Albedo, GBuffer.Roughness, GBuffer.Subsurface, Ldynamic_dir.xyz);
+
     float3 Diffuse = Light.Diffuse;
     float3 Specular = Light.Specular;
     
@@ -40,6 +42,7 @@ Accumulator main (Interpolators Input)
 #endif    
 
     Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;
+    Diffuse += Subsurface * Ldynamic_color.rgb * ShadowMap.xxx;
     Specular *= Ldynamic_color.rgb * ShadowMap.xxx;
     
     Accumulator Output = PackLightingAccumulator (Diffuse, Specular);

@@ -58,6 +58,8 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.Metallness = Material.Metallness;
 
+	GBuffer.Subsurface = Material.Subsurface;
+
     return PackGBuffer (GBuffer);
 }
 ///////////////////////////////////////////////////////////////////////////////////

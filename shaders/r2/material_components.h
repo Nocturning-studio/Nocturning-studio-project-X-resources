@@ -73,6 +73,15 @@ float GetMetallness(float2 UV)
 #endif
 }
 
+float GetSubsurface(float2 UV)
+{
+#if USE_CUSTOM_SUBSURFACE
+    return tex2D(s_custom_subsurface, UV).r;
+#else
+    return 0.0f;
+#endif
+}
+
 float GetBakedAO(float2 UV)
 {
     return tex2D(s_baked_ao, UV).r;

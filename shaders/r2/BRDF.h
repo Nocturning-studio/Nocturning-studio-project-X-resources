@@ -93,6 +93,13 @@ float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
     return F0 + (max(1.0 - roughness, F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 ////////////////////////////////////////////////////////////////////////////
+float getMipLevelFromRoughness(float roughness, float lodCount) 
+{
+    float ROUGHNESS_1_MIP_RESOLUTION = 1.5;
+    float deltaLod = lodCount - ROUGHNESS_1_MIP_RESOLUTION;
+    return deltaLod * (sqrt(1.0 + 24.0 * roughness) - 1.0) / 4.0;
+}
+////////////////////////////////////////////////////////////////////////////
 // https://www.shadertoy.com/view/ltfyD8
 // https://www.shadertoy.com/view/Wt23zt
 ////////////////////////////////////////////////////////////////////////////
@@ -107,6 +114,30 @@ float Oren_Nayar_Diffuse(float3 LightDirection, float3 ViewDirection, float3 Nor
     float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
     return NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) +
                     (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
+}
+////////////////////////////////////////////////////////////////////////////
+//https://www.shadertoy.com/view/XlKSDR
+////////////////////////////////////////////////////////////////////////////
+float F_Schlick(float f0, float f90, float VoH) {
+    return f0 + (f90 - f0) * pow(1.0 - VoH, 5.0f);
+}
+
+float Fd_Burley(float linearRoughness, float NoV, float NoL, float LoH) 
+{
+    // Burley 2012, "Physically-Based Shading at Disney"
+    float f90 = 0.5 + 2.0 * linearRoughness * LoH * LoH;
+    float lightScatter = F_Schlick(1.0, f90, NoL);
+    float viewScatter = F_Schlick(1.0, f90, NoV);
+    return lightScatter * viewScatter * (1.0 / PI);
+}
+////////////////////////////////////////////////////////////////////////////
+// Subsurface scattering
+////////////////////////////////////////////////////////////////////////////
+float3 SubsurfaceScattering(float3 Normal, float3 Point, float3 Albedo, float Roughness, float Subsurface, float3 LightDirection)
+{
+    Roughness = pow(Roughness - 0.3f, 2.0f);
+    return Roughness / (PI * pow(pow(saturate(-dot(-normalize(Point), -normalize(LightDirection))), 2.0f) *
+        (Roughness - 1.0) + 1.0, 2.0f)) * (abs(dot(normalize(Normal), -normalize(Point))) + 1.0) * 0.5 * Albedo * Subsurface;
 }
 ////////////////////////////////////////////////////////////////////////////
 // Ultimate lighting model
@@ -130,6 +161,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float NdotV = abs(dot(Normal, ViewDirection)) + 0.1f;
     float NdotH = dot(Normal, HalfWay);
     float HdotV = dot(HalfWay, ViewDirection);
+    float LdotH = dot(LightDirection, HalfWay);
     float RoughnessSqr = pow(Roughness, 2.0f);
 
     // Oren-Nayar diffuse model
@@ -137,17 +169,14 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
     float Diffuse = NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) + (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
 
-    float3 F0 = 0.04;
-    F0 = lerp(F0, Albedo, Metallness);
+    const float DielectricSpecular = 0.04f;
+    float3 F0 = lerp(DielectricSpecular, Albedo, Metallness);
 
     float D = DistributionGGX(Normal, HalfWay, Roughness);
     float3 F = fresnelSchlick(F0, HdotV);
     float G = GeometrySmith(Normal, ViewDirection, LightDirection, Roughness);
 
-    float3 numerator = (D * G) * F;
-    float denominator = 4.0 * NdotV * NdotL;
-
-    float Specular = numerator / max(denominator, 0.001f);
+    float Specular = (D * G) * F / max(4.0f * NdotV * NdotL, 0.001f);
 
     float3 kS = F;
     float3 kD = 1.0f - kS;

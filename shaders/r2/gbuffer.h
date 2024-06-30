@@ -18,6 +18,7 @@ struct GBuffer
     float Metallness;
     float BakedAO;
     float AO;
+    float Subsurface;
 };
 
 struct GBufferPacked
@@ -98,7 +99,7 @@ GBufferPacked PackGBuffer(GBuffer Input)
 
     GBuffer.rt_GBuffer_1 = float4(Input.Albedo, Input.Roughness);
     GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), PackPosition(Input.Position), 0);
-    GBuffer.rt_GBuffer_3 = float4(Input.Metallness, Input.AO, Input.BakedAO, 0);
+    GBuffer.rt_GBuffer_3 = float4(Input.Metallness, Input.AO, Input.BakedAO, Input.Subsurface);
 
     return GBuffer;
 }
@@ -120,6 +121,7 @@ GBuffer UnpackGBuffer(float2 TexCoords)
     GBuffer.Metallness = GBuffer_3.r;
     GBuffer.AO = GBuffer_3.g;
     GBuffer.BakedAO = GBuffer_3.b;
+    GBuffer.Subsurface = GBuffer_3.a;
 
     return GBuffer;
 }

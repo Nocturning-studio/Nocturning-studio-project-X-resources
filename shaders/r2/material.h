@@ -24,6 +24,7 @@ struct MaterialParams
     float Roughness;
     float Metallness;
     float AO;
+    float Subsurface;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
@@ -45,6 +46,8 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     Material.Roughness = GetRoughness(UV);
 
     Material.Metallness = GetMetallness(UV);
+
+    Material.Subsurface = GetSubsurface(UV);
 
 #if USE_BAKED_AO
     Material.AO = GetBakedAO(UV);
