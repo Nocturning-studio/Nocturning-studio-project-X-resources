@@ -1,14 +1,13 @@
 function normal		(shader, t_base, t_second, t_detail)
-	shader:begin	("gbuffer_stage_dynamic_mesh_selflight","gbuffer_stage_dynamic_mesh_selflight")
-			: fog		(false)
-			: emissive 	(true)
-	shader:sampler	("s_base")      :texture	(t_base)
+	shader	:begin		("model_def_lqs","simple")
+			:fog		(true)
+	shader	:sampler	("s_base")      :texture	(t_base)
 end
 
-function l_special	(shader, t_base, t_second, t_detail)
-	shader:begin	("shadow_direct_dynamic_mesh",	"selflight")
-			: zb 		(true,false)
-			: fog		(false)
-			: emissive 	(true)
-	shader:sampler	("s_base")      :texture	(t_base)
+function l_spot		(shader, t_base, t_second, t_detail)
+	r1_lspot 	(shader, t_base, "model_def_spot")
+end
+
+function l_point	(shader, t_base, t_second, t_detail)
+	r1_lpoint 	(shader, t_base, "model_def_point")
 end
