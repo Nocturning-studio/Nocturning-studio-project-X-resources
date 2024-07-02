@@ -31,12 +31,6 @@
 	
 	float get_depth(float2 tc, int iSample)
 	{
-		// #ifdef USE_MSAA
-			// return s_position.Load(int3(tc * pos_decompression_params2.xy, 0), iSample).z;
-		// #else
-			// return s_position.Sample(smp_nofilter, tc).z;
-		// #endif
-		// return tex2Dlod(s_position, float4(tc, 0, 0)).z;
 		return tex2Dlod0(s_gbuffer_2, tc).z;
 	}
 	
@@ -142,30 +136,33 @@
 		}
 #endif
 
-		// if(!intersected) 
-			// return 0;
-		// if(!is_in_quad(tc_step))
-			// return 0;
-		
-		float3 ssr = 0;
-		float factor = 0;
-		if(intersected && is_in_quad(tc_step.xy))
+		if (!intersected || !is_in_quad(tc_step))
 		{
-			// float3 ssr = s_image.Sample(smp_rtlinear, tc_step);
-			// float factor = 1 - smoothstep(0.1, 0.0, tc_step.y); 
-			// return float4(ssr, factor);
-			factor = 1 - smoothstep(0.1, 0.0, tc_step.y); 
-			// ssr = tex2D(s_image, tc_step.xy);
-			ssr = tex2D(s_gbuffer_1, tc_step.xy);
-			
-			// fog
-			// float distance = tc_step.z;
-			// float fog = saturate(distance*fog_params.w + fog_params.x);
-			// ssr = lerp(ssr,fog_color,fog);
-			// float skyblend = saturate(fog*fog);
-			// factor *= 1 - skyblend;
+			return 0;
 		}
-		
-		return float4(ssr, factor);
+		else
+		{
+
+			float3 ssr = 0;
+			float factor = 0;
+			if (intersected && is_in_quad(tc_step.xy))
+			{
+				// float3 ssr = s_image.Sample(smp_rtlinear, tc_step);
+				// float factor = 1 - smoothstep(0.1, 0.0, tc_step.y); 
+				// return float4(ssr, factor);
+				factor = 1 - smoothstep(0.1, 0.0, tc_step.y);
+				// ssr = tex2D(s_image, tc_step.xy);
+				ssr = tex2D(s_image, tc_step.xy);
+
+				// fog
+				// float distance = tc_step.z;
+				// float fog = saturate(distance*fog_params.w + fog_params.x);
+				// ssr = lerp(ssr,fog_color,fog);
+				// float skyblend = saturate(fog*fog);
+				// factor *= 1 - skyblend;
+			}
+
+			return float4(ssr, factor);
+		}
 	}
 #endif // REFLECTIONS_SSR_INCLUDED

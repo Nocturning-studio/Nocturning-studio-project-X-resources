@@ -38,7 +38,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     float MipLevel = getMipLevelFromRoughness(GBuffer.Roughness, 8.0f);
 
     float BakedAO = (GBuffer.BakedAO + 1.0f) * 0.5f;
-    float4 RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
+    float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
 
     float3 IrradianceActualHour = texCUBElod(env_s0, float4(WorldSpaceNormal, max(3.0f, MipLevel)));
     float3 IrradianceNextHour = texCUBElod(env_s1, float4(WorldSpaceNormal, max(3.0f, MipLevel)));
@@ -79,7 +79,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 	{
 		// float4 reflections = calc_ssr(TexCoords, GBuffer.Position, normalize(mul((float3x3)m_V, float3(0,1,0))), 0);
 		float4 reflections = calc_ssr(TexCoords, GBuffer.Position, GetNormal(TexCoords), 0);
-		SceneColor = lerp(SceneColor, reflections.rgb, reflections.a);
+		SceneColor = lerp(SceneColor, reflections.rgb, reflections.a) * F;
 	}
 	
     return float4 (SceneColor, Opacity);

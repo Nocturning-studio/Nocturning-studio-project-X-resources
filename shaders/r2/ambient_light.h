@@ -5,8 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 ////////////////////////////////////////////////////////////////////////////
-#define LIGHTMAP_BRIGHTNESS 1.0f
-////////////////////////////////////////////////////////////////////////////
 float3 CalculateAmbientWithBlurredEnvironment(float LightMapAO, float3 Normal, float Roughness)
 {
     float3 WorldSpaceNormal = mul(m_v2w, Normal);
@@ -18,6 +16,6 @@ float3 CalculateAmbientWithBlurredEnvironment(float LightMapAO, float3 Normal, f
 
     Environment = env_color.rgb * lerp(Environment, fog_color.rgb, fog_sky_influence);
 
-    return Environment * LightMapAO * LIGHTMAP_BRIGHTNESS + L_ambient.rgb;
+    return Environment * LightMapAO + L_ambient.rgb;
 }
 ////////////////////////////////////////////////////////////////////////////
