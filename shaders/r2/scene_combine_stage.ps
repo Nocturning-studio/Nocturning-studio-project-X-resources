@@ -8,6 +8,7 @@
 #include "accumulation_helper.h"
 #include "ambient_light.h"
 #include "reflection.h"
+#include "reflections_ssr.h"
 #include "BRDF.h"
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
@@ -74,6 +75,13 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     SceneColor = CalcTonemap (SceneColor);
     
+	// SSR from DWM
+	{
+		// float4 reflections = calc_ssr(TexCoords, GBuffer.Position, normalize(mul((float3x3)m_V, float3(0,1,0))), 0);
+		float4 reflections = calc_ssr(TexCoords, GBuffer.Position, GetNormal(TexCoords), 0);
+		SceneColor = lerp(SceneColor, reflections.rgb, reflections.a);
+	}
+	
     return float4 (SceneColor, Opacity);
 }
 ////////////////////////////////////////////////////////////////////////////
