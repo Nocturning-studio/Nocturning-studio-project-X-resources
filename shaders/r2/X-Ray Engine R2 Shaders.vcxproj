@@ -264,6 +264,7 @@
     <None Include="scene_combine_stage.ps" />
     <None Include="scene_combine_stage.vs" />
     <None Include="scene_combine_stage_debug.ps" />
+    <None Include="scene_combine_stage_pass_precombine.ps" />
     <None Include="scene_combine_stage_pass_volumetric.s" />
     <None Include="selflight.ps" />
     <None Include="selflight.s" />
@@ -330,6 +331,7 @@
     <ClInclude Include="material_components.h" />
     <ClInclude Include="normal_map_functions.h" />
     <ClInclude Include="reflection.h" />
+    <ClInclude Include="reflections_ssr.h" />
     <ClInclude Include="shadow_filtering.h" />
     <ClInclude Include="TBN.h" />
     <ClInclude Include="terrain_helper.h" />

@@ -50,20 +50,23 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     float3 ReflectedSkyNextHour = texCUBElod(sky_s1, float4(vreflect, MipLevel));
     float3 ReflectedSky = env_color.rgb * lerp(ReflectedSkyActualHour, ReflectedSkyNextHour, env_color.w);
     ReflectedSky = lerp(ReflectedSky, fog_color.rgb, fog_sky_influence);
-    ReflectedSky = CalcTonemap (ReflectedSky);
+    ReflectedSky = CalcTonemap (ReflectedSky) * (GBuffer.AO + L_ambient.rgb);
+
+    float4 reflections = calc_ssr(TexCoords, GBuffer.Position, GBuffer.Normal, 0);
+	reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
 #ifdef USE_BRDF_LUT
     float2 envBRDF = getBRDFIntegrationMap(float2(WorldSpaceNdotV, GBuffer.Roughness)).rg;
-    float3 specularIBL = ReflectedSky * (F * envBRDF.x + envBRDF.y);
+    float3 specularIBL = reflections * (F * envBRDF.x + envBRDF.y);
 #else
-    float3 specularIBL = ReflectedSky * F;
+    float3 specularIBL = reflections * F;
 #endif
 
     float3 DirectLighting = kD * GBuffer.Albedo * Light.Diffuse + Light.Specular;
 
     float3 IndirectDiffuse = kD * GBuffer.Albedo * Irradiance * (GBuffer.AO + L_ambient.rgb) * BakedAO * RealTimeAO;
     
-    float3 IndirectSpecular = specularIBL * (GBuffer.AO + L_ambient.rgb);
+    float3 IndirectSpecular = specularIBL;
 
     float3 IndirectLighting = IndirectDiffuse + IndirectSpecular;
 
@@ -75,13 +78,6 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     SceneColor = CalcTonemap (SceneColor);
     
-	// SSR from DWM
-	{
-		// float4 reflections = calc_ssr(TexCoords, GBuffer.Position, normalize(mul((float3x3)m_V, float3(0,1,0))), 0);
-		float4 reflections = calc_ssr(TexCoords, GBuffer.Position, GetNormal(TexCoords), 0);
-		SceneColor = lerp(SceneColor, reflections.rgb, reflections.a) * F;
-	}
-	
     return float4 (SceneColor, Opacity);
 }
 ////////////////////////////////////////////////////////////////////////////
