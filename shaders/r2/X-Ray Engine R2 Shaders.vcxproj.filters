@@ -61,12 +61,6 @@
     <ClInclude Include="TBN.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="dlaa.h">
-      <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="fxaa.h">
-      <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="contrast_adaptive_sharpening.h">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
@@ -90,6 +84,12 @@
     </ClInclude>
     <ClInclude Include="material_components.h">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="fxaa.h">
+      <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
+    </ClInclude>
+    <ClInclude Include="reflections_ssr.h">
+      <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -567,6 +567,18 @@
     <None Include="overlay_stage_apply.ps">
       <Filter>Forward rendering pipeline\Overlays</Filter>
     </None>
+    <None Include="scene_combine_stage_pass_precombine.ps">
+      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
+    </None>
+    <None Include="postprocess_stage_reflections_pass_render.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
+    </None>
+    <None Include="postprocess_stage_reflections_pass_vertical_filter.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
+    </None>
+    <None Include="postprocess_stage_reflections_pass_horizontal_filter.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -683,9 +695,6 @@
     <Filter Include="Forward rendering pipeline\Postprocess\Autoexposure">
       <UniqueIdentifier>{49feecaa-bc5c-432a-94bf-ffea9d67953f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Forward rendering pipeline\Postprocess\Anti-Aliasing\Headers">
-      <UniqueIdentifier>{db7ceedf-b04f-4372-bc9c-2ae8d69979f4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Distortion">
       <UniqueIdentifier>{8e5af72c-f84e-4f1e-8c6b-bf926c39d2ba}</UniqueIdentifier>
     </Filter>
@@ -778,6 +787,9 @@
     </Filter>
     <Filter Include="Deffered rendering pipeline\GBuffer stage\Geometry types\Dynamic mesh\Selflight">
       <UniqueIdentifier>{8f3353f6-1063-40ae-82ab-28090fa7aaa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering pipeline\Postprocess\Reflections">
+      <UniqueIdentifier>{7edd7d39-4b15-4e16-b588-4b762a2e89e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

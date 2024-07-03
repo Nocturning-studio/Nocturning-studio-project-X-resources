@@ -261,6 +261,9 @@
     <None Include="postprocess_stage_distortion.ps" />
     <None Include="postprocess_stage_motion_blur_pass_combine.ps" />
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
+    <None Include="postprocess_stage_reflections_pass_horizontal_filter.ps" />
+    <None Include="postprocess_stage_reflections_pass_render.ps" />
+    <None Include="postprocess_stage_reflections_pass_vertical_filter.ps" />
     <None Include="scene_combine_stage.ps" />
     <None Include="scene_combine_stage.vs" />
     <None Include="scene_combine_stage_debug.ps" />
@@ -320,7 +323,6 @@
     <ClInclude Include="common_uniforms.h" />
     <ClInclude Include="contrast_adaptive_sharpening.h" />
     <ClInclude Include="displacement.h" />
-    <ClInclude Include="dlaa.h" />
     <ClInclude Include="filters.h" />
     <ClInclude Include="fxaa.h" />
     <ClInclude Include="fxaa_atoc.h" />
