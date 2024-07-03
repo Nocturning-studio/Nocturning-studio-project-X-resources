@@ -61,7 +61,7 @@ float3 UnpackPosition(float position, float2 tc)
 ////////////////////////////////////////////////////////////////////////////
 float GetDepth(float2 TexCoords)
 {
-    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).b;
+    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).a;
     Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
 
     return Depth;
@@ -69,7 +69,7 @@ float GetDepth(float2 TexCoords)
 
 float3 GetPosition(float2 TexCoords)
 {
-    float Depth = tex2D(s_gbuffer_2, TexCoords).b;
+    float Depth = tex2D(s_gbuffer_2, TexCoords).a;
     Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
     float3 Position = UnpackPosition(Depth, TexCoords);
 
@@ -78,19 +78,19 @@ float3 GetPosition(float2 TexCoords)
 
 float3 GetNormal(float2 TexCoords)
 {
-    float2 PackedNormal = tex2D(s_gbuffer_2, TexCoords).rg;
-    return UnpackNormal(PackedNormal);
+    float3 PackedNormal = tex2D(s_gbuffer_2, TexCoords).rgb;
+    return PackedNormal;
 }
 
 void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout float3 Normal)
 {
     float4 GBuffer_2 = tex2D(s_gbuffer_2, TexCoords);
 
-    float Depth = GBuffer_2.z < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.z;
+    float Depth = GBuffer_2.a < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.a;
 
     Position = UnpackPosition(Depth, TexCoords);
 
-    Normal = UnpackNormal(GBuffer_2.rg);
+    Normal = GBuffer_2.rgb;
 }
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
@@ -98,7 +98,7 @@ GBufferPacked PackGBuffer(GBuffer Input)
     GBufferPacked GBuffer;
 
     GBuffer.rt_GBuffer_1 = float4(Input.Albedo, Input.Roughness);
-    GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), PackPosition(Input.Position), 0);
+    GBuffer.rt_GBuffer_2 = float4(Input.Normal, PackPosition(Input.Position));
     GBuffer.rt_GBuffer_3 = float4(Input.Metallness, Input.AO, Input.BakedAO, Input.Subsurface);
 
     return GBuffer;
@@ -112,11 +112,11 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 	float4 GBuffer_2 = tex2D(s_gbuffer_2, TexCoords);
 	float4 GBuffer_3 = tex2D(s_gbuffer_3, TexCoords);
 
-	float Depth = GBuffer_2.z < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.z;
+	float Depth = GBuffer_2.a < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.a;
 
     GBuffer.Albedo = GBuffer_1.rgb;
     GBuffer.Roughness = GBuffer_1.a;
-    GBuffer.Normal = UnpackNormal(GBuffer_2.rg);
+    GBuffer.Normal = GBuffer_2.rgb;
     GBuffer.Position = UnpackPosition(Depth, TexCoords);
     GBuffer.Metallness = GBuffer_3.r;
     GBuffer.AO = GBuffer_3.g;
@@ -128,6 +128,6 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 
 float4 PackPositionAndNormal(float3 Position, float3 Normal)
 {
-    return float4(PackNormal(Normal), PackPosition(Position), 0);
+    return float4(Normal, PackPosition(Position));
 }
 ////////////////////////////////////////////////////////////////////////////
