@@ -107,7 +107,7 @@ bool calc_intersection(int steps, inout float scale, inout float thickness, floa
 // P - view space position
 // N - view space normal
 // iSample - msaa sample id
-float4 calc_ssr(float2 tc, float3 P, float3 N, int iSample)
+float4 calc_ssr(float2 tc, float3 P, float3 N)
 {
 	float3 pos = float3(tc, 1) * P.z, pos_step = pos;
 	float3 vreflect = calc_vreflect(P, N);

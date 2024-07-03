@@ -52,7 +52,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     ReflectedSky = lerp(ReflectedSky, fog_color.rgb, fog_sky_influence);
     ReflectedSky = CalcTonemap (ReflectedSky) * (GBuffer.AO + L_ambient.rgb);
 
-    float4 reflections = calc_ssr(TexCoords, GBuffer.Position, GBuffer.Normal, 0);
+    float4 reflections = tex2D(s_reflections, TexCoords);
 	reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
 #ifdef USE_BRDF_LUT

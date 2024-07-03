@@ -92,6 +92,11 @@ void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout floa
 
     Normal = GBuffer_2.rgb;
 }
+
+float GetSceneRoughness(float2 TexCoords)
+{
+    return tex2Dlod0(s_gbuffer_1, TexCoords).a;
+}
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
 {
