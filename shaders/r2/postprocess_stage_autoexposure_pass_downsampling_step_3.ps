@@ -20,7 +20,7 @@ uniform float4 MiddleGray;
 // native bilinear
 float sample (float2 tc)
 {
-    return avg4 (tex2Dlod0 (s_image, tc));
+    return dot(tex2D(s_image,tc), 1/4.h);
 }
 
 float4 main (v2p I): COLOR
@@ -50,7 +50,6 @@ float4 main (v2p I): COLOR
     accum3.z = sample (I.tc6.wz);
     accum3.w = sample (I.tc7.wz);
     
-
 	// perform accumulation
 	float4 final;
     final.x = dot (accum0, 1 / 4.h);
@@ -60,8 +59,11 @@ float4 main (v2p I): COLOR
     float result = dot (final, 1 / 4.h);
 
     float scale = MiddleGray.x / (result * MiddleGray.y + MiddleGray.z);
-    float scale_prev = tex2Dlod0 (s_autoexposure, I.tc0.xy).x;
+	float scale_prev = tex2D(s_autoexposure, I.tc0).x;
+	float rvalue = lerp(scale_prev, scale, MiddleGray.w);
 
-    return lerp (scale_prev, scale, MiddleGray.w);
+	clamp(rvalue, 1.f / 8.f, 2.0f);
+
+    return rvalue;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

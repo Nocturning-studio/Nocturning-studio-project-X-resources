@@ -8,7 +8,7 @@
 #include "accumulation_helper.h"
 #include "ambient_light.h"
 #include "reflection.h"
-#include "reflections_ssr.h"
+//#include "reflections_ssr.h"
 #include "BRDF.h"
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
@@ -27,8 +27,6 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
     float Opacity = pow (Fog, 2.2f);
-
-    SceneColor = CalcTonemap (SceneColor);
 	
     return float4 (SceneColor, 0.0f);
 }

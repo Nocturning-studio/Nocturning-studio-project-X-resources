@@ -38,8 +38,6 @@ PixelShaderOutputStruct main (v2p I)
     float Fog = CalcFogness (I.position);
     distort.rgb = lerp (distort.rgb, fog_params.rgb, Fog);
     factor *= 1.0f - pow (Fog, 2.2f);
-
-    factor = CalcTonemap (factor);
 	
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (distort.rgb, factor);

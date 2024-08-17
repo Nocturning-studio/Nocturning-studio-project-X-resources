@@ -25,8 +25,6 @@ PixelShaderOutputStruct main (v2p I)
     float Fog = CalcFogness (I.position);
     final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
     float Opacity = (1.0f - pow (Fog, 2.2f)) * t_base.a;
-
-    final = CalcTonemap (final);
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, Opacity);

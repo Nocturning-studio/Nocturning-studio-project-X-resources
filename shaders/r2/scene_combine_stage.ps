@@ -11,73 +11,111 @@
 #include "reflections_ssr.h"
 #include "BRDF.h"
 ////////////////////////////////////////////////////////////////////////////
+uniform float debug_mode;
+////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
 
-    float NdotV = max(dot(GBuffer.Normal, -normalize(GBuffer.Position)), 0.0);
+    // Get light context
+    float NdotV = max(dot(GBuffer.Normal, -normalize(GBuffer.Position)), 0.0f);
     float3 WorldSpaceNormal = mul(m_v2w, GBuffer.Normal);
     float3 v2pointL = normalize(GBuffer.Position);
     float3 v2point = mul(m_v2w, v2pointL);
     float WorldSpaceNdotV = max(dot(WorldSpaceNormal, -v2point), 0.0);
-    float3 vreflect = reflect(v2point, WorldSpaceNormal);
 
-    // True remapping
-    float3 vreflectabs = abs(vreflect);
-    float vreflectmax = max(vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
-    vreflect /= vreflectmax;
-    if (vreflect.y < 0.99f)
-        vreflect.y = vreflect.y * 2.0f - 1.0f;
+    // Get ambient
+    float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
+    float LightMapAO = pow(pow(GBuffer.AO + 0.1f, 1.0f / 2.2f), 2.2f);
 
+    // Get F0 
     float IOR = 1.5f;
     float3 F0 = pow(IOR - 1.0f, 2.0f) / pow(IOR + 1.0f, 2.0f);
     F0 = lerp(F0, GBuffer.Albedo, GBuffer.Metallness);
-    float3 F = fresnelSchlickRoughness(F0, NdotV, GBuffer.Roughness);
-    float3 kD = (1.0f - F) * (1.0 - GBuffer.Metallness);
+
+    // Get Fresnel Coeff
+    float3 kS = fresnelSchlickRoughness(F0, NdotV, GBuffer.Roughness);
+    float3 kD = (1.0f - kS) * (1.0f - GBuffer.Metallness);
+
+    // Get reflection cube coords for IBL specular
+    float3 vreflect = getSpecularDominantDir(v2point, WorldSpaceNormal, pow2(GBuffer.Roughness));
+    vreflect = RemapCubeCoords(vreflect);
+
+    // Get coords for Irradiance
+    //float3 IrradianceCoords = normalize(-v2point + vreflect);
+
+    // Get mip level, corellated with roughness
     float MipLevel = getMipLevelFromRoughness(GBuffer.Roughness, 8.0f);
 
-    float BakedAO = (GBuffer.BakedAO + 1.0f) * 0.5f;
-    float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-
-    float3 IrradianceActualHour = texCUBElod(env_s0, float4(WorldSpaceNormal, max(3.0f, MipLevel)));
-    float3 IrradianceNextHour = texCUBElod(env_s1, float4(WorldSpaceNormal, max(3.0f, MipLevel)));
-    float3 Irradiance = env_color.rgb * lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
+    // Get irradiance
+    float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
+    float3 IrradianceActualHour = texCUBElod(env_s0, float4(WorldSpaceNormal, IrradianceMip));
+    float3 IrradianceNextHour = texCUBElod(env_s1, float4(WorldSpaceNormal, IrradianceMip));
+    float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
+    Irradiance = LinearTosRgb(Irradiance);
     Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
-    Irradiance = CalcTonemap (Irradiance);
 
+    // Get IBL specular
     float3 ReflectedSkyActualHour = texCUBElod(sky_s0, float4(vreflect, MipLevel));
     float3 ReflectedSkyNextHour = texCUBElod(sky_s1, float4(vreflect, MipLevel));
-    float3 ReflectedSky = env_color.rgb * lerp(ReflectedSkyActualHour, ReflectedSkyNextHour, env_color.w);
+    float3 ReflectedSky = lerp(ReflectedSkyActualHour, ReflectedSkyNextHour, env_color.w);
+    ReflectedSky = LinearTosRgb(ReflectedSky);
     ReflectedSky = lerp(ReflectedSky, fog_color.rgb, fog_sky_influence);
-    ReflectedSky = CalcTonemap (ReflectedSky) * (GBuffer.AO + L_ambient.rgb);
 
-    float4 reflections = tex2D(s_reflections, TexCoords);
-	reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
+    //float2 envBRDF = getBRDFIntegrationMap(NdotV, GBuffer.Roughness);
+    //ReflectedSky *= kS * envBRDF.x + envBRDF.y;
 
-#ifdef USE_BRDF_LUT
-    float2 envBRDF = getBRDFIntegrationMap(float2(WorldSpaceNdotV, GBuffer.Roughness)).rg;
-    float3 specularIBL = reflections * (F * envBRDF.x + envBRDF.y);
-#else
-    float3 specularIBL = reflections * F;
-#endif
+    //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
+	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
-    float3 DirectLighting = kD * GBuffer.Albedo * Light.Diffuse + Light.Specular;
+    // Get subsurface irradiance
+    float3 SubsurfaceIrradianceCoords = refract(v2point, WorldSpaceNormal, 0.0);
+    SubsurfaceIrradianceCoords = RemapCubeCoords(SubsurfaceIrradianceCoords);
+    float3 SubsurfaceIrradianceActualHour = texCUBElod(env_s0, float4(SubsurfaceIrradianceCoords, 8));
+    float3 SubsurfaceIrradianceNextHour = texCUBElod(env_s1, float4(SubsurfaceIrradianceCoords, 8));
+    float3 SubsurfaceIrradiance = lerp(SubsurfaceIrradianceActualHour, SubsurfaceIrradianceNextHour, env_color.w);
+    SubsurfaceIrradiance = lerp(SubsurfaceIrradiance, fog_color.rgb, fog_sky_influence);
+    float3 SubsurfaceAmbient = ((abs(WorldSpaceNdotV) + 1.0f) * 0.5f) * SubsurfaceIrradiance * GBuffer.Albedo * GBuffer.Subsurface;
 
-    float3 IndirectDiffuse = kD * GBuffer.Albedo * Irradiance * (GBuffer.AO + L_ambient.rgb) * BakedAO * RealTimeAO;
-    
-    float3 IndirectSpecular = specularIBL;
+    float3 DirectLighting = Light.Diffuse * kD + Light.Specular * kS;
 
-    float3 IndirectLighting = IndirectDiffuse + IndirectSpecular;
+    float3 IndirectLighting = (kD * Irradiance * GBuffer.BakedAO * RealTimeAO + ReflectedSky * kS + SubsurfaceAmbient) * LightMapAO * L_ambient.rgb;
 
-    float3 SceneColor = DirectLighting + IndirectLighting;
-    
+    float3 SceneColor = GBuffer.Albedo * (DirectLighting + IndirectLighting);
+
+    SceneColor = exponential_tonemapping(SceneColor);
+
+    //SceneColor = ACES(SceneColor);
+
+    //float Exposure = tex2D(s_autoexposure, float2(0.5, 0.5)).r;
+    //SceneColor = CalcExposure(SceneColor, Exposure);
+
+    //SceneColor = LinearTosRgb(SceneColor);
+
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
     float Opacity = pow (Fog, 2.2f);
 
-    SceneColor = CalcTonemap (SceneColor);
-    
+    if (debug_mode == GBUFFER_ALBEDO)
+        SceneColor = GBuffer.Albedo;
+    else if (debug_mode == GBUFFER_POSITION)
+        SceneColor = GBuffer.Position;
+    else if (debug_mode == GBUFFER_NORMAL)
+        SceneColor = normalize (GBuffer.Normal * 0.5f + 0.5f);
+    else if (debug_mode == GBUFFER_ROUGHNESS)
+        SceneColor = GBuffer.Roughness;
+    else if (debug_mode == GBUFFER_LIGHTMAP_AO)
+        SceneColor = LightMapAO;
+    else if (debug_mode == GBUFFER_BAKED_AO)
+        SceneColor = GBuffer.BakedAO;
+    else if (debug_mode == ACCUMULATOR_DIFFUSE)
+        SceneColor = Light.Diffuse * kD;
+    else if (debug_mode == ACCUMULATOR_SPECULAR)
+        SceneColor = Light.Specular * kS;
+    else if (debug_mode == REAL_TIME_AO)
+        SceneColor = RealTimeAO;
+
     return float4 (SceneColor, Opacity);
 }
 ////////////////////////////////////////////////////////////////////////////

@@ -7,10 +7,17 @@
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    float4 SceneColor = tex2Dlod0 (s_image, TexCoords);
+    float4 Color = tex2Dlod0 (s_image, TexCoords);
     
     float Exposure = tex2Dlod0 (s_autoexposure, float2 (0.5f, 0.5f)).r;
     
-    return SceneColor * Exposure;
+    //return Color * Exposure;//(1.0f - exp(-Color * Exposure)) * Exposure;
+
+    //Exposure *= SceneColor;
+    //return Exposure / (Exposure - Color + 1.0f);
+
+    float whitesqr = Exposure * Exposure;
+    Color *= Exposure;
+    return (Color * (1.0f + Color / whitesqr)) / (Color + 1.0f);
 }
 ///////////////////////////////////////////////////////////////////////////////////

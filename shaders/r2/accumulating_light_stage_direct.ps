@@ -8,6 +8,7 @@
 #include "BRDF.h"
 #include "accumulation_helper.h"
 #include "shadow_filtering.h"
+#include "screen_space_shadows.h"
 ///////////////////////////////////////////////////////////////////////////////////
 // Constants
 uniform float sun_far;
@@ -21,31 +22,30 @@ struct Interpolators
 Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
-    
-    GBuffer.Position += GBuffer.Normal * 0.00075f;
 
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
     
-    float3 Subsurface = SubsurfaceScattering(GBuffer.Normal, GBuffer.Position, GBuffer.Albedo, GBuffer.Roughness, GBuffer.Subsurface, Ldynamic_dir.xyz);
-
-    float3 Diffuse = Light.Diffuse;
-    float3 Specular = Light.Specular;
-    
-    float4 Position = float4 (GBuffer.Position, 1.0f);
+    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.01575f, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
     
     // Fading with distance
 #ifdef USE_SMOOTH_FADING
-    float ShadowMapFadingFactor = smoothstep(sun_far * 0.75f, sun_far, length (GBuffer.Position));
+    float ShadowMapFadingFactor = smoothstep(sun_far * 0.85f, sun_far, length (GBuffer.Position));
     ShadowMap = lerp (ShadowMap, 1.0f, ShadowMapFadingFactor);
 #endif    
 
-    Diffuse *= Ldynamic_color.rgb * ShadowMap.xxx;
-    Diffuse += Subsurface * Ldynamic_color.rgb * ShadowMap.xxx;
-    Specular *= Ldynamic_color.rgb * ShadowMap.xxx;
-    
-    Accumulator Output = PackLightingAccumulator (Diffuse, Specular);
+    float NdotL = abs(dot(normalize(GBuffer.Normal), Ldynamic_dir.rgb));
+    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+        ShadowMap *= TraceShadow(Ldynamic_dir, Position);
+
+    float3 SunColor = Ldynamic_color.rgb;// * 2.0f;
+
+    Light.Diffuse *= SunColor * ShadowMap.xxx;
+    Light.Diffuse += Light.Subsurface * SunColor * GBuffer.Subsurface * ShadowMap.xxx;
+    Light.Specular *= SunColor * ShadowMap.xxx;
+
+    Accumulator Output = PackLightingAccumulator (Light.Diffuse, Light.Specular);
     return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

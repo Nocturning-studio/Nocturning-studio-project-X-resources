@@ -109,7 +109,8 @@ bool calc_intersection(int steps, inout float scale, inout float thickness, floa
 // iSample - msaa sample id
 float4 calc_ssr(float2 tc, float3 P, float3 N)
 {
-	float3 pos = float3(tc, 1) * P.z, pos_step = pos;
+	float3 pos = float3(tc, 1) * P.z;
+	float3 pos_step = pos;
 	float3 vreflect = calc_vreflect(P, N);
 		
 	float depth_scale = clamp(sqrt(P.z), 0.5, 5.0);
@@ -144,13 +145,12 @@ float4 calc_ssr(float2 tc, float3 P, float3 N)
 	}
 	else
 	{
-
 		float3 ssr = 0;
 		float factor = 0;
 		if (intersected && is_in_quad(tc_step.xy))
 		{
 			factor = 1 - smoothstep(0.1, 0.0, tc_step.y);
-			ssr = tex2D(s_image, tc_step.xy);
+			ssr = tex2Dlod0(s_image, tc_step.xy);
 		}
 
 		return float4(ssr, factor);

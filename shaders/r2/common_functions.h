@@ -109,16 +109,17 @@ float random(float2 st)
     return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
 }
 ////////////////////////////////////////////////////////////////////////////
-float3 sRgbToLinear(float3 vValue)
+// https://www.shadertoy.com/view/3dGfzh
+////////////////////////////////////////////////////////////////////////////
+// slightly altered https://www.shadertoy.com/view/wtBXRz
+float2 brownConradyDistortion(float2 uv, float k1)
 {
-    return vValue * (vValue * (vValue * 0.305306011 + 0.682171111) + 0.012522878);
-}
+    uv = uv * 2.0 - 1.0;	// brown conrady takes [-1:1]
 
-float3 LinearTosRgb(float3 vColor)
-{
-    float3 S1 = sqrt(vColor);
-    float3 S2 = sqrt(S1);
-    float3 S3 = sqrt(S2);
-    return (0.585122381 * S1 + 0.783140355 * S2 - 0.368262736 * S3);
+    // positive values of K1 give barrel distortion, negative give pincushion
+    float r2 = uv.x * uv.x + uv.y * uv.y;
+    uv *= 1.0 + k1 * r2;
+
+    return (uv * .5 + .5); // restore -> [0:1]
 }
 ////////////////////////////////////////////////////////////////////////////

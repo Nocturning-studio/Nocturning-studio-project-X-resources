@@ -91,6 +91,9 @@
     <ClInclude Include="reflections_ssr.h">
       <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
     </ClInclude>
+    <ClInclude Include="screen_space_shadows.h">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="accumulating_light_stage_mask.vs">

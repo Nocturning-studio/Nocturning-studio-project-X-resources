@@ -18,7 +18,7 @@ struct v2p
 // native bilinear
 float sample (float2 tc)
 {
-    return avg4 (tex2Dlod0 (s_image, tc));
+    return dot(tex2D(s_image,tc), 1/4.h);
 }
 
 float4 main (v2p I): COLOR

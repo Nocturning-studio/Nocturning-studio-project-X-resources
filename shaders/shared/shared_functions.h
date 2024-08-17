@@ -98,4 +98,51 @@ float3 calc_reflection(float3 pos_w, float3 norm_w)
     return reflect(normalize(pos_w - eye_position), norm_w);
 }
 ////////////////////////////////////////////////////////////////////////////
+float3 RemapCubeCoords(float3 CubeCoords)
+{
+    float3 CubeCoordsAbs = abs(CubeCoords);
+    float CubeCoordsMax = max(CubeCoordsAbs.x, max(CubeCoordsAbs.y, CubeCoordsAbs.z));
+    CubeCoords /= CubeCoordsMax;
+    if (CubeCoords.y < 0.99f)
+        CubeCoords.y = CubeCoords.y * 2.0f - 1.0f;
+
+    return CubeCoords;
+}
+////////////////////////////////////////////////////////////////////////////
+//https://www.turais.de/how-to-load-hdri-as-a-cubemap-in-opengl/
+////////////////////////////////////////////////////////////////////////////
+/*
+float3 uvToXYZ(int face, float2 uv)
+{
+    if (face == 0)
+        return float3(1.f, uv.y, -uv.x);
+    else if (face == 1)
+        return float3(-1.f, uv.y, uv.x);
+    else if (face == 2)
+        return float3(+uv.x, -1.f, +uv.y);
+    else if (face == 3)
+        return float3(+uv.x, 1.f, -uv.y);
+    else if (face == 4)
+        return float3(+uv.x, uv.y, 1.f);
+    else //if(face == 5)
+    {
+        return float3(-uv.x, +uv.y, -1.f);
+    }
+}
+
+float2 dirToUV(float3 dir)
+{
+    return float2(0.5f + 0.5f * atan(dir.z, dir.x) / PI, 1.f - acos(dir.y) / PI);
+}
+*/
+//float3 panoramaToCubeMap(int face, float2 texCoord)
+//{
+//    float2 texCoordNew = texCoord * 2.0 - 1.0; //< mapping vom 0,1 to -1,1 coords
+//    float3 scan = uvToXYZ(face, texCoordNew);
+//    float3 direction = normalize(scan);
+//    float2 src = dirToUV(direction);
+//
+//    return  texture(u_panorama, src).rgb; //< get the color from the panorama
+//}
+////////////////////////////////////////////////////////////////////////////
 

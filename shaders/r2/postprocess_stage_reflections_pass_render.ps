@@ -5,13 +5,18 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.h"
 #include "gbuffer.h"
-#include "reflections_ssr.h"
+//#include "reflections_ssr.h"
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
-    float3 Position, Normal = NULL;
-    GetPositionAndNormal(TexCoords, Position, Normal);
+    //float3 Position, Normal = NULL;
+    //GetPositionAndNormal(TexCoords, Position, Normal);
 
-    return calc_ssr(TexCoords, Position, Normal);
+    //float Fresnel = pow(clamp(1.0f - dot(Normal, -normalize(Position)), 0.0f, 1.0f), 5.0f);
+
+    //if(Fresnel > 0.0f)
+    //    return calc_ssr(TexCoords, Position, Normal);
+    //else
+        return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////

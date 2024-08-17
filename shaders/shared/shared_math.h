@@ -6,16 +6,22 @@
 // Functions
 ////////////////////////////////////////////////////////////////////////////
 // Inverting
-#define invert(x) 1.0f - x
+#define invert(x) (1.0f - x)
 ////////////////////////////////////////////////////////////////////////////
 // Myltiply add
-#define mad(m, a, b) m * a + b
+#define mad(m, a, b) ((m) * (a) + (b))
 
 // Multiply + Saturation
 #define mul_sat(a, b) saturate(mul(a, b))
 
 // Multiply add + Saturation
 #define mad_sat(m, a, b) saturate(mad(m, a, b))
+
+//Power
+#define pow2(x) mul(x, x)
+#define pow4(x) pow2(mul(x, x))
+#define pow5(x) pow(x, 5.0f)
+#define powEXP(x) pow(x, 2.718f)
 ////////////////////////////////////////////////////////////////////////////
 // Average functions
 float avg2(float2 tex)

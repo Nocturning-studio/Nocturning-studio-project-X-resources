@@ -20,7 +20,7 @@ uniform float3 hdr_params;
 //////////////////////////////////////////////////////////////////////////////////////////
 float GetDepth(float2 TexCoords)
 {
-	float DepthBuffer = tex2D(s_depth, TexCoords).a;
+    float DepthBuffer = GetZBufferFromINTZ(TexCoords);
     return LinearizeDepth (DepthBuffer);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,9 @@ float4 main (v2p I): COLOR
     float3 t_0 = tex2Dlod0(s_base, I.tc0 + offset);
     float3 t_1 = tex2Dlod0(s_base, I.tc1 + offset);
     float3 image = (t_0 + t_1) * 0.5f;
-    
+
+    //image = CalcDepthOfField(image, I.tc0);
+
 #ifdef USE_CHROMATIC_ABBERATION
     image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5f);
 #endif
@@ -107,6 +109,8 @@ float4 main (v2p I): COLOR
     
     image = (image * I.color + c_brightness) * 2.0f;
     
+    image *= step(abs(I.tc0.y - 0.5f), 0.4f);
+
     return float4 (image, 1.0f);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

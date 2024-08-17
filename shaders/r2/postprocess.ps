@@ -18,12 +18,18 @@ uniform float4 c_brightness;
 // Pixel
 float4 main (v2p I): COLOR
 {
-	float3 t_0 = tex2Dlod0 (s_base0, I.tc0);
-	float3 t_1 = tex2Dlod0 (s_base1, I.tc1);
+    float2 ResizeAspect = float2(1920, 1080) / screen_res.xy;
+
+    //Resize viewport
+    float2 TexCoords0 = I.tc0 * ResizeAspect + (1.0f - ResizeAspect) / 2.0f;
+    float2 TexCoords1 = I.tc1 * ResizeAspect + (1.0f - ResizeAspect) / 2.0f;
+
+	float3 t_0 = tex2Dlod0 (s_base0, TexCoords0);
+	float3 t_1 = tex2Dlod0 (s_base1, TexCoords1);
 	float3 image = (t_0 + t_1) * .5;
     
 #ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (s_base, image.rgb, (I.tc0 + I.tc1) * 0.5f);
+    image.rgb = ChromaticAberration (s_base, image.rgb, (TexCoords0 + TexCoords1) * 0.5f);
 #endif
     
     float gray = dot (image, I.gray);
@@ -41,13 +47,17 @@ float4 main (v2p I): COLOR
 #elif VIGNETTE_MODE == 2
     float VignettePower = vignette_power;
 #endif
-    float Vignette = tex2D (s_vignette, I.tc1).r;
-    image *= Vignette + (1.0f - Vignette) * (1.0f - VignettePower);
+	//https://www.shadertoy.com/view/ms3GDs
+    float Vignette = pow(16.0f * TexCoords1.x * TexCoords1.y * (1.0f - TexCoords1.x) * (1.0f - TexCoords1.y), VignettePower);//0.1f);
+    image *= Vignette;// + (1.0f - Vignette) * (1.0f - VignettePower);
 #endif    
 
 #ifdef USE_SEPIA
     image *= sepia_params.rgb + (1.0f - sepia_params.rgb) * (1.0f - sepia_params.a);
 #endif
+
+    if(TexCoords0.x > 1.0f || TexCoords0.y > 1.0f || TexCoords0.x < 0.0f || TexCoords0.y < 0.0f)
+        image *= NULL;
 
     return float4 (image, 1);
 }

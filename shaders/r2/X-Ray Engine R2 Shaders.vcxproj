@@ -334,6 +334,7 @@
     <ClInclude Include="normal_map_functions.h" />
     <ClInclude Include="reflection.h" />
     <ClInclude Include="reflections_ssr.h" />
+    <ClInclude Include="screen_space_shadows.h" />
     <ClInclude Include="shadow_filtering.h" />
     <ClInclude Include="TBN.h" />
     <ClInclude Include="terrain_helper.h" />

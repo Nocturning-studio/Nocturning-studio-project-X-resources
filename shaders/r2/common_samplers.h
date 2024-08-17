@@ -67,9 +67,6 @@ uniform sampler2D s_debug_mask;
 uniform sampler2D s_debug_diagonal_mask;
 uniform sampler2D s_debug_triple_mask;
 uniform sampler2D s_debug_quadro_mask;
-
-// Visual posteffects
-uniform sampler2D s_vignette;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Sky
 uniform samplerCUBE env_s0;

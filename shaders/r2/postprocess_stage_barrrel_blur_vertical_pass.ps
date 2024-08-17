@@ -11,8 +11,8 @@
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     // Create blurring map, based on vignette
-    float VignetteColor = tex2Dlod0 (s_vignette, TexCoords).r;
-    VignetteColor = pow (VignetteColor, EXP);
+	//https://www.shadertoy.com/view/ms3GDs
+    float Vignette = pow(16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y), EXP);
 
     // Separated blur
     float4 BlurredImageColor = NULL;
@@ -26,6 +26,6 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
     float4 UnblurredImageColor = tex2Dlod0 (s_image, TexCoords);
     
     // Blending blurred and unblurred image colors by blur map
-    return (UnblurredImageColor * VignetteColor) + (BlurredImageColor * (1.0f - VignetteColor));
+    return lerp(BlurredImageColor, UnblurredImageColor, Vignette);
 }
 ///////////////////////////////////////////////////////////////////////////////////

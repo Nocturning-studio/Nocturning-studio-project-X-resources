@@ -18,10 +18,11 @@ float4 main (Interpolators Input): COLOR0
     float3 SkyActual = texCUBE (s_sky0, Input.UV0);
     float3 SkyNext = texCUBE (s_sky1, Input.UV1);
     float3 Sky = lerp (SkyActual, SkyNext, Input.Color.w);
+
+    Sky = LinearTosRgb(Sky);
+
     Sky = lerp (Sky, fog_color.rgb, fog_sky_influence);
 
-    Sky = CalcTonemap (Sky);
-    
     return float4 (Sky, 1.0f);
 }
 //////////////////////////////////////////////////////////////////////////////////////////

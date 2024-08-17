@@ -30,6 +30,8 @@ float4 main (v2p I): COLOR
     final.z = luminance (I.tc2.xy);
     final.w = luminance (I.tc3.xy);
 
+    final.xyz = sRgbToLinear(final.xyz);
+
     return final;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

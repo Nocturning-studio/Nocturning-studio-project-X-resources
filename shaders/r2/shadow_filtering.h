@@ -6,19 +6,19 @@
 #include "common.h"
 #include "filters.h"
 ////////////////////////////////////////////////////////////////////////////
-#if SHADOW_FILTER == LOW_FILTERING
+//#if SHADOW_FILTER == LOW_FILTERING
 #define SHADOW_FILTERING_SAMPLES_COUNT 4
 #define OFFSET_ARRAY box_coords
-#elif SHADOW_FILTER == MIDDLE_FILTERING
-#define SHADOW_FILTERING_SAMPLES_COUNT 9
-#define OFFSET_ARRAY box_coords
-#elif SHADOW_FILTER == HIGHT_FILTERING
-#define SHADOW_FILTERING_SAMPLES_COUNT 9
-#define OFFSET_ARRAY strided_coords
-#elif SHADOW_FILTER == DISABLE_FILTERING
-#define SHADOW_FILTERING_SAMPLES_COUNT 1
-#define OFFSET_ARRAY strided_coords
-#endif
+//#elif SHADOW_FILTER == MIDDLE_FILTERING
+//#define SHADOW_FILTERING_SAMPLES_COUNT 9
+//#define OFFSET_ARRAY box_coords
+//#elif SHADOW_FILTER == HIGHT_FILTERING
+//#define SHADOW_FILTERING_SAMPLES_COUNT 9
+//#define OFFSET_ARRAY strided_coords
+//#elif SHADOW_FILTER == DISABLE_FILTERING
+//#define SHADOW_FILTERING_SAMPLES_COUNT 1
+//#define OFFSET_ARRAY strided_coords
+//#endif
 ////////////////////////////////////////////////////////////////////////////
 float sample_shadow_map(float4 TexCoords, float2 SampleBias)
 {

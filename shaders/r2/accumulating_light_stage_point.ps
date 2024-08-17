@@ -8,6 +8,7 @@
 #include "BRDF.h"
 #include "accumulation_helper.h"
 #include "shadow_filtering.h"
+#include "screen_space_shadows.h"
 ///////////////////////////////////////////////////////////////////////////////////
 struct Interpolators
 {
@@ -26,12 +27,7 @@ Accumulator main (Interpolators Input)
     float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
     
-    float3 Subsurface = SubsurfaceScattering(GBuffer.Normal, GBuffer.Position, GBuffer.Albedo, GBuffer.Roughness, GBuffer.Subsurface, LightDirection);
-
-    float3 Diffuse = Light.Diffuse;
-    float3 Specular = Light.Specular;
-    
-    float4 Position = float4 (GBuffer.Position, 1.0f);
+    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.015f, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
   
 #ifdef USE_SHADOW_MAPPING
@@ -46,13 +42,17 @@ Accumulator main (Interpolators Input)
     float3 LightMap = float3 (1.0f, 1.0f, 1.0f);
 #endif
     
+    float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
+    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+        ShadowMap *= TraceShadow(LightDirection, Position);
+
     LightMap *= ShadowMap * AttenuationFactor;
     
-    Diffuse *= Ldynamic_color.rgb * LightMap;
-    Diffuse += Subsurface * Ldynamic_color.rgb * LightMap;
-    Specular *= Ldynamic_color.rgb * LightMap;
+    Light.Diffuse *= Ldynamic_color.rgb * LightMap;
+    Light.Diffuse += Light.Subsurface * Ldynamic_color.rgb * GBuffer.Subsurface * ShadowMap.xxx;
+    Light.Specular *= Ldynamic_color.rgb * LightMap;
     
-    Accumulator Output = PackLightingAccumulator (Diffuse, Specular);
+    Accumulator Output = PackLightingAccumulator (Light.Diffuse, Light.Specular);
     return Output;
 }
 ///////////////////////////////////////////////////////////////////////////////////

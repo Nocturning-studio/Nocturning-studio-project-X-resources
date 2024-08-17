@@ -45,6 +45,7 @@ uniform float far_plane;
 // z = near plane
 // w = far plane
 uniform float4 pos_decompression_params;
+uniform float4 pos_decompression_params_hud;
 
 uniform float4 env_color; // color.w  = lerp factor
 

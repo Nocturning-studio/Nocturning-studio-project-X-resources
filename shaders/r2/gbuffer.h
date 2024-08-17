@@ -8,6 +8,7 @@
 uniform sampler2D s_gbuffer_1;
 uniform sampler2D s_gbuffer_2;
 uniform sampler2D s_gbuffer_3;
+uniform sampler2D s_zbuffer;
 ////////////////////////////////////////////////////////////////////////////
 struct GBuffer
 {
@@ -51,60 +52,50 @@ float PackPosition(float3 position)
    return position.z;
 }
 
-float3 UnpackPosition(float position, float2 tc)
+float3 UnpackPosition(float Depth, float2 TexCoords)
 {
 	float3 pos;
-	pos.z = position.x;
-	pos.xy = pos.z * (tc * 2.0f * pos_decompression_params.xy - pos_decompression_params.xy);
-	return pos;
+	pos.z = Depth;
+	pos.xy = pos.z * (TexCoords * 2.0f * pos_decompression_params.xy - pos_decompression_params.xy);
+    return pos;//float3(Depth * ((TexCoords * screen_res.xy + 0.5f) * pos_decompression_params.zw - pos_decompression_params.xy), Depth);
 }
 ////////////////////////////////////////////////////////////////////////////
 float GetDepth(float2 TexCoords)
 {
-    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).a;
+    float Depth = tex2Dlod0(s_gbuffer_2, TexCoords).a; // .a = hw deph
     Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
-
     return Depth;
 }
 
 float3 GetPosition(float2 TexCoords)
 {
-    float Depth = tex2D(s_gbuffer_2, TexCoords).a;
-    Depth = Depth < pos_decompression_params.z ? pos_decompression_params.w : Depth;
-    float3 Position = UnpackPosition(Depth, TexCoords);
-
-    return Position;
+    return UnpackPosition(GetDepth(TexCoords), TexCoords);
 }
 
 float3 GetNormal(float2 TexCoords)
 {
-    float3 PackedNormal = tex2D(s_gbuffer_2, TexCoords).rgb;
-    return PackedNormal;
+    return UnpackNormal(tex2Dlod0(s_gbuffer_2, TexCoords).rg);
 }
 
 void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout float3 Normal)
 {
-    float4 GBuffer_2 = tex2D(s_gbuffer_2, TexCoords);
+    Position = GetPosition(TexCoords);
 
-    float Depth = GBuffer_2.a < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.a;
-
-    Position = UnpackPosition(Depth, TexCoords);
-
-    Normal = GBuffer_2.rgb;
+    Normal = UnpackNormal(tex2Dlod0(s_gbuffer_2, TexCoords).rg);
 }
 
 float GetSceneRoughness(float2 TexCoords)
 {
-    return tex2Dlod0(s_gbuffer_1, TexCoords).a;
+    return sRgbToLinear(tex2Dlod0(s_gbuffer_3, TexCoords).g);
 }
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)
 {
     GBufferPacked GBuffer;
 
-    GBuffer.rt_GBuffer_1 = float4(Input.Albedo, Input.Roughness);
-    GBuffer.rt_GBuffer_2 = float4(Input.Normal, PackPosition(Input.Position));
-    GBuffer.rt_GBuffer_3 = float4(Input.Metallness, Input.AO, Input.BakedAO, Input.Subsurface);
+    GBuffer.rt_GBuffer_1 = float4(Input.Albedo, 0);
+    GBuffer.rt_GBuffer_2 = float4(PackNormal(Input.Normal), Input.AO, PackPosition(Input.Position));
+    GBuffer.rt_GBuffer_3 = float4(Input.Metallness, Input.Roughness, Input.BakedAO, Input.Subsurface);
 
     return GBuffer;
 }
@@ -117,14 +108,14 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 	float4 GBuffer_2 = tex2D(s_gbuffer_2, TexCoords);
 	float4 GBuffer_3 = tex2D(s_gbuffer_3, TexCoords);
 
-	float Depth = GBuffer_2.a < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.a;
+	//float Depth = GBuffer_2.a < pos_decompression_params.z ? pos_decompression_params.w : GBuffer_2.a;
 
     GBuffer.Albedo = GBuffer_1.rgb;
-    GBuffer.Roughness = GBuffer_1.a;
-    GBuffer.Normal = GBuffer_2.rgb;
-    GBuffer.Position = UnpackPosition(Depth, TexCoords);
+    GBuffer.Roughness = GBuffer_3.g;
+    GBuffer.Normal = UnpackNormal(GBuffer_2.rg);
+    GBuffer.Position = GetPosition(TexCoords);
     GBuffer.Metallness = GBuffer_3.r;
-    GBuffer.AO = GBuffer_3.g;
+    GBuffer.AO = GBuffer_2.b;
     GBuffer.BakedAO = GBuffer_3.b;
     GBuffer.Subsurface = GBuffer_3.a;
 
@@ -133,6 +124,6 @@ GBuffer UnpackGBuffer(float2 TexCoords)
 
 float4 PackPositionAndNormal(float3 Position, float3 Normal)
 {
-    return float4(Normal, PackPosition(Position));
+    return float4(PackNormal(Normal), 0, PackPosition(Position));
 }
 ////////////////////////////////////////////////////////////////////////////
