@@ -71,4 +71,24 @@ float3 p_hemi(float2 tc)
 	float3 t_lmh = tex2D(s_hemi, tc);
 	return dot(t_lmh, 1.0f / 3.0f);
 }
+
+#define USE_RGB_SUN
+
+float3 GetLightMapAO(float2 TexCoords)
+{
+#ifdef USE_RGB_SUN
+	return dot(tex2D(s_hemi, TexCoords).aaa, 1.0f / 3.0f);
+#else
+	return tex2D(s_hemi, TexCoords).rgb;
+#endif
+}
+
+float3 GetLightMapSun(float2 TexCoords)
+{
+#ifdef USE_RGB_SUN
+	return tex2D(s_hemi, TexCoords).rgb;
+#else
+	return tex2D(s_hemi, TexCoords).aaa;
+#endif
+}
 ////////////////////////////////////////////////////////////////////////////
