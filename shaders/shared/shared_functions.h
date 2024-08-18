@@ -132,7 +132,7 @@ float3 uvToXYZ(int face, float2 uv)
 
 float2 dirToUV(float3 dir)
 {
-    return float2(0.5f + 0.5f * atan(dir.z, dir.x) / PI, 1.f - acos(dir.y) / PI);
+    return float2(0.5f + 0.5f * atan2(dir.z, dir.x) / PI, 1.f - acos(dir.y) / PI);
 }
 */
 //float3 panoramaToCubeMap(int face, float2 texCoord)

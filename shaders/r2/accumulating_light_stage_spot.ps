@@ -32,6 +32,7 @@ Accumulator main (Interpolators Input)
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
 #else
     float ShadowMap = 1.0f;
+    Light.Specular = NULL;
 #endif
     
 #ifdef USE_LIGHT_MAPPING

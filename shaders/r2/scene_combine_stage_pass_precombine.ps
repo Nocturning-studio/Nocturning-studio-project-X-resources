@@ -6,7 +6,6 @@
 #include "common.h"
 #include "gbuffer.h"
 #include "accumulation_helper.h"
-#include "ambient_light.h"
 #include "reflection.h"
 //#include "reflections_ssr.h"
 #include "BRDF.h"
@@ -16,7 +15,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
 
-    float3 IndirectDiffuse = CalculateAmbientWithBlurredEnvironment(GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
+    float3 IndirectDiffuse = NULL;//CalculateAmbientWithBlurredEnvironment(GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
     
     float BakedAO = (GBuffer.BakedAO + 1.0f) * 0.5f;
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;

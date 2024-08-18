@@ -271,6 +271,10 @@ struct LightComponents
     float3 Subsurface;
 };
 
+float SchlickFresnel(float u, float f0, float f90) {
+    return f0 + (f90 - f0) * pow(1. - u, 5.);
+}
+
 LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
@@ -291,13 +295,13 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     // Oren-Nayar diffuse model
     float s = VdotL - NdotL * NdotV;
     float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
-    float x = invert(0.5f * RoughnessSqr2 / (RoughnessSqr + 0.33f));
-    float y = 0.45f * RoughnessSqr2 / (RoughnessSqr2 + 0.09f) * s * t;
+    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
+    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
     Light.Diffuse = mad(NdotL, x, y);
 
     // Cook-Torrance specular model
     float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
-    float V = Vis_SmithJoint(RoughnessSqr2, NdotV, NdotL);
+    float V = Vis_SmithJoint(RoughnessSqr, NdotV, NdotL);
     V = NdotL * V * (4.0f * HdotV / NdotH);
     Light.Specular = D * V;
 
@@ -313,15 +317,8 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
 ////////////////////////////////////////////////////////////////////////////
 float CalculateAttenuation(float3 Point, float3 LightPosition, float LightSourceRange)
 {
-    // Calculate standard X-Ray Engine light attenuation
     float3 LightDirection = Point - LightPosition;
     float LightRadiusSquared = dot(LightDirection, LightDirection);
-    float AttenuationFactor = saturate(1.0f - LightRadiusSquared * LightSourceRange);
-
-    // Make attenuation more realistic - light brightness falls down with pow 2.2
-    //  Need work with lighting on game levels
-    // AttenuationFactor = pow(AttenuationFactor, 2.2f);
-
-    return AttenuationFactor;
+    return saturate(1.0f - LightRadiusSquared * LightSourceRange);
 }
 ////////////////////////////////////////////////////////////////////////////

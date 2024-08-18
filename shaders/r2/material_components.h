@@ -48,8 +48,19 @@ float GetHeight(float2 UV)
 {
 #if USE_BUMP
     return tex2Dlod0(s_bumpX, UV).a;
+#elif USE_CUSTOM_DISPLACEMENT
+    return tex2Dlod0(s_custom_displacement, UV).r;
 #else
-    return 0.5f;
+    return 1.0f;
+#endif
+}
+
+float GetEmissive(float2 UV)
+{
+#if USE_CUSTOM_EMISSIVE
+    return tex2Dlod0(s_custom_emissive, UV).r;
+#else
+    return 0.0f;
 #endif
 }
 

@@ -18,6 +18,8 @@ uniform sampler2D s_custom_normal;
 uniform sampler2D s_custom_roughness;
 uniform sampler2D s_custom_metallness;
 uniform sampler2D s_custom_subsurface;
+uniform sampler2D s_custom_emissive;
+uniform sampler2D s_custom_displacement;
 //////////////////////////////////////////////////////////////////////////////////////////
 // For terrain mask
 uniform sampler2D s_dt_r;

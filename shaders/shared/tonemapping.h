@@ -82,6 +82,14 @@ float3 ACESFilm(float3 x) {
     return clamp((x * (2.51f * x + 0.03f)) / (x * (2.43f * x + 0.59f) + 0.14f), 0.0f, 1.0f);
 }
 ////////////////////////////////////////////////////////////////////////////
+// https://twitter.com/jimhejl/status/633777619998130176
+float3 ToneMapFilmic_Hejl2015(float3 hdr, float whitePt) {
+    float4 vh = float4(hdr, whitePt);
+    float4 va = 1.425 * vh + 0.05;
+    float4 vf = (vh * va + 0.004) / (vh * (va + 0.55) + 0.0491) - 0.0821;
+    return vf.rgb / vf.www;
+}
+////////////////////////////////////////////////////////////////////////////
 float3 CalcTonemap(float3 Color)
 {
     //Color = sRgbToLinear(Color);

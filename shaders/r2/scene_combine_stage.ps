@@ -18,6 +18,8 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
 
+    float3 Albedo = sRgbToLinear(GBuffer.Albedo);
+
     // Get light context
     float NdotV = max(dot(GBuffer.Normal, -normalize(GBuffer.Position)), 0.0f);
     float3 WorldSpaceNormal = mul(m_v2w, GBuffer.Normal);
@@ -27,12 +29,12 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = pow(pow(GBuffer.AO + 0.1f, 1.0f / 2.2f), 2.2f);
+    float LightMapAO = pow(pow(GBuffer.AO + 0.1f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb;
 
     // Get F0 
     float IOR = 1.5f;
     float3 F0 = pow(IOR - 1.0f, 2.0f) / pow(IOR + 1.0f, 2.0f);
-    F0 = lerp(F0, GBuffer.Albedo, GBuffer.Metallness);
+    F0 = lerp(F0, Albedo, GBuffer.Metallness);
 
     // Get Fresnel Coeff
     float3 kS = fresnelSchlickRoughness(F0, NdotV, GBuffer.Roughness);
@@ -43,15 +45,15 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     vreflect = RemapCubeCoords(vreflect);
 
     // Get coords for Irradiance
-    //float3 IrradianceCoords = normalize(-v2point + vreflect);
+    float3 IrradianceCoords = RemapCubeCoords(WorldSpaceNormal);
 
     // Get mip level, corellated with roughness
     float MipLevel = getMipLevelFromRoughness(GBuffer.Roughness, 8.0f);
 
     // Get irradiance
     float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
-    float3 IrradianceActualHour = texCUBElod(env_s0, float4(WorldSpaceNormal, IrradianceMip));
-    float3 IrradianceNextHour = texCUBElod(env_s1, float4(WorldSpaceNormal, IrradianceMip));
+    float3 IrradianceActualHour = texCUBElod(env_s0, float4(IrradianceCoords, IrradianceMip));
+    float3 IrradianceNextHour = texCUBElod(env_s1, float4(IrradianceCoords, IrradianceMip));
     float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
     Irradiance = LinearTosRgb(Irradiance);
     Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
@@ -76,22 +78,18 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     float3 SubsurfaceIrradianceNextHour = texCUBElod(env_s1, float4(SubsurfaceIrradianceCoords, 8));
     float3 SubsurfaceIrradiance = lerp(SubsurfaceIrradianceActualHour, SubsurfaceIrradianceNextHour, env_color.w);
     SubsurfaceIrradiance = lerp(SubsurfaceIrradiance, fog_color.rgb, fog_sky_influence);
-    float3 SubsurfaceAmbient = ((abs(WorldSpaceNdotV) + 1.0f) * 0.5f) * SubsurfaceIrradiance * GBuffer.Albedo * GBuffer.Subsurface;
+    float3 SubsurfaceAmbient = ((abs(WorldSpaceNdotV) + 1.0f) * 0.5f) * SubsurfaceIrradiance * Albedo * GBuffer.Subsurface * LightMapAO;
 
-    float3 DirectLighting = Light.Diffuse * kD + Light.Specular * kS;
+    float3 IndirectDiffuse = Irradiance * GBuffer.BakedAO * RealTimeAO * LightMapAO + SubsurfaceAmbient;
 
-    float3 IndirectLighting = (kD * Irradiance * GBuffer.BakedAO * RealTimeAO + ReflectedSky * kS + SubsurfaceAmbient) * LightMapAO * L_ambient.rgb;
-
-    float3 SceneColor = GBuffer.Albedo * (DirectLighting + IndirectLighting);
+    float3 SceneColor = lerp(Albedo * (Light.Diffuse * kD + IndirectDiffuse * kD), ReflectedSky * kS * LightMapAO, GBuffer.Metallness) + (Light.Specular * kS) + GBuffer.Emissive * Albedo;
 
     SceneColor = exponential_tonemapping(SceneColor);
-
-    //SceneColor = ACES(SceneColor);
 
     //float Exposure = tex2D(s_autoexposure, float2(0.5, 0.5)).r;
     //SceneColor = CalcExposure(SceneColor, Exposure);
 
-    //SceneColor = LinearTosRgb(SceneColor);
+    SceneColor = LinearTosRgb(SceneColor);
 
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
