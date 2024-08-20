@@ -19,22 +19,22 @@ struct Interpolators
 Accumulator main (Interpolators Input)
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
-    
-    GBuffer.Position += GBuffer.Normal * 0.00075f;
+
+    float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
 
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
     
-    float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
-    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
+
     
-    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.015f, 1.0f);
+    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.01575f, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
   
 #ifdef USE_SHADOW_MAPPING
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
 #else
     float ShadowMap = 1.0f;
-    Light.Specular = NULL;
+    LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
 #endif
     
 #ifdef USE_LIGHT_MAPPING

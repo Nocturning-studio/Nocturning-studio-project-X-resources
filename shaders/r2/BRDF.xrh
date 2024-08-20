@@ -5,47 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 ////////////////////////////////////////////////////////////////////////////
-// Более оптимизированная версия, с тем же результатом, так как все вычисления уже отрендерены в текстуру и правильным
-// F0 (Наверное)
-// https://github.com/Zackin5/StalkerCop-FxaaShaders + https://learnopengl.com/PBR/IBL/Specular-IBL +
-// https://www.xrhadertoy.com/view/3tlBW7
-////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_brdf_lut;
-////////////////////////////////////////////////////////////////////////////
-/*
-float3 fresnelSchlickRoughness(float NdotL, float3 F0, float roughness)
-{
-    return F0 + (max((1.0 - roughness), F0) - F0) * pow(1.0 - NdotL, 5.0);
-}
-
-float3 EnvironmentBRDF_LUT(float3 Point, float3 Normal, float Roughness)
-{
-    float3 v = -normalize(Point);
-    float vDotN = saturate(dot(Normal, v));
-
-    // Index of refraction for common dielectrics. Corresponds to f0 4%
-    float IOR = 1.5f;
-    // Reflectance of the surface when looking straight at it along the negative normal
-    float F0 = float(pow(IOR - 1.0f, 2.0f) / pow(IOR + 1.0f, 2.0f));
-    // F0 = lerp(F0, 1.0f, Metalness);
-
-    float3 F = fresnelSchlickRoughness(vDotN, F0.xxx, Roughness);
-    float2 brdf = tex2D(s_brdf_lut, float2(vDotN, Roughness));
-    return F * (brdf.x + brdf.y);
-}
-*/
-////////////////////////////////////////////////////////////////////////////
-float Fresnel(float Specular, float3 ViewDirection, float3 floatAngle)
-{
-    return (Specular + (1.0f - Specular) * pow(1.0f - saturate(dot(ViewDirection, floatAngle)), 5.0f));
-}
-////////////////////////////////////////////////////////////////////////////
-float Blinn_Phong_Specular(float3 floatAngle, float3 Normal)
-{
-    float Specular = max(0.0f, dot(floatAngle, Normal));
-
-    return pow(Specular, 16.0f);
-}
 ////////////////////////////////////////////////////////////////////////////
 // https://www.xrhadertoy.com/view/WscyRl
 // https://habr.com/ru/articles/426123/
@@ -241,20 +201,7 @@ LightingData FoliageShading(GBufferSample gBuffer, float energy, float3 L, float
 #endif
     return lighting;
 }
-
-https://www.xrhadertoy.com/view/sltXRl
-    float Fss90 = dot(L, H) * dot(L, H) * mat.roughness;
-    float Fss = mix(1.0, Fss90, FL) * mix(1.0, Fss90, FV);
-    float ss = 1.25 * (Fss * (1.0 / (L.z + V.z) - 0.5) + 0.5);
-    mix(Fd, ss, mat.subsurface)
 */
-
-float SchlickFresnel(float u)
-{
-    float m = clamp(1.0f - u, 0.0f, 1.0f);
-    float m2 = m * m;
-    return m2 * m2 * m;
-}
 ////////////////////////////////////////////////////////////////////////////
 //https://www.xrhadertoy.com/view/wd3GDX
 ////////////////////////////////////////////////////////////////////////////
@@ -284,7 +231,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
     float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
-    float NdotL = max(dot(Normal, LightDirection), 0.00001f);//saturate(dot(Normal, LightDirection));
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
     float NdotV = max(dot(Normal, ViewDirection), 1e-5);
     float NdotH = saturate(dot(Normal, HalfWayDirection));
     float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
@@ -316,6 +263,34 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
     float scatter = D_GGX(0.36, saturate(-VdotL));
     Light.Subsurface = wrapNoL * scatter;
+
+    return Light;
+}
+
+//----------------------------------------------//
+// Lighting model for non shadowed light sources//
+//----------------------------------------------//
+LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float3 ViewDirection = -normalize(Point);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    float NdotV = max(dot(Normal, ViewDirection), 1e-5);
+    float VdotL = dot(ViewDirection, LightDirection);
+    float RoughnessSqr = pow2(Roughness);
+
+    // Oren-Nayar diffuse model
+    float s = VdotL - NdotL * NdotV;
+    float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
+    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
+    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
+    Light.Diffuse = mad(NdotL, x, y);
+
+    Light.Specular = NULL;
+    Light.Subsurface = NULL;
 
     return Light;
 }
