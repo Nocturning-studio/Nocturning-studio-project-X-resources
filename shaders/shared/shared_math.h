@@ -21,6 +21,7 @@
 #define pow2(x) mul(x, x)
 #define pow4(x) pow2(mul(x, x))
 #define pow5(x) pow(x, 5.0f)
+#define pow6(x) pow(x, 6.0f)
 #define powEXP(x) pow(x, 2.718f)
 ////////////////////////////////////////////////////////////////////////////
 // Average functions

@@ -162,6 +162,10 @@ float3 F_Schlick(float3 SpecularColor, float VoH)
     return saturate(50.0 * SpecularColor.g) * Fc + (1 - Fc) * SpecularColor;
 
 }
+
+float3 fresnel(float cosTheta, float3 F0) {
+    return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
+}
 ////////////////////////////////////////////////////////////////////////////
 float getMipLevelFromRoughness(float roughness, float lodCount) 
 {
@@ -271,19 +275,16 @@ struct LightComponents
     float3 Subsurface;
 };
 
-float SchlickFresnel(float u, float f0, float f90) {
-    return f0 + (f90 - f0) * pow(1. - u, 5.);
-}
-
 LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
 
+    Albedo = sRgbToLinear(Albedo);
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
     float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
-    float NdotL = saturate(dot(Normal, LightDirection));
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);//saturate(dot(Normal, LightDirection));
     float NdotV = max(dot(Normal, ViewDirection), 1e-5);
     float NdotH = saturate(dot(Normal, HalfWayDirection));
     float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
@@ -292,18 +293,24 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float RoughnessSqr = pow2(Roughness);
     float RoughnessSqr2 = pow2(RoughnessSqr);
 
+    // Get F0 
+    float IOR = 1.5f;
+    float3 F0 = pow(IOR - 1.0f, 2.0f) / pow(IOR + 1.0f, 2.0f);
+    F0 = lerp(F0, Albedo, Metallness);
+    float3 kS = fresnelSchlickRoughness(F0, HdotV, Roughness);
+    float3 kD = (1.0f - kS) * (1.0f - Metallness);
+
+    // Cook-Torrance specular model
+    float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
+    float V = Vis_SmithJoint(RoughnessSqr, NdotV, NdotL) * NdotL * (4.0f * HdotV / NdotH);
+    Light.Specular = D * V * kS;
+
     // Oren-Nayar diffuse model
     float s = VdotL - NdotL * NdotV;
     float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
     float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
     float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
-    Light.Diffuse = mad(NdotL, x, y);
-
-    // Cook-Torrance specular model
-    float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
-    float V = Vis_SmithJoint(RoughnessSqr, NdotV, NdotL);
-    V = NdotL * V * (4.0f * HdotV / NdotH);
-    Light.Specular = D * V;
+    Light.Diffuse = mad(NdotL, x, y) * kD;
 
     // Fake effect of the light going through the thin foliage
     float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);

@@ -45,11 +45,19 @@
 #define GBUFFER_POSITION 2
 #define GBUFFER_NORMAL 3
 #define GBUFFER_ROUGHNESS 4
-#define GBUFFER_LIGHTMAP_AO 5
-#define GBUFFER_BAKED_AO 6
-#define ACCUMULATOR_DIFFUSE 7
-#define ACCUMULATOR_SPECULAR 8
-#define REAL_TIME_AO 9
+#define GBUFFER_METALLNESS 5
+#define GBUFFER_SUBSURFACE 6
+#define GBUFFER_EMISSIVE 7
+#define GBUFFER_LIGHTMAP_AO 8
+#define GBUFFER_BAKED_AO 9
+#define DIRECT_LIGHT 10
+#define DIRECT_DIFFUSE 11
+#define DIRECT_SPECULAR 12
+#define INDIRECT_LIGHT 13
+#define INDIRECT_LIGHT_DIFFUSE 14
+#define INDIRECT_LIGHT_SPECULAR 15
+#define SUBSURFACE_SCATTERING 16
+#define REAL_TIME_AO 17
 
 ////////////////////////////////////////////////////////////////////////////
 // Material types

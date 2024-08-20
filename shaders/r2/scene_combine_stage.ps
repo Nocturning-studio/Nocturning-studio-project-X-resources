@@ -18,10 +18,9 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
     LightingData Light = UnpackLightingAccumulator(TexCoords);
 
-    float3 Albedo = sRgbToLinear(GBuffer.Albedo);
-
     // Get light context
-    float NdotV = max(dot(GBuffer.Normal, -normalize(GBuffer.Position)), 0.0f);
+    float3 Albedo = GBuffer.Albedo;//sRgbToLinear(GBuffer.Albedo);
+    float NdotV = max(dot(GBuffer.Normal, normalize(-GBuffer.Position)), 0.00001f);
     float3 WorldSpaceNormal = mul(m_v2w, GBuffer.Normal);
     float3 v2pointL = normalize(GBuffer.Position);
     float3 v2point = mul(m_v2w, v2pointL);
@@ -29,7 +28,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = pow(pow(GBuffer.AO + 0.1f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb;
+    float LightMapAO = pow(pow(GBuffer.AO + 0.05f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb;
 
     // Get F0 
     float IOR = 1.5f;
@@ -52,44 +51,40 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get irradiance
     float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
-    float3 IrradianceActualHour = texCUBElod(env_s0, float4(IrradianceCoords, IrradianceMip));
-    float3 IrradianceNextHour = texCUBElod(env_s1, float4(IrradianceCoords, IrradianceMip));
+    float3 IrradianceActualHour = texCUBElod(env_s0, float4(IrradianceCoords, 0));
+    float3 IrradianceNextHour = texCUBElod(env_s1, float4(IrradianceCoords, 0));
     float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
-    Irradiance = LinearTosRgb(Irradiance);
+    //Irradiance = sRgbToLinear(Irradiance);
     Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
 
     // Get IBL specular
     float3 ReflectedSkyActualHour = texCUBElod(sky_s0, float4(vreflect, MipLevel));
     float3 ReflectedSkyNextHour = texCUBElod(sky_s1, float4(vreflect, MipLevel));
     float3 ReflectedSky = lerp(ReflectedSkyActualHour, ReflectedSkyNextHour, env_color.w);
-    ReflectedSky = LinearTosRgb(ReflectedSky);
+    //ReflectedSky = sRgbToLinear(ReflectedSky);
     ReflectedSky = lerp(ReflectedSky, fog_color.rgb, fog_sky_influence);
-
-    //float2 envBRDF = getBRDFIntegrationMap(NdotV, GBuffer.Roughness);
-    //ReflectedSky *= kS * envBRDF.x + envBRDF.y;
 
     //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
 	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
-    // Get subsurface irradiance
-    float3 SubsurfaceIrradianceCoords = refract(v2point, WorldSpaceNormal, 0.0);
-    SubsurfaceIrradianceCoords = RemapCubeCoords(SubsurfaceIrradianceCoords);
-    float3 SubsurfaceIrradianceActualHour = texCUBElod(env_s0, float4(SubsurfaceIrradianceCoords, 8));
-    float3 SubsurfaceIrradianceNextHour = texCUBElod(env_s1, float4(SubsurfaceIrradianceCoords, 8));
-    float3 SubsurfaceIrradiance = lerp(SubsurfaceIrradianceActualHour, SubsurfaceIrradianceNextHour, env_color.w);
-    SubsurfaceIrradiance = lerp(SubsurfaceIrradiance, fog_color.rgb, fog_sky_influence);
-    float3 SubsurfaceAmbient = ((abs(WorldSpaceNdotV) + 1.0f) * 0.5f) * SubsurfaceIrradiance * Albedo * GBuffer.Subsurface * LightMapAO;
+    float3 IndirectDiffuse = Irradiance * GBuffer.BakedAO * RealTimeAO * LightMapAO * kD;
+    float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
+    float3 DirectDiffuse = Light.Diffuse;
+    float3 DirectSpecular = Light.Specular;
+    float3 Emission = GBuffer.Emissive * Albedo;
 
-    float3 IndirectDiffuse = Irradiance * GBuffer.BakedAO * RealTimeAO * LightMapAO + SubsurfaceAmbient;
+    //float3 SceneColor = Albedo * (DirectDiffuse + IndirectDiffuse) + IndirectSpecular + DirectSpecular + Emission;
 
-    float3 SceneColor = lerp(Albedo * (Light.Diffuse * kD + IndirectDiffuse * kD), ReflectedSky * kS * LightMapAO, GBuffer.Metallness) + (Light.Specular * kS) + GBuffer.Emissive * Albedo;
+    float3 SceneColor = (IndirectDiffuse * Albedo + IndirectSpecular) + (DirectDiffuse * Albedo + DirectSpecular) + Emission;
+
+    SceneColor *= 2.0f;
 
     SceneColor = exponential_tonemapping(SceneColor);
 
     //float Exposure = tex2D(s_autoexposure, float2(0.5, 0.5)).r;
     //SceneColor = CalcExposure(SceneColor, Exposure);
 
-    SceneColor = LinearTosRgb(SceneColor);
+    //SceneColor = LinearTosRgb(SceneColor);
 
     float Fog = CalcFogness (GBuffer.Position);
     SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
@@ -100,17 +95,33 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     else if (debug_mode == GBUFFER_POSITION)
         SceneColor = GBuffer.Position;
     else if (debug_mode == GBUFFER_NORMAL)
-        SceneColor = normalize (GBuffer.Normal * 0.5f + 0.5f);
+        SceneColor = normalize(GBuffer.Normal * 0.5f + 0.5f);
     else if (debug_mode == GBUFFER_ROUGHNESS)
         SceneColor = GBuffer.Roughness;
+    else if (debug_mode == GBUFFER_METALLNESS)
+        SceneColor = GBuffer.Metallness;
+    else if (debug_mode == GBUFFER_SUBSURFACE)
+        SceneColor = GBuffer.Subsurface;
+    else if (debug_mode == GBUFFER_EMISSIVE)
+        SceneColor = GBuffer.Emissive;
     else if (debug_mode == GBUFFER_LIGHTMAP_AO)
         SceneColor = LightMapAO;
     else if (debug_mode == GBUFFER_BAKED_AO)
         SceneColor = GBuffer.BakedAO;
-    else if (debug_mode == ACCUMULATOR_DIFFUSE)
-        SceneColor = Light.Diffuse * kD;
-    else if (debug_mode == ACCUMULATOR_SPECULAR)
-        SceneColor = Light.Specular * kS;
+    else if (debug_mode == DIRECT_LIGHT)
+        SceneColor = lerp(DirectDiffuse, DirectSpecular, GBuffer.Metallness);
+    else if (debug_mode == DIRECT_DIFFUSE)
+        SceneColor = DirectDiffuse;
+    else if (debug_mode == DIRECT_SPECULAR)
+        SceneColor = DirectSpecular;
+    else if (debug_mode == INDIRECT_LIGHT)
+        SceneColor = lerp(IndirectDiffuse, IndirectSpecular, GBuffer.Metallness);
+    else if (debug_mode == INDIRECT_LIGHT_DIFFUSE)
+        SceneColor = IndirectDiffuse;
+    else if (debug_mode == INDIRECT_LIGHT_SPECULAR)
+        SceneColor = IndirectSpecular;
+    else if (debug_mode == SUBSURFACE_SCATTERING)
+        SceneColor = NULL;//SubsurfaceAmbient;
     else if (debug_mode == REAL_TIME_AO)
         SceneColor = RealTimeAO;
 
