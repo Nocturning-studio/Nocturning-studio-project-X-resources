@@ -47,6 +47,8 @@ uniform float far_plane;
 uniform float4 pos_decompression_params;
 uniform float4 pos_decompression_params_hud;
 
+uniform float fov;
+
 uniform float4 env_color; // color.w  = lerp factor
 
 uniform float4 timers;

@@ -1,0 +1,96 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 20.08.2024
+//	Original author : Doenitz
+//  Porting		: Deathman, Mihan323
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.h"
+#include "gbuffer.h"
+//////////////////////////////////////////////////////////////////////////////////////////
+#define GTAO_SAMPLE 4
+#define GTAO_SLICES 4
+#define GTAO_RADIUS 2
+#define GTAO_TC_MUL 1.0f
+//////////////////////////////////////////////////////////////////////////////////////////
+// Fast approx from... Drobot??
+float fast_acos(float v)
+{
+    v = clamp(v, -1, 1);
+    float res = -0.156583 * abs(v) + (3.14 * 0.5);
+    res *= sqrt(1.0 - abs(v));
+    return (v >= 0) ? res : 3.14 - res;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float GTAO_Offsets(float2 uv)
+{
+    int2 position = (int2)(uv * screen_res.xy / GTAO_TC_MUL);
+    float a = (position.y - position.x);
+    return 0.25f * abs(a - (a / 8.0f) * 8.0f);
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float GTAO_Noise(float2 position) 
+{ 
+    //TODO - Replace with texture noise or Bayer noise
+    return frac(52.9829189f * frac(dot(position, float2(0.06711056f, 0.00583715f)))); 
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR0
+{
+    float3 Position, Normal;
+    GetPositionAndNormal (TexCoords, Position, Normal);
+
+    float proj_scale = float(screen_res.y) / (tan(fov * 0.5f) * 2.0f);
+    float screen_radius = (GTAO_RADIUS * 0.5f * proj_scale) / Position.z;
+    float3 viewV = -normalize(Position);
+
+    float noiseOffset = GTAO_Offsets(TexCoords);
+    //float noiseDirection = GTAO_Noise(TexCoords * screen_res.xy);
+
+    int2 pos2d = Position2D;
+    float noiseDirection = (pos2d.y % 4) * 0.25f + (pos2d.x % 4) * 0.0625f + 0.0625f;
+
+    float falloff_mul = 2.0f / pow(GTAO_RADIUS, 2.0f);
+    float screen_res_mul = 1.0f / GTAO_SAMPLE * screen_res.zw;
+    float pi_by_slices = PI / GTAO_SLICES;
+
+    float visibility = 0.0f;
+
+    for (int slice = 0; slice < GTAO_SLICES; slice++)
+    {
+        float phi = (slice + noiseDirection) * pi_by_slices;
+        float2 omega = float2(cos(phi), sin(phi));
+        float3 directionV = float3(omega.x, omega.y, 0.0f);
+
+        float3 orthoDirectionV = directionV - (dot(directionV, viewV) * viewV);
+        float3 axisV = cross(directionV, viewV);
+        float3 projNormal = Normal - axisV * dot(Normal, axisV);
+        float projNormalLenght = length(projNormal);
+
+        float sgnN = sign(dot(orthoDirectionV, projNormal));
+        float cosN = saturate(dot(projNormal, viewV) / projNormalLenght);
+        float n = sgnN * fast_acos(cosN);
+        float sinN2 = 2.0f * sin(n);
+
+        for (int side = 0; side < 2; side++)
+        {
+            float cHorizonCos = -1.0f;
+
+            for (int sample = 0; sample < GTAO_SAMPLE; sample++)
+            {
+                float2 s = max(screen_radius * (float(sample) + noiseOffset), 4.0f + float(sample)) * screen_res_mul; // fix for multiplying s by sample=0 from Unity code
+                float2 sTexCoord = TexCoords + (-1.0f + 2.0f * side) * s * float2(omega.x, -omega.y);
+                float3 sPosV = GetPosition(sTexCoord);
+                float3 sHorizonV = sPosV - Position;
+                float falloff = saturate(dot(sHorizonV, sHorizonV) * falloff_mul);
+                float H = dot(normalize(sHorizonV), viewV);
+                cHorizonCos = (H > cHorizonCos) ? lerp(H, cHorizonCos, falloff) : cHorizonCos;
+            }
+
+            float h = n + clamp((-1.0f + 2.0f * side) * fast_acos(cHorizonCos) - n, -PI / 2.0f, PI / 2.0f);
+            visibility += projNormalLenght * (cosN + h * sinN2 - cos(2.0f * h - n)) / 4.0f;
+        }
+    }
+
+    visibility /= GTAO_SLICES;
+    return float4(visibility, Position.z, 0.0f, 0.0f);
+}
+//////////////////////////////////////////////////////////////////////////////////////////

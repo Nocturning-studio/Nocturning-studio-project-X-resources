@@ -28,7 +28,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = pow(pow(GBuffer.AO + 0.05f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb;
+    float LightMapAO = pow(pow(GBuffer.AO + 0.05f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb * GBuffer.BakedAO * RealTimeAO;
 
     // Get F0 
     float IOR = 1.5f;
@@ -67,7 +67,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
 	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
-    float3 IndirectDiffuse = Irradiance * GBuffer.BakedAO * RealTimeAO * LightMapAO * kD;
+    float3 IndirectDiffuse = Irradiance * LightMapAO * kD;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
     float3 DirectDiffuse = Light.Diffuse;
     float3 DirectSpecular = Light.Specular;
