@@ -3,7 +3,7 @@
 //	Author		: Deathman
 //	NSProjectX - 2022
 ///////////////////////////////////////////////////////////////////////////
-#include "common.h"
+#include "common.xrh"
 ///////////////////////////////////////////////////////////////////////////
 static const float2 diagonal_coords[32] = {
     float2(1, 1),  float2(1, -1),  float2(-1, 1), float2(-1, -1), float2(2, 2),  float2(2, -2),

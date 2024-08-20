@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.xrh"
 
 vf_point main (v_vert v)
 {

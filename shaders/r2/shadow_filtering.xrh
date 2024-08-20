@@ -3,8 +3,8 @@
 // Author: Deathman
 // Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#include "common.h"
-#include "filters.h"
+#include "common.xrh"
+#include "filters.xrh"
 ////////////////////////////////////////////////////////////////////////////
 //#if SHADOW_FILTER == LOW_FILTERING
 #define SHADOW_FILTERING_SAMPLES_COUNT 4

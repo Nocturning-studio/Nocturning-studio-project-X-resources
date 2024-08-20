@@ -3,12 +3,12 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#include "common.h"
+#include "common.xrh"
 ////////////////////////////////////////////////////////////////////////////
 // Более оптимизированная версия, с тем же результатом, так как все вычисления уже отрендерены в текстуру и правильным
 // F0 (Наверное)
 // https://github.com/Zackin5/StalkerCop-FxaaShaders + https://learnopengl.com/PBR/IBL/Specular-IBL +
-// https://www.shadertoy.com/view/3tlBW7
+// https://www.xrhadertoy.com/view/3tlBW7
 ////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_brdf_lut;
 ////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ float Blinn_Phong_Specular(float3 floatAngle, float3 Normal)
     return pow(Specular, 16.0f);
 }
 ////////////////////////////////////////////////////////////////////////////
-// https://www.shadertoy.com/view/WscyRl
+// https://www.xrhadertoy.com/view/WscyRl
 // https://habr.com/ru/articles/426123/
 // https://habr.com/ru/articles/326852/
 ////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
     return F0 + (max(1.0 - roughness, F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 ////////////////////////////////////////////////////////////////////////////
-//https://www.shadertoy.com/view/3tlBW7
+//https://www.xrhadertoy.com/view/3tlBW7
 ////////////////////////////////////////////////////////////////////////////
 // Trowbridge-Reitz AKA GGX
 float GGXDistribution(float3 n, float3 h, float roughness) 
@@ -185,8 +185,8 @@ float3 getSpecularDominantDir(float3 rd, float3 n, float roughness)
     return normalize(lerp(n, reflect(rd, n), lerpFactor));
 }
 ////////////////////////////////////////////////////////////////////////////
-// https://www.shadertoy.com/view/ltfyD8
-// https://www.shadertoy.com/view/Wt23zt
+// https://www.xrhadertoy.com/view/ltfyD8
+// https://www.xrhadertoy.com/view/Wt23zt
 ////////////////////////////////////////////////////////////////////////////
 float Oren_Nayar_Diffuse(float3 LightDirection, float3 ViewDirection, float3 Normal, float Roughness)
 {
@@ -242,7 +242,7 @@ LightingData FoliageShading(GBufferSample gBuffer, float energy, float3 L, float
     return lighting;
 }
 
-https://www.shadertoy.com/view/sltXRl
+https://www.xrhadertoy.com/view/sltXRl
     float Fss90 = dot(L, H) * dot(L, H) * mat.roughness;
     float Fss = mix(1.0, Fss90, FL) * mix(1.0, Fss90, FV);
     float ss = 1.25 * (Fss * (1.0 / (L.z + V.z) - 0.5) + 0.5);
@@ -256,7 +256,7 @@ float SchlickFresnel(float u)
     return m2 * m2 * m;
 }
 ////////////////////////////////////////////////////////////////////////////
-//https://www.shadertoy.com/view/wd3GDX
+//https://www.xrhadertoy.com/view/wd3GDX
 ////////////////////////////////////////////////////////////////////////////
 float Alpha2FromGloss(float gloss)
 {

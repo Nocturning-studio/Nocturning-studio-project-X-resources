@@ -9,11 +9,11 @@
     Сопутствующий ущерб - необходимо написать конвертер стандартных карт в новые материалы
 */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "material_components.h"
-#include "displacement.h"
-#include "normal_map_functions.h"
-#include "fxaa_atoc.h"
-#include "ao_from_height.h"
+#include "material_components.xrh"
+#include "displacement.xrh"
+#include "normal_map_functions.xrh"
+#include "fxaa_atoc.xrh"
+#include "ao_from_height.xrh"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialParams
 {

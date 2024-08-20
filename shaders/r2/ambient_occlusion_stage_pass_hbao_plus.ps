@@ -3,8 +3,8 @@
 //	Author		: Mihan323
 //	NSProjectX Nocturning Studio - 2024
 //////////////////////////////////////////////////////////////////////////////////////////
-#include "common.h"
-#include "gbuffer.h"
+#include "common.xrh"
+#include "gbuffer.xrh"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
 #define POWER 2.2f
@@ -13,7 +13,7 @@
 #define STEPS 2
 #define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
+float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 {
     float3 Position, Normal;
     GetPositionAndNormal (TexCoords, Position, Normal);
@@ -41,8 +41,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
             sincos (PI, c, s);
             float2x2 rot = float2x2 (c, -s, s, c);
             
-            int2 pos2d = Position2D; //TexCoords * screen_res.xy + 0.5;
-            float jitter = (pos2d.y % 4) * 0.25f + (pos2d.x % 4) * 0.0625f + 0.0625f;
+            float jitter = (Position2D.y % 4) * 0.25f + (Position2D.x % 4) * 0.0625f + 0.0625f;
 			
 			//return jitter;
 			

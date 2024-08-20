@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-#include "common.h"
+#include "common.xrh"
 //////////////////////////////////////////////////////////////////////////////////////////
 struct v2p
 {
@@ -50,7 +50,7 @@ float4 main (v2p I): COLOR
 #elif VIGNETTE_MODE == 2
     float VignettePower = vignette_power;
 #endif
-	//https://www.shadertoy.com/view/ms3GDs
+	//https://www.xrhadertoy.com/view/ms3GDs
     float Vignette = pow(16.0f * TexCoords1.x * TexCoords1.y * (1.0f - TexCoords1.x) * (1.0f - TexCoords1.y), VignettePower);//0.1f);
     image *= Vignette;// + (1.0f - Vignette) * (1.0f - VignettePower);
 #endif    

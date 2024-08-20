@@ -1,5 +1,5 @@
-#include "common.h"
-#include <skinning.h>
+#include "common.xrh"
+#include <skinning.xrh>
 
 vf_point _main (v_model v)
 {

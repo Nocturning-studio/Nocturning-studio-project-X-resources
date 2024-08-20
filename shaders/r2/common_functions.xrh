@@ -109,9 +109,9 @@ float random(float2 st)
     return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
 }
 ////////////////////////////////////////////////////////////////////////////
-// https://www.shadertoy.com/view/3dGfzh
+// https://www.xrhadertoy.com/view/3dGfzh
 ////////////////////////////////////////////////////////////////////////////
-// slightly altered https://www.shadertoy.com/view/wtBXRz
+// slightly altered https://www.xrhadertoy.com/view/wtBXRz
 float2 brownConradyDistortion(float2 uv, float k1)
 {
     uv = uv * 2.0 - 1.0;	// brown conrady takes [-1:1]
@@ -121,5 +121,17 @@ float2 brownConradyDistortion(float2 uv, float k1)
     uv *= 1.0 + k1 * r2;
 
     return (uv * .5 + .5); // restore -> [0:1]
+}
+////////////////////////////////////////////////////////////////////////////
+// RotationCosSin is (cos(alpha),sin(alpha)) where alpha is the rotation angle
+// A 2D rotation matrix is applied (see https://en.wikipedia.org/wiki/Rotation_matrix)
+float2 CalcRotationOffset(float noiseDirection)
+{
+    float c, s;
+    sincos (PI, c, s);
+    float2x2 rot = float2x2 (c, -s, s, c);
+    float2 noiseOffset;
+    sincos (5.0f * PI * noiseDirection, noiseOffset.y, noiseOffset.x);
+    return lerp (noiseOffset, noiseDirection, 0.5f);
 }
 ////////////////////////////////////////////////////////////////////////////

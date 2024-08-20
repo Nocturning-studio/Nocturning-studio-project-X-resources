@@ -3,15 +3,15 @@
 // Author: Deathman
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
-#include "common.h"
-#include "filters.h"
+#include "common.xrh"
+#include "filters.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 #define SAMPLES_COUNT 2
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     // Create blurring map, based on vignette
-	//https://www.shadertoy.com/view/ms3GDs
+	//https://www.xrhadertoy.com/view/ms3GDs
     float Vignette = pow(16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y), EXP);
 
     // Separated blur

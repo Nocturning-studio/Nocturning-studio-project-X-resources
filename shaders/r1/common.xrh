@@ -3,10 +3,10 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0 
 ////////////////////////////////////////////////////////////////////////////
-#include "common_shared.h"
-#include "common_defines.h"
-#include "common_iostructs.h"
-#include "common_samplers.h"
-#include "common_uniforms.h"
-#include "common_functions.h"
+#include "common_shared.xrh"
+#include "common_defines.xrh"
+#include "common_iostructs.xrh"
+#include "common_samplers.xrh"
+#include "common_uniforms.xrh"
+#include "common_functions.xrh"
 ////////////////////////////////////////////////////////////////////////////

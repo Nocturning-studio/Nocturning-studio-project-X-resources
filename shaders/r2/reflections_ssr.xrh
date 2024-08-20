@@ -3,8 +3,8 @@
 //	Author		: Mihan323
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#include "common.h"
-#include "gbuffer.h"
+#include "common.xrh"
+#include "gbuffer.xrh"
 ////////////////////////////////////////////////////////////////////////////
 #define SSR_STEPS 50   //  50  	 // 25 	
 #define SSR_STEP_SIZE 2.0  //  2.0     // 1.2

@@ -1,97 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="accumulation_helper.h">
+    <ClInclude Include="accumulation_helper.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="gbuffer.h">
+    <ClInclude Include="gbuffer.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="displacement.h">
+    <ClInclude Include="displacement.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="lightmap.h">
+    <ClInclude Include="lightmap.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
+    <ClInclude Include="material.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="normal_map_functions.h">
+    <ClInclude Include="normal_map_functions.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ambient_light.h">
+    <ClInclude Include="ambient_light.xrh">
       <Filter>Deffered rendering pipeline\Scene combine stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="reflection.h">
+    <ClInclude Include="reflection.xrh">
       <Filter>Deffered rendering pipeline\Scene combine stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="common.h">
+    <ClInclude Include="common.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_define_associations.h">
+    <ClInclude Include="common_define_associations.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_defines.h">
+    <ClInclude Include="common_defines.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_functions.h">
+    <ClInclude Include="common_functions.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_iostructs.h">
+    <ClInclude Include="common_iostructs.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_policies.h">
+    <ClInclude Include="common_policies.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_samplers.h">
+    <ClInclude Include="common_samplers.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_uniforms.h">
+    <ClInclude Include="common_uniforms.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="filters.h">
+    <ClInclude Include="filters.xrh">
       <Filter>Helpers\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="shadow_filtering.h">
+    <ClInclude Include="shadow_filtering.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="terrain_helper.h">
+    <ClInclude Include="terrain_helper.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="TBN.h">
+    <ClInclude Include="TBN.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="contrast_adaptive_sharpening.h">
+    <ClInclude Include="contrast_adaptive_sharpening.xrh">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
-    <ClInclude Include="fxaa_atoc.h">
+    <ClInclude Include="fxaa_atoc.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="alpha_test.h">
+    <ClInclude Include="alpha_test.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="hashed_alpha.h">
+    <ClInclude Include="hashed_alpha.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="common_shared.h">
+    <ClInclude Include="common_shared.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="BRDF.h">
+    <ClInclude Include="BRDF.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ao_from_height.h">
+    <ClInclude Include="ao_from_height.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="material_components.h">
+    <ClInclude Include="material_components.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="fxaa.h">
+    <ClInclude Include="fxaa.xrh">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
     </ClInclude>
-    <ClInclude Include="reflections_ssr.h">
+    <ClInclude Include="reflections_ssr.xrh">
       <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
     </ClInclude>
-    <ClInclude Include="screen_space_shadows.h">
+    <ClInclude Include="screen_space_shadows.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -581,6 +581,9 @@
     </None>
     <None Include="postprocess_stage_reflections_pass_horizontal_filter.ps">
       <Filter>Forward rendering pipeline\Postprocess\Reflections</Filter>
+    </None>
+    <None Include="ambient_occlusion_stage_pass_gtao.ps">
+      <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

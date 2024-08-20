@@ -423,25 +423,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h">
+    <ClInclude Include="common.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_defines.h">
+    <ClInclude Include="common_defines.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_functions.h">
+    <ClInclude Include="common_functions.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_iostructs.h">
+    <ClInclude Include="common_iostructs.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_samplers.h">
+    <ClInclude Include="common_samplers.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_uniforms.h">
+    <ClInclude Include="common_uniforms.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
-    <ClInclude Include="common_shared.h">
+    <ClInclude Include="common_shared.xrh">
       <Filter>Helpers\Common</Filter>
     </ClInclude>
   </ItemGroup>

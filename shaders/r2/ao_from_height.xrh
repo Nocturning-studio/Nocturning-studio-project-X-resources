@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Author: Deadiablo, Deathman
-// Original code: https://www.shadertoy.com/view/WscyRl
+// Original code: https://www.xrhadertoy.com/view/WscyRl
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "material_components.h"
+#include "material_components.xrh"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define AO_SAMPLES 8.0
 #define AO_ATTENUATION 5.0
@@ -29,15 +29,14 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
         float result = 0.0;
         for (float f = 0.0; f < 1.0; f += 1.0 / AO_SAMPLES)
         {
-            float randUoffset = random(float2(f * 16524.56, f * 23532.43));
-            float randVoffset = random(float2(f * 21384.12, f * 11835.78));
-            float2 offset = float2(randUoffset, randVoffset) * 2.0 - 1.0;
-            offset *= AO_RADIUS;
+            float noiseDirection = random(float2(f * 16524.56, f * 23532.43));
+            float2 noiseOffset = CalcRotationOffset(noiseDirection) * AO_RADIUS;
+            noiseOffset = noiseOffset * 2.0 - 1.0;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-            result += max(GetTerrainDetailHeight(Mask, UV + offset) - height, 0.0f);
+            result += max(GetTerrainDetailHeight(Mask, UV + noiseOffset) - height, 0.0f);
 #else
-            result += max(GetHeight(UV + offset) - height, 0.0f);
+            result += max(GetHeight(UV + noiseOffset) - height, 0.0f);
 #endif
         }
 

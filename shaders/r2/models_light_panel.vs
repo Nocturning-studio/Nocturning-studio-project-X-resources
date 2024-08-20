@@ -1,5 +1,5 @@
-#include "common.h"
-#include <skinning.h>
+#include "common.xrh"
+#include <skinning.xrh>
 
 struct vf
 {

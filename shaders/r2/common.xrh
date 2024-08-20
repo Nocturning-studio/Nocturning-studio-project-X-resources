@@ -9,12 +9,12 @@
 // #pragma pack_matrix (row_major/row_column)
 // #pragma warning
 ////////////////////////////////////////////////////////////////////////////
-#include "common_shared.h"
-#include "common_define_associations.h"
-#include "common_defines.h"
-#include "common_iostructs.h"
-#include "common_policies.h"
-#include "common_samplers.h"
-#include "common_uniforms.h"
-#include "common_functions.h"
+#include "common_shared.xrh"
+#include "common_define_associations.xrh"
+#include "common_defines.xrh"
+#include "common_iostructs.xrh"
+#include "common_policies.xrh"
+#include "common_samplers.xrh"
+#include "common_uniforms.xrh"
+#include "common_functions.xrh"
 ////////////////////////////////////////////////////////////////////////////

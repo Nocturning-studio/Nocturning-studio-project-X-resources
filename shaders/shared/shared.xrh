@@ -4,19 +4,19 @@
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
 //Common
-#include <shared_math.h>
-#include <shared_constants.h>
-#include <shared_defines.h>
-#include <shared_uniforms.h>
-#include <shared_iostructs.h>
-#include <shared_functions.h>
+#include <shared_math.xrh>
+#include <shared_constants.xrh>
+#include <shared_defines.xrh>
+#include <shared_uniforms.xrh>
+#include <shared_iostructs.xrh>
+#include <shared_functions.xrh>
 
 //Effects
-#include <fog.h>
-#include <depth_of_field_common.h>
-#include <chromatic_abberations.h>
-#include <tonemapping.h>
+#include <fog.xrh>
+#include <depth_of_field_common.xrh>
+#include <chromatic_abberations.xrh>
+#include <tonemapping.xrh>
 
 //Z-Buffer
-#include <zbuffer.h>
+#include <zbuffer.xrh>
 ////////////////////////////////////////////////////////////////////////////

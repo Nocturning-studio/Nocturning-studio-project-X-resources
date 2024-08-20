@@ -15,43 +15,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fog.h">
+    <ClInclude Include="fog.xrh">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="shared.h">
+    <ClInclude Include="shared.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="shared_uniforms.h">
+    <ClInclude Include="shared_uniforms.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="skinning.h">
+    <ClInclude Include="skinning.xrh">
       <Filter>Skinning</Filter>
     </ClInclude>
-    <ClInclude Include="shared_functions.h">
+    <ClInclude Include="shared_functions.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="shared_iostructs.h">
+    <ClInclude Include="shared_iostructs.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="shared_math.h">
+    <ClInclude Include="shared_math.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="shared_defines.h">
+    <ClInclude Include="shared_defines.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="zbuffer.h">
+    <ClInclude Include="zbuffer.xrh">
       <Filter>Z-Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="depth_of_field_common.h">
+    <ClInclude Include="depth_of_field_common.xrh">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="shared_constants.h">
+    <ClInclude Include="shared_constants.xrh">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="chromatic_abberations.h">
+    <ClInclude Include="chromatic_abberations.xrh">
       <Filter>Effects</Filter>
     </ClInclude>
-    <ClInclude Include="tonemapping.h">
+    <ClInclude Include="tonemapping.xrh">
       <Filter>Effects</Filter>
     </ClInclude>
   </ItemGroup>

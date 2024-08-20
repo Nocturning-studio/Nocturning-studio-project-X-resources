@@ -285,13 +285,13 @@
     <None Include="yuv2rgb.ps" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h" />
-    <ClInclude Include="common_shared.h" />
-    <ClInclude Include="common_defines.h" />
-    <ClInclude Include="common_functions.h" />
-    <ClInclude Include="common_iostructs.h" />
-    <ClInclude Include="common_samplers.h" />
-    <ClInclude Include="common_uniforms.h" />
+    <ClInclude Include="common.xrh" />
+    <ClInclude Include="common_shared.xrh" />
+    <ClInclude Include="common_defines.xrh" />
+    <ClInclude Include="common_functions.xrh" />
+    <ClInclude Include="common_iostructs.xrh" />
+    <ClInclude Include="common_samplers.xrh" />
+    <ClInclude Include="common_uniforms.xrh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
