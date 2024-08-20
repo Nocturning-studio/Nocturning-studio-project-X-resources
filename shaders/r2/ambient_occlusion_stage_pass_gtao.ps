@@ -11,6 +11,7 @@
 #define GTAO_SLICES 4
 #define GTAO_RADIUS 2
 #define GTAO_TC_MUL 1.0f
+#define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
 #define GTAO_NEG_1_OVER_RADIUSQR -1.0 / (GTAO_RADIUS * GTAO_RADIUS)
 #define FALLOFF_MUL 2.0f / pow(GTAO_RADIUS, 2.0f)
@@ -30,59 +31,72 @@ float4 main(float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR0
     float3 Position, Normal;
     GetPositionAndNormal (TexCoords, Position, Normal);
 
-    Position.z *= 0.9992f;
-    Position += Normal * 0.05;
 
-    float proj_scale = float(screen_res.y) / (tan(fov * 0.5f) * 2.0f);
-    float screen_radius = (GTAO_RADIUS * 0.5f * proj_scale) / Position.z;
-    float3 viewV = -normalize(Position);
-
-    float noiseDirection = (Position2D.y % 4) * 0.25f + (Position2D.x % 4) * 0.0625f + 0.0625f;
-    float2 noiseOffset = CalcRotationOffset(noiseDirection);
-
-    float screen_res_mul = 1.0f / GTAO_SAMPLE * screen_res.zw;
-
-    float visibility = 0.0f;
-
-    for (int slice = 0; slice < GTAO_SLICES; slice++)
+    if (Position.z > RENDER_DISTANCE)
     {
-        float phi = (slice + noiseDirection) * PI_BY_SLICES;
-        float2 omega = float2(cosapprox(phi), sinapprox(phi));
-        float3 directionV = float3(omega.x, omega.y, 0.0f);
-
-        float3 orthoDirectionV = directionV - (dot(directionV, viewV) * viewV);
-        float3 axisV = cross(directionV, viewV);
-        float3 projNormal = Normal - axisV * dot(Normal, axisV);
-        float projNormalLenght = length(projNormal);
-
-        float sgnN = sign(dot(orthoDirectionV, projNormal));
-        float cosN = saturate(dot(projNormal, viewV) / projNormalLenght);
-        float n = sgnN * fast_acos(cosN);
-        float sinN2 = 2.0f * sinapprox(n);
-
-        for (int side = 0; side < 2; side++)
-        {
-            float cHorizonCos = -1.0f;
-
-            for (int sample = 0; sample < GTAO_SAMPLE; sample++)
-            {
-                float2 s = max(screen_radius * (float(sample) + noiseOffset), 4.0f + float(sample)) * screen_res_mul; // fix for multiplying s by sample=0 from Unity code
-                float2 sTexCoord = TexCoords + (-1.0f + 2.0f * side) * s * float2(omega.x, -omega.y);
-                float3 SamplePosition = GetPosition(sTexCoord);
-                float3 SampleDirection = SamplePosition - Position;
-                float LengthSqr = dot(SampleDirection, SampleDirection);
-                float falloff = clamp(LengthSqr * GTAO_NEG_1_OVER_RADIUSQR + 1.0f, 0.0f, 1.0f);
-                float sHorizonV = dot(SampleDirection, -normalize(Position)) * rsqrt(LengthSqr + 1e-5);
-                sHorizonV = lerp(cHorizonCos, sHorizonV, falloff);
-                cHorizonCos = max(cHorizonCos, sHorizonV);
-            }
-
-            float h = n + clamp((-1.0f + 2.0f * side) * fast_acos(cHorizonCos) - n, -PI / 2.0f, PI / 2.0f);
-            visibility += projNormalLenght * (cosN + h * sinN2 - cos(2.0f * h - n)) / 4.0f;
-        }
+        return float4 (1.0f, 1.0f, 1.0f, 1.0f);
     }
+    else
+    {
+        Position.z *= 0.9992f;
+        Position += Normal * 0.05;
 
-    visibility /= GTAO_SLICES;
-    return float4(visibility, 0.0f, 0.0f, 0.0f);
+        float proj_scale = float(screen_res.y) / (tan(fov * 0.5f) * 2.0f);
+        float screen_radius = (GTAO_RADIUS * 0.5f * proj_scale) / Position.z;
+        float3 viewV = -normalize(Position);
+
+        float noiseDirection = (Position2D.y % 4) * 0.25f + (Position2D.x % 4) * 0.0625f + 0.0625f;
+        float2 noiseOffset = CalcRotationOffset(noiseDirection);
+
+        float screen_res_mul = 1.0f / GTAO_SAMPLE * screen_res.zw;
+
+        float occ = 0.0f;
+
+        for (int slice = 0; slice < GTAO_SLICES; slice++)
+        {
+            float phi = (slice + noiseDirection) * PI_BY_SLICES;
+            float2 omega = float2(cosapprox(phi), sinapprox(phi));
+            float3 directionV = float3(omega.x, omega.y, 0.0f);
+
+            float3 orthoDirectionV = directionV - (dot(directionV, viewV) * viewV);
+            float3 axisV = cross(directionV, viewV);
+            float3 projNormal = Normal - axisV * dot(Normal, axisV);
+            float projNormalLenght = length(projNormal);
+
+            float sgnN = sign(dot(orthoDirectionV, projNormal));
+            float cosN = saturate(dot(projNormal, viewV) / projNormalLenght);
+            float n = sgnN * fast_acos(cosN);
+            float sinN2 = 2.0f * sinapprox(n);
+
+            for (int side = 0; side < 2; side++)
+            {
+                float cHorizonCos = -1.0f;
+
+                for (int sample = 0; sample < GTAO_SAMPLE; sample++)
+                {
+                    float2 s = max(screen_radius * (float(sample) + noiseOffset), 4.0f + float(sample)) * screen_res_mul; // fix for multiplying s by sample=0 from Unity code
+                    float2 sTexCoord = TexCoords + (-1.0f + 2.0f * side) * s * float2(omega.x, -omega.y);
+                    float3 SamplePosition = GetPosition(sTexCoord);
+                    float3 SampleDirection = SamplePosition - Position;
+                    float LengthSqr = dot(SampleDirection, SampleDirection);
+                    float falloff = clamp(LengthSqr * GTAO_NEG_1_OVER_RADIUSQR + 1.0f, 0.0f, 1.0f);
+                    float sHorizonV = dot(SampleDirection, -normalize(Position)) * rsqrt(LengthSqr + 1e-5);
+                    sHorizonV = lerp(cHorizonCos, sHorizonV, falloff);
+                    cHorizonCos = max(cHorizonCos, sHorizonV);
+                }
+
+                float h = n + clamp((-1.0f + 2.0f * side) * fast_acos(cHorizonCos) - n, -PI / 2.0f, PI / 2.0f);
+                occ += projNormalLenght * (cosN + h * sinN2 - cos(2.0f * h - n)) / 4.0f;
+            }
+        }
+
+        occ /= GTAO_SLICES;
+
+        // Create smooth render distance border
+        float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75f, RENDER_DISTANCE, length (Position));
+        occ = lerp (occ, 1.0f, FarFadingFactor);
+
+        return float4(occ, 0.0f, 0.0f, 0.0f);
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////
