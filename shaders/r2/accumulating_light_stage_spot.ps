@@ -6,7 +6,6 @@
 #include "common.xrh"
 #include "gbuffer.xrh"
 #include "BRDF.xrh"
-#include "accumulation_helper.xrh"
 #include "shadow_filtering.xrh"
 #include "screen_space_shadows.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
@@ -16,10 +15,11 @@ struct Interpolators
     float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-Accumulator main (Interpolators Input)
+float4 main (Interpolators Input): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
-    
+    //GBuffer.Albedo = sRgbToLinear(GBuffer.Albedo);
+
     float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
 
     float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
@@ -51,11 +51,9 @@ Accumulator main (Interpolators Input)
 
     LightMap *= ShadowMap * AttenuationFactor;
     
-    Light.Diffuse *= Ldynamic_color.rgb * LightMap;
-    Light.Diffuse += Light.Subsurface * Ldynamic_color.rgb * GBuffer.Subsurface * ShadowMap.xxx;
+    Light.Diffuse = lerp(Light.Diffuse, Light.Subsurface, GBuffer.Subsurface) * Ldynamic_color.rgb * LightMap;
     Light.Specular *= Ldynamic_color.rgb * LightMap;
     
-    Accumulator Output = PackLightingAccumulator (Light.Diffuse, Light.Specular);
-    return Output;
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular, 0.0f);
 }
 ///////////////////////////////////////////////////////////////////////////////////

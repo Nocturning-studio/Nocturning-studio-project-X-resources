@@ -226,7 +226,6 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
 {
     LightComponents Light;
 
-    Albedo = sRgbToLinear(Albedo);
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);

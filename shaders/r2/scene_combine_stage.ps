@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "gbuffer.xrh"
-#include "accumulation_helper.xrh"
 #include "ambient_light.xrh"
 #include "reflection.xrh"
 #include "reflections_ssr.xrh"
@@ -16,7 +15,6 @@ uniform float debug_mode;
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
-    LightingData Light = UnpackLightingAccumulator(TexCoords);
 
     // Get light context
     float3 Albedo = GBuffer.Albedo;//sRgbToLinear(GBuffer.Albedo);
@@ -69,13 +67,10 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     float3 IndirectDiffuse = Irradiance * LightMapAO * kD;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
-    float3 DirectDiffuse = Light.Diffuse;
-    float3 DirectSpecular = Light.Specular;
+    float3 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords);
     float3 Emission = GBuffer.Emissive * Albedo;
 
-    //float3 SceneColor = Albedo * (DirectDiffuse + IndirectDiffuse) + IndirectSpecular + DirectSpecular + Emission;
-
-    float3 SceneColor = (IndirectDiffuse * Albedo + IndirectSpecular) + (DirectDiffuse * Albedo + DirectSpecular) + Emission;
+    float3 SceneColor = (IndirectDiffuse * Albedo + IndirectSpecular) + DirectLighting + Emission;
 
     SceneColor *= 2.0f;
 
@@ -109,11 +104,11 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     else if (debug_mode == GBUFFER_BAKED_AO)
         SceneColor = GBuffer.BakedAO;
     else if (debug_mode == DIRECT_LIGHT)
-        SceneColor = lerp(DirectDiffuse, DirectSpecular, GBuffer.Metallness);
+        SceneColor = DirectLighting;
     else if (debug_mode == DIRECT_DIFFUSE)
-        SceneColor = DirectDiffuse;
+        SceneColor = DirectLighting;
     else if (debug_mode == DIRECT_SPECULAR)
-        SceneColor = DirectSpecular;
+        SceneColor = DirectLighting;
     else if (debug_mode == INDIRECT_LIGHT)
         SceneColor = lerp(IndirectDiffuse, IndirectSpecular, GBuffer.Metallness);
     else if (debug_mode == INDIRECT_LIGHT_DIFFUSE)

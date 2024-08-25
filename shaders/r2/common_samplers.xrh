@@ -49,9 +49,7 @@ uniform sampler s_lmap;               // 2D/cube projector lightmap
 uniform sampler3D s_material;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Combine phase
-uniform sampler2D s_accumulator;
-uniform sampler2D s_diffuse_accumulator;
-uniform sampler2D s_specular_accumulator;
+uniform sampler2D s_light_accumulator;
 uniform sampler2D s_bloom;
 uniform sampler2D s_distort;
 uniform sampler s_image;            // used in various post-processing
