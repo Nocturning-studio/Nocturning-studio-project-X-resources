@@ -62,6 +62,8 @@ GBufferPacked main (Interpolators Input)
 	// Transformate height map from [0; 1] space to [1; 2] and make normals more power
     NormalMap.xy *= HeightMap + 1.0f;
 
+	NormalMap.z = pow2(NormalMap.z);
+
 	// Make normals more power with heightmap
     NormalMap.z *= HeightMap;
 

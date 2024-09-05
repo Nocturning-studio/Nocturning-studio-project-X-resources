@@ -7,7 +7,7 @@
 #include "filters.xrh"
 ////////////////////////////////////////////////////////////////////////////
 //#if SHADOW_FILTER == LOW_FILTERING
-#define SHADOW_FILTERING_SAMPLES_COUNT 4
+#define SHADOW_FILTERING_SAMPLES_COUNT 8
 #define OFFSET_ARRAY box_coords
 //#elif SHADOW_FILTER == MIDDLE_FILTERING
 //#define SHADOW_FILTERING_SAMPLES_COUNT 9
@@ -20,6 +20,14 @@
 //#define OFFSET_ARRAY strided_coords
 //#endif
 ////////////////////////////////////////////////////////////////////////////
+float ModifyShadowMap(float ShadowMap)
+{
+    if(ShadowMap > 0.5f)
+        return 1.0f;
+    else
+        return 0.0f;
+}
+
 float sample_shadow_map(float4 TexCoords, float2 SampleBias)
 {
     float ShadowMapPixelSize = 1.0f / float(SMAP_size);
@@ -42,6 +50,10 @@ float shadow_map_filter(float4 TexCoords)
 
 float get_shadow_map(float4 TexCoords)
 {
-    return shadow_map_filter(TexCoords);
+    float ShadowMap = shadow_map_filter(TexCoords);
+
+    ShadowMap = ModifyShadowMap(ShadowMap);
+
+    return ShadowMap;
 }
 ////////////////////////////////////////////////////////////////////////////

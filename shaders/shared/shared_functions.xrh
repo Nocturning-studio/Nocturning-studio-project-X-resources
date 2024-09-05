@@ -103,8 +103,7 @@ float3 RemapCubeCoords(float3 CubeCoords)
     float3 CubeCoordsAbs = abs(CubeCoords);
     float CubeCoordsMax = max(CubeCoordsAbs.x, max(CubeCoordsAbs.y, CubeCoordsAbs.z));
     CubeCoords /= CubeCoordsMax;
-    if (CubeCoords.y < 0.99f)
-        CubeCoords.y = CubeCoords.y * 2.0f - 1.0f;
+    CubeCoords.y = CubeCoords.y * 2.0f - 1.0f;
 
     return CubeCoords;
 }

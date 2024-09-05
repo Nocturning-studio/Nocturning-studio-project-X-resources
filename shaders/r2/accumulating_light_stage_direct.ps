@@ -21,7 +21,6 @@ struct Interpolators
 float4 main (Interpolators Input): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
-    //GBuffer.Albedo = sRgbToLinear(GBuffer.Albedo);
 
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
     

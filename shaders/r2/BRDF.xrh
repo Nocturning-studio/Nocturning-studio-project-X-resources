@@ -222,10 +222,14 @@ struct LightComponents
     float3 Subsurface;
 };
 
+//---------------------------------------------------------//
+// Full PBR lighting model for metallic-roughness materials//
+//---------------------------------------------------------//
 LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
 
+    Roughness = Roughness + 0.015f;
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
@@ -262,6 +266,27 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
     float scatter = D_GGX(0.36, saturate(-VdotL));
     Light.Subsurface = wrapNoL * scatter;
+
+    return Light;
+}
+
+//----------------------------------------------//
+// Phong lighting model for X-Ray materials     //
+//----------------------------------------------//
+LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float3 ViewDirection = -normalize(Point);
+    float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    float NdotH = saturate(dot(Normal, HalfWayDirection));
+
+    Light.Diffuse = NdotL;
+    Light.Specular = pow(NdotH, 128.0f) * invert(Roughness);
+    Light.Subsurface = NULL;
 
     return Light;
 }

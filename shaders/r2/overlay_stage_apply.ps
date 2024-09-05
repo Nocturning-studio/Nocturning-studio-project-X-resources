@@ -19,7 +19,7 @@ float4 main (float4 TexCoords : TEXCOORD0) : COLOR0
 		ImageColor *= tex2Dlod0(s_photo_grid, TexCoords);
 
 	if(enabled_overlays.y > 0)
-		ImageColor *= step(abs(TexCoords.y - 0.5f), 0.4f);//tex2Dlod0(s_cinema_borders, TexCoords);
+		ImageColor *= step(abs(TexCoords.y - 0.5f), 0.4f);
 
 	if(enabled_overlays.z > 0)
 		ImageColor *= tex2Dlod0(s_watermark, TexCoords);

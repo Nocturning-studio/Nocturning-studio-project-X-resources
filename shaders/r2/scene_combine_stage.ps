@@ -26,7 +26,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = pow(pow(GBuffer.AO + 0.05f, 1.0f / 2.2f), 2.2f) * L_ambient.rgb * GBuffer.BakedAO * RealTimeAO;
+    float LightMapAO = pow(pow(GBuffer.AO + 0.15f, 1.0f / 2.2f), 2.2f);
 
     // Get F0 
     float IOR = 1.5f;
@@ -49,8 +49,8 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     // Get irradiance
     float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
-    float3 IrradianceActualHour = texCUBElod(env_s0, float4(IrradianceCoords, 0));
-    float3 IrradianceNextHour = texCUBElod(env_s1, float4(IrradianceCoords, 0));
+    float3 IrradianceActualHour = texCUBElod(sky_s0, float4(IrradianceCoords, 8));
+    float3 IrradianceNextHour = texCUBElod(sky_s1, float4(IrradianceCoords, 8));
     float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
     //Irradiance = sRgbToLinear(Irradiance);
     Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
@@ -65,12 +65,12 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
     //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
 	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
 
-    float3 IndirectDiffuse = Irradiance * LightMapAO * kD;
+    float3 IndirectDiffuse = Irradiance * LightMapAO * Albedo * kD * GBuffer.BakedAO * RealTimeAO;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
-    float3 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords);
+    float4 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords) * GBuffer.BakedAO * RealTimeAO;
     float3 Emission = GBuffer.Emissive * Albedo;
 
-    float3 SceneColor = (IndirectDiffuse * Albedo + IndirectSpecular) + DirectLighting + Emission;
+    float3 SceneColor = IndirectDiffuse + IndirectSpecular + DirectLighting + Emission;
 
     SceneColor *= 2.0f;
 
