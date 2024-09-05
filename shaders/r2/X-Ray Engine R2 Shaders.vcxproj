@@ -337,7 +337,6 @@
     <ClInclude Include="reflections_ssr.xrh" />
     <ClInclude Include="screen_space_shadows.xrh" />
     <ClInclude Include="shadow_filtering.xrh" />
-    <ClInclude Include="TBN.xrh" />
     <ClInclude Include="terrain_helper.xrh" />
   </ItemGroup>
   <ItemGroup>

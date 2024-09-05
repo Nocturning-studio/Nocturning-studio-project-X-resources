@@ -58,9 +58,6 @@
     <ClInclude Include="terrain_helper.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="TBN.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="contrast_adaptive_sharpening.xrh">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>

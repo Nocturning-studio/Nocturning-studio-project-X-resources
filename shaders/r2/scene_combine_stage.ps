@@ -67,7 +67,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     float3 IndirectDiffuse = Irradiance * LightMapAO * Albedo * kD * GBuffer.BakedAO * RealTimeAO;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
-    float4 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords) * GBuffer.BakedAO * RealTimeAO;
+    float4 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords);
     float3 Emission = GBuffer.Emissive * Albedo;
 
     float3 SceneColor = IndirectDiffuse + IndirectSpecular + DirectLighting + Emission;

@@ -52,7 +52,7 @@ float get_shadow_map(float4 TexCoords)
 {
     float ShadowMap = shadow_map_filter(TexCoords);
 
-    ShadowMap = ModifyShadowMap(ShadowMap);
+    //ShadowMap = ModifyShadowMap(ShadowMap);
 
     return ShadowMap;
 }

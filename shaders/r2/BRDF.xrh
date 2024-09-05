@@ -273,7 +273,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
 //----------------------------------------------//
 // Phong lighting model for X-Ray materials     //
 //----------------------------------------------//
-LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
+LightComponents Calculate_Phong_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
 
