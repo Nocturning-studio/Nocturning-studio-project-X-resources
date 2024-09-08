@@ -1,0 +1,79 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 08.09.2024
+//  Integration to NSPX: Mihan323, Deathman
+//  © 2008 NVIDIA Corporation. All rights reserved. 
+////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+////////////////////////////////////////////////////////////////////////////
+#define BLOCKER_SEARCH_NUM_SAMPLES 16
+#define PCF_NUM_SAMPLES 16
+#define NEAR_PLANE 9.5f
+#define LIGHT_WORLD_SIZE .5f
+#define LIGHT_FRUSTUM_WIDTH 3.75f
+
+// Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
+#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH) 
+////////////////////////////////////////////////////////////////////////////
+float PenumbraSize(float zReceiver, float zBlocker) //Parallel plane estimation
+{
+    return (zReceiver - zBlocker) / zBlocker;
+}
+
+void FindBlocker(out float avgBlockerDepth,
+                 out float numBlockers,
+                 float2 uv, float zReceiver)
+{
+ //This uses similar triangles to compute what
+ //area of the shadow map we should search
+    float searchWidth = LIGHT_SIZE_UV * (zReceiver - NEAR_PLANE) / zReceiver;
+    float blockerSum = 0.0f;
+    numBlockers = 0.0f;
+
+    for (int i = 0; i < BLOCKER_SEARCH_NUM_SAMPLES; ++i)
+    {
+        float shadowMapDepth = tDepthMap.SampleLevel(PointSampler, uv + poissonDisk_16[i] * searchWidth, 0.0f);
+        if (shadowMapDepth < zReceiver)
+        {
+            blockerSum += shadowMapDepth;
+            numBlockers++;
+        }
+    }
+    avgBlockerDepth = blockerSum / numBlockers;
+}
+
+float PCF_Filter(float2 uv, float zReceiver, float filterRadiusUV)
+{
+    float sum = 0.0f;
+    for (int i = 0; i < PCF_NUM_SAMPLES; ++i)
+    {
+        float2 offset = poissonDisk_16[i] * filterRadiusUV;
+        sum += tDepthMap.SampleCmpLevelZero(PCF_Sampler, uv + offset, zReceiver);
+    }
+    return sum / PCF_NUM_SAMPLES;
+}
+
+float PCSS(Texture2D shadowMapTex, float4 coords)
+{
+    float2 uv = coords.xy;
+    float zReceiver = coords.z; // Assumed to be eye-space z in this code
+
+ // STEP 1: blocker search
+    float avgBlockerDepth = 0.0f;
+    float numBlockers = 0.0f;
+    FindBlocker(avgBlockerDepth, numBlockers, uv, zReceiver);
+    //There are no occluders so early out (this saves filtering)
+    if (numBlockers < 1.0f)
+    {
+        return 1.0f;
+    }
+    else
+    {
+ // STEP 2: penumbra size
+        float penumbraRatio = PenumbraSize(zReceiver, avgBlockerDepth);
+        float filterRadiusUV = penumbraRatio * LIGHT_SIZE_UV * NEAR_PLANE / coords.z;
+
+ // STEP 3: filtering
+        return PCF_Filter(uv, zReceiver, filterRadiusUV);
+    }
+}
+////////////////////////////////////////////////////////////////////////////

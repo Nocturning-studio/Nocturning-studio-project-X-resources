@@ -582,6 +582,9 @@
     <None Include="ambient_occlusion_stage_pass_gtao.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Main calculating</Filter>
     </None>
+    <None Include="PCSS.xrh">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">

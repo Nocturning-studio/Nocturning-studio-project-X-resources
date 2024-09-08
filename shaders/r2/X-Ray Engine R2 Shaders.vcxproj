@@ -238,6 +238,7 @@
     <None Include="particle_s-add.ps" />
     <None Include="particle_s-blend.ps" />
     <None Include="particle_s-mul.ps" />
+    <None Include="PCSS.xrh" />
     <None Include="portal.ps" />
     <None Include="portal.s" />
     <None Include="portal.vs" />
