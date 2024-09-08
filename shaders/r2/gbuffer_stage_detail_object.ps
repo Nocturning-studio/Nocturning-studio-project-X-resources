@@ -40,7 +40,7 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.BakedAO = 1.0f;
 
-    GBuffer.Normal = normalize (Input.Normal.xyz);
+    GBuffer.Normal = normalize(cross(ddx(Input.Position), ddy(Input.Position)));
 
 	GBuffer.Position = Input.Position;
 	
