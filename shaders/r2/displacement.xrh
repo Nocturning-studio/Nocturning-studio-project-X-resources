@@ -121,7 +121,7 @@
 float2 CalculateParallaxMapping(float3 Position, float3 ViewVector, float2 UV, 
                                 float StartFadingDistance, float StopFadingDistance, int MaterialType
 #ifdef USE_FOR_TERRAIN_MATERIAL
-    , float4 Mask
+    , float4 BlendMask
 #endif
 )
 {
@@ -130,7 +130,7 @@ float2 CalculateParallaxMapping(float3 Position, float3 ViewVector, float2 UV,
         float height = 0.0f;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-        height = GetTerrainDetailHeight(Mask, UV);
+        height = GetTerrainDetailHeight(BlendMask, UV);
 #else
         if(MaterialType == BASE_MATERIAL)
             height = GetHeight(UV);
@@ -152,7 +152,7 @@ float2 CalculateParallaxOcclusionMapping(float3 Position, float3 ViewVector, flo
                                          float StartFadingDistance, float StopFadingDistance, 
                                          int MinimalSamplesCount, int MaximalSamplesCount, int MaterialType
 #ifdef USE_FOR_TERRAIN_MATERIAL
-    , float4 Mask
+    , float4 BlendMask
 #endif
 )
 {
@@ -175,7 +175,7 @@ float2 CalculateParallaxOcclusionMapping(float3 Position, float3 ViewVector, flo
             vTexCurrentOffset += vTexOffsetPerStep;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-            fCurrHeight = GetTerrainDetailHeight(Mask, vTexCurrentOffset);
+            fCurrHeight = GetTerrainDetailHeight(BlendMask, vTexCurrentOffset);
 #else
             if (MaterialType == BASE_MATERIAL)
                 fCurrHeight = GetHeight(vTexCurrentOffset);
@@ -190,7 +190,7 @@ float2 CalculateParallaxOcclusionMapping(float3 Position, float3 ViewVector, flo
         float fPrevHeight = 0.0f;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-        fPrevHeight = GetTerrainDetailHeight(Mask, vTexCurrentOffset);
+        fPrevHeight = GetTerrainDetailHeight(BlendMask, vTexCurrentOffset);
 #else
         if (MaterialType == BASE_MATERIAL)
             fPrevHeight = GetHeight(vTexCurrentOffset);
@@ -242,16 +242,16 @@ float2 GetDetailDisplacement(float3 Position, float3 ViewVector, float2 UV, int 
     return UV;
 }
 #else
-float2 GetTerrainDisplacement(float3 Position, float3 ViewVector, float2 UV, float4 Mask, int MaterialType)
+float2 GetTerrainDisplacement(float3 Position, float3 ViewVector, float2 UV, float4 BlendMask, int MaterialType)
 {
 #if defined(USE_PARALLAX_OCCLUSION_MAPPING)
     UV = CalculateParallaxOcclusionMapping(Position, ViewVector, UV, TERRAIN_STEEP_PARALLAX_START_FADE,
         TERRAIN_STEEP_PARALLAX_STOP_FADE, DETAIL_STEEP_PARALLAX_MIN_SAMPLES,
-        TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, MaterialType, Mask);
+        TERRAIN_STEEP_PARALLAX_MAX_SAMPLES, MaterialType, BlendMask);
 #elif defined(USE_PARALLAX_MAPPING)
     UV = CalculateParallaxMapping(Position, ViewVector, UV,
         TERRAIN_PARALLAX_START_FADE,
-        TERRAIN_PARALLAX_STOP_FADE, MaterialType, Mask);
+        TERRAIN_PARALLAX_STOP_FADE, MaterialType, BlendMask);
 #endif
 
     return UV;

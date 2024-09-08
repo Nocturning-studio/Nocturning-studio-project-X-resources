@@ -12,7 +12,9 @@ float3 GetViewVector(float3 Position, float3x3 TBN)
     return normalize(mul(TBN, -Position));
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Material components
+/*----------------------------------------------------------------------------------------------------------------*/
+//Main material components
+/*----------------------------------------------------------------------------------------------------------------*/
 float3 GetAlbedo(float2 UV)
 {
     return tex2D(s_base, UV);
@@ -97,7 +99,9 @@ float GetBakedAO(float2 UV)
 {
     return tex2D(s_baked_ao, UV).r;
 }
-
+/*----------------------------------------------------------------------------------------------------------------*/
+//Detail material components
+/*----------------------------------------------------------------------------------------------------------------*/
 float3 GetDetailAlbedo(float2 UV)
 {
     return tex2D(s_detail, UV);
@@ -139,46 +143,48 @@ float GetDetailHeight(float2 UV)
     return 0.5f;
 #endif
 }
-
+/*----------------------------------------------------------------------------------------------------------------*/
+//Detail material components
+/*----------------------------------------------------------------------------------------------------------------*/
 float4 GetTerrainDetailMask(float2 UV)
 {
-    float4 Mask = tex2D(s_mask, UV);
-    return Mask / dot(Mask, 1.0f);
+    float4 BlendMask = tex2D(s_mask, UV);
+    return BlendMask / dot(BlendMask, 1.0f);
 }
 
-float3 GetTerrainDetailAlbedo(float4 Mask, float2 UV)
+float3 GetTerrainDetailAlbedo(float4 BlendMask, float2 UV)
 {
-    float3 RedChannelAlbedo = tex2D(s_dt_r, UV) * Mask.r;
-    float3 GreenChannelAlbedo = tex2D(s_dt_g, UV) * Mask.g;
-    float3 BlueChannelAlbedo = tex2D(s_dt_b, UV) * Mask.b;
-    float3 AlphaChannelAlbedo = tex2D(s_dt_a, UV) * Mask.a;
+    float3 RedChannelAlbedo = tex2D(s_dt_r, UV) * BlendMask.r;
+    float3 GreenChannelAlbedo = tex2D(s_dt_g, UV) * BlendMask.g;
+    float3 BlueChannelAlbedo = tex2D(s_dt_b, UV) * BlendMask.b;
+    float3 AlphaChannelAlbedo = tex2D(s_dt_a, UV) * BlendMask.a;
     return RedChannelAlbedo + GreenChannelAlbedo + BlueChannelAlbedo + AlphaChannelAlbedo;
 }
 
-float4 GetTerrainDetailBump(float4 Mask, float2 UV)
+float4 GetTerrainDetailBump(float4 BlendMask, float2 UV)
 {
-    float4 RedChannelBump = tex2D(s_dn_r, UV) * Mask.r;
-    float4 GreenChannelBump = tex2D(s_dn_g, UV) * Mask.g;
-    float4 BlueChannelBump = tex2D(s_dn_b, UV) * Mask.b;
-    float4 AlphaChannelBump = tex2D(s_dn_a, UV) * Mask.a;
+    float4 RedChannelBump = tex2D(s_dn_r, UV) * BlendMask.r;
+    float4 GreenChannelBump = tex2D(s_dn_g, UV) * BlendMask.g;
+    float4 BlueChannelBump = tex2D(s_dn_b, UV) * BlendMask.b;
+    float4 AlphaChannelBump = tex2D(s_dn_a, UV) * BlendMask.a;
     return RedChannelBump + GreenChannelBump + BlueChannelBump + AlphaChannelBump;
 }
 
-float4 GetTerrainDetailBumpDecompression(float4 Mask, float2 UV)
+float4 GetTerrainDetailBumpDecompression(float4 BlendMask, float2 UV)
 {
-    float4 RedChannelBumpX = tex2D(s_dn_rX, UV) * Mask.r;
-    float4 GreenChannelBumpX = tex2D(s_dn_gX, UV) * Mask.g;
-    float4 BlueChannelBumpX = tex2D(s_dn_bX, UV) * Mask.b;
-    float4 AlphaChannelBumpX = tex2D(s_dn_aX, UV) * Mask.a;
+    float4 RedChannelBumpX = tex2D(s_dn_rX, UV) * BlendMask.r;
+    float4 GreenChannelBumpX = tex2D(s_dn_gX, UV) * BlendMask.g;
+    float4 BlueChannelBumpX = tex2D(s_dn_bX, UV) * BlendMask.b;
+    float4 AlphaChannelBumpX = tex2D(s_dn_aX, UV) * BlendMask.a;
     return RedChannelBumpX + GreenChannelBumpX + BlueChannelBumpX + AlphaChannelBumpX;
 }
 
-float GetTerrainDetailHeight(float4 Mask, float2 UV)
+float GetTerrainDetailHeight(float4 BlendMask, float2 UV)
 {
-    float RedChannelHeight = tex2Dlod0(s_dn_rX, UV).a * Mask.r;
-    float GreenChannelHeight = tex2Dlod0(s_dn_gX, UV).a * Mask.g;
-    float BlueChannelHeight = tex2Dlod0(s_dn_bX, UV).a * Mask.b;
-    float AlphaChannelHeight = tex2Dlod0(s_dn_aX, UV).a * Mask.a;
+    float RedChannelHeight = tex2Dlod0(s_dn_rX, UV).a * BlendMask.r;
+    float GreenChannelHeight = tex2Dlod0(s_dn_gX, UV).a * BlendMask.g;
+    float BlueChannelHeight = tex2Dlod0(s_dn_bX, UV).a * BlendMask.b;
+    float AlphaChannelHeight = tex2Dlod0(s_dn_aX, UV).a * BlendMask.a;
     return RedChannelHeight + GreenChannelHeight + BlueChannelHeight + AlphaChannelHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

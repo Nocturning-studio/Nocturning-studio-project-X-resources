@@ -3,6 +3,8 @@
 // Autor: Deathman
 // Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////////
+//TODO: REVRITE FOR NEW MATERIALS FORMAT
+////////////////////////////////////////////////////////////////////////////////
 #define USE_FOR_TERRAIN_MATERIAL
 ////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
@@ -28,7 +30,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Get detail textures map (4 channels = 4 textures)
-	float4 Mask = GetTerrainDetailMask (Input.UV);
+    float4 BlendMask = GetTerrainDetailMask(Input.UV);
 
 	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
 	float3 DiffuseTextureData = tex2D (s_base, Input.UV);
@@ -39,17 +41,17 @@ GBufferPacked main (Interpolators Input)
 	float3 ViewVector = GetViewVector(Input.Position, TBN);
 
 	// Choose displacement type and calculate UV displacement
-	float2 DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, Mask, TERRAIN_MATERIAL);
+    float2 DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, BlendMask, TERRAIN_MATERIAL);
 
 	// details albedo data, multiplicated by detail map
-	float3 DetailAlbedo = GetTerrainDetailAlbedo (Mask, DetailUV);
+    float3 DetailAlbedo = GetTerrainDetailAlbedo(BlendMask, DetailUV);
     GBuffer.Albedo = 2.0f * DiffuseTextureData.rgb * DetailAlbedo;
 
 	// Get DXT comressed normals + AO + Roughness for all details in 4 textures set
-	float4 DetailBumpData = GetTerrainDetailBump (Mask, DetailUV);
+    float4 DetailBumpData = GetTerrainDetailBump(BlendMask, DetailUV);
 
 	// Get DXT decompressing data + heightmap for all details in 4 textures set
-	float4 DetailBumpDecompressionData = GetTerrainDetailBumpDecompression (Mask, DetailUV);
+    float4 DetailBumpDecompressionData = GetTerrainDetailBumpDecompression(BlendMask, DetailUV);
 
 	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
 	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0f);
@@ -78,7 +80,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.AO = tex2D (s_base, Input.UV).a * AO_BRIGHTNESS;
 
 	// Get baked ao from details
-    GBuffer.BakedAO = AOfromHeight(DetailUV, Input.Position.z, Mask);
+    GBuffer.BakedAO = AOfromHeight(DetailUV, Input.Position.z, BlendMask);
 
 	// Create glossiness from details
     GBuffer.Roughness = invert(DetailBumpData.r);

@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float AOfromHeight(float2 UV, float WorldSpaceDepth
 #ifdef USE_FOR_TERRAIN_MATERIAL
-    , float4 Mask
+    , float4 BlendMask
 #endif
 )
 {
@@ -21,7 +21,7 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
     if (WorldSpaceDepth < AO_RENDER_DISTANCE)
     {
 #ifdef USE_FOR_TERRAIN_MATERIAL
-        float height = GetTerrainDetailHeight(Mask, UV);
+        float height = GetTerrainDetailHeight(BlendMask, UV);
 #else
         float height = GetHeight(UV);
 #endif
@@ -34,7 +34,7 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
             noiseOffset = noiseOffset * 2.0 - 1.0;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-            result += max(GetTerrainDetailHeight(Mask, UV + noiseOffset) - height, 0.0f);
+            result += max(GetTerrainDetailHeight(BlendMask, UV + noiseOffset) - height, 0.0f);
 #else
             result += max(GetHeight(UV + noiseOffset) - height, 0.0f);
 #endif
