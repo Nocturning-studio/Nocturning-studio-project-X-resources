@@ -1,0 +1,38 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+// Created: 27.10.2024
+// Author: Deathman
+// Nocturning studion for NS Project X
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "bloom_common.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+struct OutputTextures
+{
+    float4 BloomTexture : COLOR0;
+    float4 BladesTexture : COLOR1;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+OutputTextures main(float2 TexCoords : TEXCOORD0)
+{
+    OutputTextures Output;
+    
+	float4 ImageColor = tex2Dlod0(s_image, TexCoords);
+    
+    float Amount = GetBladesAmount(ImageColor.rgb);
+    
+    Output.BladesTexture = ImageColor * Amount;
+    
+    //float4 Offset = bloom_resolution.zwzw * float4(-1, -1, +1, +1);
+    //ImageColor += tex2Dlod0(s_image, TexCoords + Offset.xy);
+    //ImageColor += tex2Dlod0(s_image, TexCoords + Offset.zy);
+    //ImageColor += tex2Dlod0(s_image, TexCoords + Offset.xw);
+    //ImageColor += tex2Dlod0(s_image, TexCoords + Offset.zw);
+    //ImageColor *= 1.0f / 5.0f;
+    
+    Amount = GetBloomAmount(ImageColor.rgb);
+    
+    Output.BloomTexture = ImageColor * Amount;
+    
+    return Output;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

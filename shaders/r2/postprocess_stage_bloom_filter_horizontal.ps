@@ -1,34 +1,37 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-// Created: 21.12.2023
-// Author: Deathman
-// Nocturning studion for NS Project X
+// Created: 28.10.2024
+//https://github.com/cansik/processing-bloom-filter/blob/master/ProcessingPostFX/shader/blurFrag.glsl
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
-#include "filters.xrh"
+#include "bloom_common.xrh"
 //////////////////////////////////////////////////////////////////////////////////////////
-#if BLOOM_QUALITY == UNDEFINED_QUALITY
-#define BLOOM_SAMPLES_COUNT 2
-#elif BLOOM_QUALITY == LOW_QUALITY
-#define BLOOM_SAMPLES_COUNT 2
-#elif BLOOM_QUALITY == MIDDLE_QUALITY
-#define BLOOM_SAMPLES_COUNT 4
-#elif BLOOM_QUALITY == HIGHT_QUALITY
-#define BLOOM_SAMPLES_COUNT 4
-#elif BLOOM_QUALITY == ULTRA_QUALITY
-#define BLOOM_SAMPLES_COUNT 6
-#endif
+#define BLOOM_SAMPLES_COUNT 32
+#define SIGMA (screen_res.x * 0.3f)
 //////////////////////////////////////////////////////////////////////////////////////////
-uniform float4 bloom_resolution;
-//////////////////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0): COLOR0
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
 {
-    float4 output = NULL;
-
+    float2 PixelSize = bloom_resolution.zw;
+    
+    // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
+    float3 incrementalGaussian;
+    incrementalGaussian.x = 1.0f / (sqrt(2.0f * PI) * SIGMA);
+    incrementalGaussian.y = exp(-0.5f / (SIGMA * SIGMA));
+    incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
+    
+    float4 BlurredColor = tex2Dlod0(s_bloom, TexCoords) * incrementalGaussian.x;
+    float coefficientSum = incrementalGaussian.x;
+    incrementalGaussian.xy *= incrementalGaussian.yz;
+    
     for (int i = -BLOOM_SAMPLES_COUNT / 2; i < BLOOM_SAMPLES_COUNT / 2; i++)
     {
-        float4 sample = tex2Dlod0 (s_bloom, TexCoords + bloom_resolution.zw * float2 (i, 0));
-        output += sample;
+        BlurredColor += tex2Dlod0(s_bloom, TexCoords + PixelSize * float2(i, 0)) * incrementalGaussian.x;
+        BlurredColor += tex2Dlod0(s_bloom, TexCoords - PixelSize * float2(i, 0)) * incrementalGaussian.x;
+        coefficientSum += 2.0 * incrementalGaussian.x;
+        incrementalGaussian.xy *= incrementalGaussian.yz;
     }
-    return output / BLOOM_SAMPLES_COUNT;
+    
+    BlurredColor /= coefficientSum;
+    
+    return BlurredColor;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

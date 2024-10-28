@@ -4,16 +4,20 @@
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
-#include "filters.xrh"
-///////////////////////////////////////////////////////////////////////////////////
-uniform float2 bloom_parameters;
+#include "bloom_common.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR
 {
     float4 OutColor = tex2Dlod0 (s_image, TexCoords);
 
-	float4 Bloom = box_filter (s_bloom, int (9), TexCoords) * (1.0f + bloom_parameters.x);
-
-    return OutColor + (Bloom * bloom_parameters.y);
+    float4 Offset = screen_res.zwzw * float4(-1, -1, +1, +1);
+    float4 BloomColor = tex2Dlod0(s_bloom, TexCoords);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw);
+    BloomColor *= 1.0f / 5.0f;
+    
+    return OutColor; //BloomColor + OutColor;
 }
 ///////////////////////////////////////////////////////////////////////////////////
