@@ -83,7 +83,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     // Transformate height map from [0; 1] space to [1; 2] and make normals more power
     Material.Normal.xy *= Material.Height + 1.0f;
 
-    Material.Normal.z = pow2(Material.Normal.z);
+    Material.Normal.z = pow4(Material.Normal.z);
 
     // Make normals more power with heightmap
     Material.Normal.z *= Material.Height;
