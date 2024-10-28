@@ -225,7 +225,7 @@ struct LightComponents
 //---------------------------------------------------------//
 // Full PBR lighting model for metallic-roughness materials//
 //---------------------------------------------------------//
-LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
+LightComponents Calculate_PBR_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
 {
     LightComponents Light;
 
@@ -277,16 +277,26 @@ LightComponents Calculate_Phong_Lighting_Model(float Roughness, float Metallness
 {
     LightComponents Light;
 
+    Roughness = max(Roughness, 0.001f);
     Normal = normalize(Normal);
     LightDirection = -normalize(LightDirection);
     float3 ViewDirection = -normalize(Point);
     float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
     float NdotL = max(dot(Normal, LightDirection), 0.00001f);
-    float NdotH = saturate(dot(Normal, HalfWayDirection));
+    float NdotH = max(dot(Normal, HalfWayDirection), 0.00001f);
+    float VdotL = dot(ViewDirection, LightDirection);
+    float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
+    float Glossiness = pow2(invert(Roughness));
 
     Light.Diffuse = NdotL;
-    Light.Specular = pow(NdotH, 128.0f) * invert(Roughness);
-    Light.Subsurface = NULL;
+    float norm_factor = (128.0f+1.0f) / (2.0f*PI);
+    float3 F = fresnelSchlickRoughness(0.04f, HdotV, invert(Glossiness));
+    Light.Specular = pow(NdotH, 128.0f) * Glossiness * norm_factor * Albedo * F;
+    
+    // Fake effect of the light going through the thin foliage
+    float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
+    float scatter = D_GGX(0.36, saturate(-VdotL));
+    Light.Subsurface = wrapNoL * scatter;
 
     return Light;
 }
@@ -315,6 +325,20 @@ LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallne
 
     Light.Specular = NULL;
     Light.Subsurface = NULL;
+
+    return Light;
+}
+
+#define STALKER_BUILD
+LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float AO, float3 LightDirection)
+{
+    LightComponents Light;
+
+#ifdef STALKER_BUILD
+    Light = Calculate_Phong_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, AO, LightDirection);
+#else
+    Light = Calculate_PBR_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, AO, LightDirection);
+#endif
 
     return Light;
 }
