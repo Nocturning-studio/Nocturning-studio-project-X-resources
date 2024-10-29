@@ -1000,7 +1000,7 @@
 			</hint>			
 		</cap_difficulty>
 
-		<list_difficulty x="194" y="20" width="261" height="21">	
+		<list_difficulty x="194" y="20" width="261" height="21" list_length="5">	
 			<options_item entry="g_game_difficulty" group="mm_opt_gameplay"/>
 			<text_color>
 				<e r="216" g="186" b="140"/>
