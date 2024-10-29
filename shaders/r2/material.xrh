@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "material_components.xrh"
 #include "displacement.xrh"
+#include "parallax_shadows.xrh"
 #include "normal_map_functions.xrh"
 #include "fxaa_atoc.xrh"
 #include "ao_from_height.xrh"
@@ -18,6 +19,7 @@ struct MaterialParams
     float Roughness;
     float Metallness;
     float AO;
+    //float ParallaxShadows;
     float Subsurface;
     float Emissive;
 };
@@ -25,11 +27,15 @@ struct MaterialParams
 MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 {
     MaterialParams Material;
-
+    
     float3 ViewVector = GetViewVector(Position, TBN);
-
+    
     UV = GetDisplacement(Position, ViewVector, UV, BASE_MATERIAL);
 
+    //float3 LightDirection = GetLightDirection(sun_dir, TBN);
+    
+    //Material.ParallaxShadows = ShadowCalc(Position, LightDirection, UV, BASE_MATERIAL);
+    
     Material.Albedo = GetAlbedo(UV);
 
     Material.Opacity = GetOpacity(UV);

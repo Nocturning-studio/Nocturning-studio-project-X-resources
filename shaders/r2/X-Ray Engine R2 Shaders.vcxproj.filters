@@ -55,9 +55,6 @@
     <ClInclude Include="shadow_filtering.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="terrain_helper.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="contrast_adaptive_sharpening.xrh">
       <Filter>Forward rendering pipeline\Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
@@ -90,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="screen_space_shadows.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="parallax_shadows.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -213,9 +213,6 @@
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_3.ps">
       <Filter>Forward rendering pipeline\Postprocess\Autoexposure</Filter>
     </None>
-    <None Include="postprocess_stage_autoexposure_pass_combine.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Autoexposure</Filter>
-    </None>
     <None Include="postprocess_stage_antialiasing_pass_fxaa.ps">
       <Filter>Forward rendering pipeline\Postprocess\Anti-Aliasing</Filter>
     </None>
@@ -228,13 +225,10 @@
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps">
       <Filter>Forward rendering pipeline\Postprocess\Motion blur</Filter>
     </None>
-    <None Include="postprocess_stage_bloom_build.ps">
+    <None Include="postprocess_stage_bloom_prepare.ps">
       <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
     </None>
     <None Include="postprocess_stage_bloom_combine.ps">
-      <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
-    </None>
-    <None Include="postprocess_stage_bloom_filter.ps">
       <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
     </None>
     <None Include="postprocess_stage_distortion.ps">
@@ -585,6 +579,30 @@
     <None Include="PCSS.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
     </None>
+    <None Include="postprocess_stage_fog_scattering_pass_horizontal_filter.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Fog scattering</Filter>
+    </None>
+    <None Include="postprocess_stage_fog_scattering_pass_vertical_filter.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Fog scattering</Filter>
+    </None>
+    <None Include="bloom_common.xrh">
+      <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
+    </None>
+    <None Include="postprocess_stage_bloom_blades_filter_vertical.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
+    </None>
+    <None Include="postprocess_stage_bloom_blades_filter_horizontal.ps">
+      <Filter>Forward rendering pipeline\Postprocess\Bloom</Filter>
+    </None>
+    <None Include="effects_sun.s">
+      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+    </None>
+    <None Include="effects_sun.ps">
+      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+    </None>
+    <None Include="effects_sun.vs">
+      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -796,6 +814,12 @@
     </Filter>
     <Filter Include="Forward rendering pipeline\Postprocess\Reflections">
       <UniqueIdentifier>{7edd7d39-4b15-4e16-b588-4b762a2e89e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering pipeline\Postprocess\Fog scattering">
+      <UniqueIdentifier>{e5ed94be-e7b4-434d-b9be-9b4b7c1257ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering pipeline\Editor blenders\Sun">
+      <UniqueIdentifier>{a2d41156-ec75-430e-954d-668f41b982ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

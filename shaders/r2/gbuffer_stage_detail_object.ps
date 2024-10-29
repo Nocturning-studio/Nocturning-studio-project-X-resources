@@ -38,7 +38,7 @@ GBufferPacked main (Interpolators Input)
 	
     GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
 
-    GBuffer.BakedAO = 1.0f;
+    GBuffer.BackedAO = 1.0f;
 
     GBuffer.Normal = normalize(cross(ddx(Input.Position), ddy(Input.Position)));
 
@@ -48,7 +48,7 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.Metallness = 0.0f;
 
-	GBuffer.Subsurface = 0.0f;
+	GBuffer.Subsurface = 1.0f;
 
 	GBuffer.Emissive = 0.0f;
 	

@@ -22,7 +22,7 @@ float4 main (Interpolators Input): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
 
-    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, Ldynamic_dir.xyz);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
     
     float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.01575f, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
@@ -40,9 +40,10 @@ float4 main (Interpolators Input): COLOR0
 
     float3 SunColor = Ldynamic_color.rgb;// * 2.0f;
 
-    Light.Diffuse = lerp(Light.Diffuse, Light.Subsurface, GBuffer.Subsurface) * SunColor * ShadowMap.xxx;
+    Light.Diffuse *= SunColor * ShadowMap.xxx;
     Light.Specular *= SunColor * ShadowMap.xxx;
+    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * (GBuffer.Albedo + 0.5f);
 
-    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular, 0.0f);
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, 0.0f);
 }
 ///////////////////////////////////////////////////////////////////////////////////

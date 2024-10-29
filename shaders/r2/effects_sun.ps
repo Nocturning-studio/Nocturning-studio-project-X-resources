@@ -10,5 +10,5 @@ struct p_TL
 // Pixel
 float4 main(p_TL I) : COLOR
 {
-    return tex2D(s_base, I.Tex0) * I.Color * 2.0f;
+    return tex2D(s_base, I.Tex0) * I.Color;
 }

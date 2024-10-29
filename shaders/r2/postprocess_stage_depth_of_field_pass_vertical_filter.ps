@@ -6,11 +6,21 @@
 #include "common.xrh"
 #include "gbuffer.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
-#define DOF_SEARCH_SIZE 8
+#define DOF_SEARCH_SIZE 4
+///////////////////////////////////////////////////////////////////////////////////
+float3 GetPositionWithSky(float2 TexCoords)
+{
+    float3 Position = GetPosition(TexCoords);
+    
+    if (all(Position) == 0.0f)
+        Position.z = 150.0f;
+    
+    return Position;
+}
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    float BlurPower = DOFFactor (GetDepth (TexCoords));
+    float BlurPower = DOFFactor(GetDepth(TexCoords)) + pow(CalcFogness(GetPositionWithSky(TexCoords)), EXP);
     
     if (BlurPower == 0.0f)
     {
@@ -28,7 +38,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
         
             float3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
 
-            float SampleContribution = DOFFactor (GetDepth (SampleCoords));
+            float SampleContribution = DOFFactor(GetDepth(SampleCoords)) + pow(CalcFogness(GetPositionWithSky(SampleCoords)), EXP);
         
             SummaryImageColor += SampleColor * SampleContribution;
         

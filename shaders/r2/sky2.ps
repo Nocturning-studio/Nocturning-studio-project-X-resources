@@ -9,26 +9,34 @@ struct Interpolators
     float3 UV1: TEXCOORD1;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
+struct OutputTextures
+{
+    float4 Texture0 : COLOR0;
+    float4 Texture1 : COLOR1;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
 uniform samplerCUBE s_sky0;
 uniform samplerCUBE s_sky1;
 //////////////////////////////////////////////////////////////////////////////////////////
-// Pixel
-float4 main (Interpolators Input): COLOR0
+OutputTextures main(Interpolators Input)
 {
+    OutputTextures Output;
+    
     float3 SkyActual = texCUBE (s_sky0, Input.UV0);
     float3 SkyNext = texCUBE (s_sky1, Input.UV1);
     float3 Sky = lerp (SkyActual, SkyNext, Input.Color.w);
 
-    //Sky = sRgbToLinear(Sky);
+    Sky = lerp(Sky, fog_color.rgb, fog_sky_influence);
+    
+    Output.Texture1 = float4(Sky, 0.0f);
 
-    Sky *= 2.0f;
+    float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
+    //Sky *= Exposure * 2.0f;
+    
+    //Sky = exponential_tonemapping(Sky);
 
-    Sky = exponential_tonemapping(Sky);
-
-    //Sky = LinearTosRgb(Sky);
-
-    Sky = lerp (Sky, fog_color.rgb, fog_sky_influence);
-
-    return float4 (Sky, 1.0f);
+    Output.Texture0 = float4(Sky, 1.0f);
+    
+    return Output;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

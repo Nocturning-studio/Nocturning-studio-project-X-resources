@@ -11,6 +11,7 @@
 #include "material_components.xrh"
 #include "normal_map_functions.xrh"
 #include "displacement.xrh"
+#include "parallax_shadows.xrh"
 #include "gbuffer.xrh"
 #include "ao_from_height.xrh"
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,12 @@ GBufferPacked main (Interpolators Input)
 
 	// Choose displacement type and calculate UV displacement
     float2 DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, BlendMask, TERRAIN_MATERIAL);
+	
+	// Get tangent space sun direction
+    //float3 LightDirection = GetLightDirection(sun_dir, TBN);
+    
+	// Get parralx shadows
+    //float ParallaxShadows = ShadowCalc(Input.Position, LightDirection, Input.DetailUV, TERRAIN_MATERIAL, BlendMask);
 
 	// details albedo data, multiplicated by detail map
     float3 DetailAlbedo = GetTerrainDetailAlbedo(BlendMask, DetailUV);
@@ -75,12 +82,12 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Normal = normalize (mul (TBN, NormalMap));
 	
     GBuffer.Position = Input.Position;
-
+	
 	// Get light map ambient
-    GBuffer.AO = tex2D (s_base, Input.UV).a * AO_BRIGHTNESS;
+    GBuffer.AO = tex2D(s_base, Input.UV).a * AO_BRIGHTNESS;
 
 	// Get baked ao from details
-    GBuffer.BakedAO = AOfromHeight(DetailUV, Input.Position.z, BlendMask);
+    GBuffer.BackedAO = AOfromHeight(DetailUV, Input.Position.z, BlendMask);
 
 	// Create glossiness from details
     GBuffer.Roughness = invert(DetailBumpData.r);

@@ -31,9 +31,9 @@ GBufferPacked main (Interpolators Input)
 
     GBuffer.Position = Input.Position;
 
-    GBuffer.AO = EMISSIVE_POWER;
+    GBuffer.AO = 1.0f;
 	
-    GBuffer.BakedAO = 1.0f;
+    GBuffer.BackedAO = 1.0f;
 	
     GBuffer.Roughness = 1.0f;
 	
@@ -41,7 +41,7 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.Subsurface = 0.0f;
 
-	GBuffer.Emissive = 0.0f;
+	GBuffer.Emissive = EMISSIVE_POWER;
 
     return PackGBuffer (GBuffer);
 }

@@ -5,11 +5,33 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "contrast_adaptive_sharpening.xrh"
+#include "bloom_common.xrh"
 ////////////////////////////////////////////////////////////////////////////
 uniform float2 cas_params;
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
-    return float4 (CAS(s_image, TexCoords, cas_params.x, cas_params.y), 1.0f);
+    float4 ImageColor = float4(CAS(s_image, TexCoords, cas_params.x, cas_params.y), 1.0f);
+    float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
+    ImageColor = exponential_tonemapping(ImageColor).rgbb * Exposure * 1.5f;
+    
+    float4 Offset = screen_res.zwzw * float4(-1, -1, +1, +1);
+    float4 BloomColor = tex2Dlod0(s_bloom, TexCoords);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw);
+    BloomColor *= 1.0f / 5.0f;
+    
+    float4 BloomBladesColor = tex2Dlod0(s_bloom_blades, TexCoords);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xy);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zy);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xw);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zw);
+    BloomBladesColor *= 1.0f / 5.0f;
+    
+    return BloomColor + BloomBladesColor + ImageColor;
+    //return BloomBladesColor;
+    //return BloomColor;
 }
 ////////////////////////////////////////////////////////////////////////////

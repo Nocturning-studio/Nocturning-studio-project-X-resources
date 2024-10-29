@@ -12,8 +12,16 @@
 ////////////////////////////////////////////////////////////////////////////
 uniform float debug_mode;
 ////////////////////////////////////////////////////////////////////////////
-float4 main (float2 TexCoords: TEXCOORD0): COLOR
+struct OutputTextures
 {
+    float4 Texture0 : COLOR0;
+    float4 Texture1 : COLOR1;
+};
+////////////////////////////////////////////////////////////////////////////
+OutputTextures main(float2 TexCoords : TEXCOORD0)
+{
+    OutputTextures Output;
+    
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
 
     // Get light context
@@ -64,62 +72,73 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
 	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
-
-    float3 IndirectDiffuse = Irradiance * LightMapAO * Albedo * kD * GBuffer.BakedAO * RealTimeAO;
+    
+    float3 IndirectDiffuse = Irradiance * LightMapAO * Albedo * kD * RealTimeAO * GBuffer.BackedAO;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
     float4 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords);
     float3 Emission = GBuffer.Emissive * Albedo;
 
     float3 SceneColor = IndirectDiffuse + IndirectSpecular + DirectLighting + Emission;
 
-    SceneColor *= 2.0f;
+    float3 Position = GBuffer.Position;
+    
+    if (all(Position) == 0.0f)
+        Position.z = 150.0f;
+    
+    float Fog = CalcFogness(Position);
+    SceneColor = lerp(SceneColor, fog_params.rgb, Fog);
+    float Opacity = pow(Fog, 2.2f);
+    
+    Output.Texture1 = float4(SceneColor, 0.0f);
 
-    SceneColor = exponential_tonemapping(SceneColor);
-
-    //float Exposure = tex2D(s_autoexposure, float2(0.5, 0.5)).r;
+    //float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
+    //SceneColor *= Exposure * 2.0f;
     //SceneColor = CalcExposure(SceneColor, Exposure);
 
+    //SceneColor = exponential_tonemapping(SceneColor);
+    
     //SceneColor = LinearTosRgb(SceneColor);
 
-    float Fog = CalcFogness (GBuffer.Position);
-    SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
-    float Opacity = pow (Fog, 2.2f);
+    if(debug_mode != 0)
+    {
+        if (debug_mode == GBUFFER_ALBEDO)
+            SceneColor = GBuffer.Albedo;
+        else if (debug_mode == GBUFFER_POSITION)
+            SceneColor = GBuffer.Position;
+        else if (debug_mode == GBUFFER_NORMAL)
+            SceneColor = normalize(GBuffer.Normal * 0.5f + 0.5f);
+        else if (debug_mode == GBUFFER_ROUGHNESS)
+            SceneColor = GBuffer.Roughness;
+        else if (debug_mode == GBUFFER_METALLNESS)
+            SceneColor = GBuffer.Metallness;
+        else if (debug_mode == GBUFFER_SUBSURFACE)
+            SceneColor = GBuffer.Subsurface;
+        else if (debug_mode == GBUFFER_EMISSIVE)
+            SceneColor = GBuffer.Emissive;
+        else if (debug_mode == GBUFFER_LIGHTMAP_AO)
+            SceneColor = LightMapAO;
+        else if (debug_mode == GBUFFER_BAKED_AO)
+            SceneColor = GBuffer.BackedAO;
+        else if (debug_mode == DIRECT_LIGHT)
+            SceneColor = DirectLighting;
+        else if (debug_mode == DIRECT_DIFFUSE)
+            SceneColor = DirectLighting;
+        else if (debug_mode == DIRECT_SPECULAR)
+            SceneColor = DirectLighting;
+        else if (debug_mode == INDIRECT_LIGHT)
+            SceneColor = lerp(IndirectDiffuse, IndirectSpecular, GBuffer.Metallness);
+        else if (debug_mode == INDIRECT_LIGHT_DIFFUSE)
+            SceneColor = IndirectDiffuse;
+        else if (debug_mode == INDIRECT_LIGHT_SPECULAR)
+            SceneColor = IndirectSpecular;
+        else if (debug_mode == SUBSURFACE_SCATTERING)
+            SceneColor = NULL; //SubsurfaceAmbient;
+        else if (debug_mode == REAL_TIME_AO)
+            SceneColor = RealTimeAO;
+    }
 
-    if (debug_mode == GBUFFER_ALBEDO)
-        SceneColor = GBuffer.Albedo;
-    else if (debug_mode == GBUFFER_POSITION)
-        SceneColor = GBuffer.Position;
-    else if (debug_mode == GBUFFER_NORMAL)
-        SceneColor = normalize(GBuffer.Normal * 0.5f + 0.5f);
-    else if (debug_mode == GBUFFER_ROUGHNESS)
-        SceneColor = GBuffer.Roughness;
-    else if (debug_mode == GBUFFER_METALLNESS)
-        SceneColor = GBuffer.Metallness;
-    else if (debug_mode == GBUFFER_SUBSURFACE)
-        SceneColor = GBuffer.Subsurface;
-    else if (debug_mode == GBUFFER_EMISSIVE)
-        SceneColor = GBuffer.Emissive;
-    else if (debug_mode == GBUFFER_LIGHTMAP_AO)
-        SceneColor = LightMapAO;
-    else if (debug_mode == GBUFFER_BAKED_AO)
-        SceneColor = GBuffer.BakedAO;
-    else if (debug_mode == DIRECT_LIGHT)
-        SceneColor = DirectLighting;
-    else if (debug_mode == DIRECT_DIFFUSE)
-        SceneColor = DirectLighting;
-    else if (debug_mode == DIRECT_SPECULAR)
-        SceneColor = DirectLighting;
-    else if (debug_mode == INDIRECT_LIGHT)
-        SceneColor = lerp(IndirectDiffuse, IndirectSpecular, GBuffer.Metallness);
-    else if (debug_mode == INDIRECT_LIGHT_DIFFUSE)
-        SceneColor = IndirectDiffuse;
-    else if (debug_mode == INDIRECT_LIGHT_SPECULAR)
-        SceneColor = IndirectSpecular;
-    else if (debug_mode == SUBSURFACE_SCATTERING)
-        SceneColor = NULL;//SubsurfaceAmbient;
-    else if (debug_mode == REAL_TIME_AO)
-        SceneColor = RealTimeAO;
-
-    return float4 (SceneColor, Opacity);
+    Output.Texture0 = float4(SceneColor, Opacity);
+    
+    return Output;
 }
 ////////////////////////////////////////////////////////////////////////////

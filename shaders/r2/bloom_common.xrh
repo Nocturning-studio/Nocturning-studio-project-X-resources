@@ -4,7 +4,7 @@
 // Nocturning studion for NS Project X
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform float4 bloom_resolution;
-uniform float2 bloom_parameters;
+uniform float4 bloom_parameters;
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_bloom;
 uniform sampler2D s_bloom_blades;
@@ -30,9 +30,9 @@ float GetBloomAmount(float3 Color)
 
 float GetBladesAmount(float3 Color)
 {
-    float Theshold = 0.9f;
+    float Theshold = bloom_parameters.z;
     
-    float Brightness = 3.0f;
+    float Brightness = bloom_parameters.w;
     
     float Luminance = GetLuminance(Color) - Theshold;
     Luminance = saturate(Luminance);

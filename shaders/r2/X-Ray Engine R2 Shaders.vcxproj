@@ -160,6 +160,10 @@
     <None Include="ambient_occlusion_stage_pass_gtao.ps" />
     <None Include="ambient_occlusion_stage_pass_ssao_plus.ps" />
     <None Include="ambient_occlusion_stage_pass_ssao.ps" />
+    <None Include="bloom_common.xrh" />
+    <None Include="effects_sun.ps" />
+    <None Include="effects_sun.s" />
+    <None Include="effects_sun.vs" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.ps" />
     <None Include="gbuffer_stage_dynamic_mesh_selflight.vs" />
     <None Include="models_light_panel.ps" />
@@ -245,15 +249,15 @@
     <None Include="postprocess.ps" />
     <None Include="postprocess.s" />
     <None Include="postprocess_stage_antialiasing_pass_fxaa.ps" />
-    <None Include="postprocess_stage_autoexposure_pass_combine.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_1.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_2.ps" />
     <None Include="postprocess_stage_autoexposure_pass_downsampling_step_3.ps" />
     <None Include="postprocess_stage_barrrel_blur_horizontal_pass.ps" />
     <None Include="postprocess_stage_barrrel_blur_vertical_pass.ps" />
-    <None Include="postprocess_stage_bloom_build.ps" />
+    <None Include="postprocess_stage_bloom_blades_filter_horizontal.ps" />
+    <None Include="postprocess_stage_bloom_blades_filter_vertical.ps" />
+    <None Include="postprocess_stage_bloom_prepare.ps" />
     <None Include="postprocess_stage_bloom_combine.ps" />
-    <None Include="postprocess_stage_bloom_filter.ps" />
     <None Include="postprocess_stage_bloom_filter_horizontal.ps" />
     <None Include="postprocess_stage_bloom_filter_vertical.ps" />
     <None Include="postprocess_stage_contrast_adaptive_sharpening.ps" />
@@ -261,6 +265,8 @@
     <None Include="postprocess_stage_depth_of_field_pass_poisson_filter.ps" />
     <None Include="postprocess_stage_depth_of_field_pass_vertical_filter.ps" />
     <None Include="postprocess_stage_distortion.ps" />
+    <None Include="postprocess_stage_fog_scattering_pass_horizontal_filter.ps" />
+    <None Include="postprocess_stage_fog_scattering_pass_vertical_filter.ps" />
     <None Include="postprocess_stage_motion_blur_pass_combine.ps" />
     <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
     <None Include="postprocess_stage_reflections_pass_horizontal_filter.ps" />
@@ -334,11 +340,11 @@
     <ClInclude Include="material.xrh" />
     <ClInclude Include="material_components.xrh" />
     <ClInclude Include="normal_map_functions.xrh" />
+    <ClInclude Include="parallax_shadows.xrh" />
     <ClInclude Include="reflection.xrh" />
     <ClInclude Include="reflections_ssr.xrh" />
     <ClInclude Include="screen_space_shadows.xrh" />
     <ClInclude Include="shadow_filtering.xrh" />
-    <ClInclude Include="terrain_helper.xrh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ambient_occlusion_stage_pass_hbao_plus.ps" />

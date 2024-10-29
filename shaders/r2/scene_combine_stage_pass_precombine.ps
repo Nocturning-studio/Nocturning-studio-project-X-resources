@@ -15,9 +15,8 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
     //float3 IndirectDiffuse = NULL;//CalculateAmbientWithBlurredEnvironment(GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
     
-    //float BakedAO = (GBuffer.BakedAO + 1.0f) * 0.5f;
     //float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    //IndirectDiffuse *= RealTimeAO * BakedAO;
+    //IndirectDiffuse *= RealTimeAO;
 
     //float3 SceneColor = GBuffer.Albedo * (IndirectDiffuse + Light.Diffuse) + Light.Specular;
 

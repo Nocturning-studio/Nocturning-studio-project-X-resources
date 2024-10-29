@@ -29,10 +29,10 @@ float4 main (Interpolators Input): COLOR0
   
 #ifdef USE_SHADOW_MAPPING
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
-    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
 #else
     float ShadowMap = 1.0f;
-    LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, GBuffer.BakedAO, LightDirection);
+    LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
 #endif
     
 #ifdef USE_LIGHT_MAPPING

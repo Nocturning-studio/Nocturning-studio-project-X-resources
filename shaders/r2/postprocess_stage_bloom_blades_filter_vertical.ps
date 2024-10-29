@@ -1,24 +1,37 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-// Created: 27.10.2024
-// Author: Deathman
-// Nocturning studion for NS Project X
+// Created: 28.10.2024
+//https://github.com/cansik/processing-bloom-filter/blob/master/ProcessingPostFX/shader/blurFrag.glsl
 //////////////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "bloom_common.xrh"
 //////////////////////////////////////////////////////////////////////////////////////////
-#define BLOOM_SAMPLES_COUNT 2
+#define BLOOM_SAMPLES_COUNT 4
+#define SIGMA bloom_resolution.y
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
 {
     float2 PixelSize = bloom_resolution.zw;
     
-    float4 BlurredColor = NULL;
+    // Incremental Gaussian Coefficent Calculation (See GPU Gems 3 pp. 877 - 889)
+    float3 incrementalGaussian;
+    incrementalGaussian.x = 1.0f / (sqrt(2.0f * PI) * SIGMA);
+    incrementalGaussian.y = exp(-0.5f / (SIGMA * SIGMA));
+    incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
     
-    for (int y = -BLOOM_SAMPLES_COUNT / 2; y < BLOOM_SAMPLES_COUNT / 2; y++)
+    float4 BlurredColor = tex2Dlod0(s_bloom_blades, TexCoords) * incrementalGaussian.x;
+    float coefficientSum = incrementalGaussian.x;
+    incrementalGaussian.xy *= incrementalGaussian.yz;
+    
+    for (int i = -BLOOM_SAMPLES_COUNT / 2; i < BLOOM_SAMPLES_COUNT / 2; i++)
     {
-        BlurredColor += tex2Dlod0(s_bloom_blades, TexCoords + PixelSize * float2(0, y));
+        BlurredColor += tex2Dlod0(s_bloom_blades, TexCoords + PixelSize * float2(0, i)) * incrementalGaussian.x;
+        BlurredColor += tex2Dlod0(s_bloom_blades, TexCoords - PixelSize * float2(0, i)) * incrementalGaussian.x;
+        coefficientSum += 2.0 * incrementalGaussian.x;
+        incrementalGaussian.xy *= incrementalGaussian.yz;
     }
     
-    return BlurredColor / BLOOM_SAMPLES_COUNT;
+    BlurredColor /= coefficientSum;
+    
+    return BlurredColor;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
