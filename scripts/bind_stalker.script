@@ -10,7 +10,8 @@ local game_difficulty_by_num = {
 	[0] = "gd_novice",
 	[1] = "gd_stalker",
 	[2] = "gd_veteran",
-	[3] = "gd_master"
+	[3] = "gd_master",
+	[4] = "gd_legend"
 	}
 
 lasthealth  = 0
