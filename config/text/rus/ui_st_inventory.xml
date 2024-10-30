@@ -3,20 +3,29 @@
 	<string id="st_activate_artefact">
 		<text>активировать артефакт</text>
 	</string>
-	<string id="st_attach_gl_to_rifle">
-		<text>прицепить гранатомет к винтовке</text>
+	<string id="st_attach_gl_to_slot1">
+		<text>прицепить гранатомет к оружию в первой €чейке</text>
 	</string>
-	<string id="st_attach_scope_to_pistol">
-		<text>прицепить прицел к пистолету</text>
+	<string id="st_attach_gl_to_slot2">
+		<text>прицепить гранатомет к оружию во второй €чейке</text>
 	</string>
-	<string id="st_attach_scope_to_rifle">
-		<text>прицепить прицел к винтовке</text>
+	<string id="st_attach_scope_to_slot1">
+		<text>прицепить прицел к оружию в первой €чейке</text>
 	</string>
-	<string id="st_attach_silencer_to_pistol">
-		<text>прицепить глушитель к пистолету</text>
+	<string id="st_attach_scope_to_slot2">
+		<text>прицепить прицел к оружию во второй €чейке</text>
 	</string>
-	<string id="st_attach_silencer_to_rifle">
-		<text>прицепить глушитель к винтовке</text>
+	<string id="st_attach_silencer_to_slot1">
+		<text>прицепить глушитель к оружию в первой €чейке</text>
+	</string>
+	<string id="st_attach_silencer_to_slot2">
+		<text>прицепить глушитель к оружию во второй €чейке</text>
+	</string>
+	<string id="st_move_to_slot1">
+		<text>переместить в €чейку 1</text>
+	</string>
+	<string id="st_move_to_slot2">
+		<text>переместить в €чейку 2</text>
 	</string>
 	<string id="st_base_cost">
 		<text>цена</text>
@@ -52,13 +61,7 @@
 		<text>убрать в рюкзак</text>
 	</string>
 	<string id="st_move_to_slot">
-		<text>переместить в слот</text>
-	</string>
-	<string id="st_move_to_slot1">
-		<text>переместить в слот 1</text>
-	</string>
-	<string id="st_move_to_slot2">
-		<text>переместить в слот 2</text>
+		<text>переместить в €чейку</text>
 	</string>
 	<string id="st_sell_item">
 		<text>продать предмет</text>
