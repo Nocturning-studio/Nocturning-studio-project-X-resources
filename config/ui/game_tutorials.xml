@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding="UTF-8"?>
+﻿<?xml version='1.0' encoding="UTF-8"?>
 <window>
 
 <!-- ------------------------------------------------------------------------- -->
@@ -739,13 +739,17 @@
 			<pda_section/>
 			<grab_input>0</grab_input>
 			<main_wnd>
-				<auto_static start_time="0" length_sec="10000" x="350" y="360" width="300" height="60">
+				<auto_static start_time="2" length_sec="10000" x="350" y="360" width="300" height="60" light_anim="credits_head" la_cyclic="0"  la_text="1" la_alpha="1">
 					<window_name>w1</window_name>
 					<text font="graffiti50"  r="255" g="0" b="0" a="255" align="c">st_game_over</text>
 				</auto_static>
-				<auto_static start_time="3" length_sec="10000" x="350" y="660" width="300" height="60" light_anim="ui_pda_contacts" la_cyclic="1" la_text="1" la_alpha="1">
+				<auto_static start_time="4" length_sec="10000" x="350" y="660" width="300" height="60" light_anim="credits_head" la_cyclic="0" la_text="1" la_alpha="1">
 					<window_name>w2</window_name>
-					<text font="graffiti22"  r="255" g="0" b="0" a="255" align="c">st_game_over_press_jump</text>
+					<text font="graffiti22"  r="255" g="0" b="0" a="255" align="c">st_game_over_main_menu</text>
+				</auto_static>
+				<auto_static start_time="5" length_sec="10000" x="350" y="690" width="300" height="60" light_anim="credits_head" la_cyclic="0" la_text="1" la_alpha="1">
+					<window_name>w2</window_name>
+					<text font="graffiti22"  r="255" g="0" b="0" a="255" align="c">st_game_over_last_save</text>
 				</auto_static>
 			</main_wnd>
 		</item>
