@@ -12,8 +12,11 @@ struct v2p
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D s_base0;
 uniform sampler2D s_base1;
+uniform sampler2D s_grad0;
+uniform sampler2D s_grad1;
 uniform sampler2D s_noise;
 uniform float4 c_brightness;
+uniform float4 c_colormap;
 //////////////////////////////////////////////////////////////////////////////////////////
 // Pixel
 float4 main (v2p I): COLOR
@@ -29,11 +32,18 @@ float4 main (v2p I): COLOR
 
 	float3 t_0 = tex2Dlod0 (s_base0, TexCoords0);
 	float3 t_1 = tex2Dlod0 (s_base1, TexCoords1);
-	float3 image = (t_0 + t_1) * .5;
+    float3 image_o = (t_0 + t_1) * .5;
     
 #ifdef USE_CHROMATIC_ABBERATION
-    image.rgb = ChromaticAberration (s_base, image.rgb, (TexCoords0 + TexCoords1) * 0.5f);
+    image_o.rgb = ChromaticAberration (s_base, image_o.rgb, (TexCoords0 + TexCoords1) * 0.5f);
 #endif
+    
+    float grad_i = dot(image_o, (0.3333h).xxx);
+
+    float3 image0 = tex2Dlod0(s_grad0, float2(grad_i, 0.5f));
+    float3 image1 = tex2Dlod0(s_grad1, float2(grad_i, 0.5f));
+    float3 image = lerp(image0, image1, c_colormap.y);
+    image = lerp(image_o, image, c_colormap.x);
     
     float gray = dot (image, I.gray);
     image = lerp (gray, image, I.gray.w);
