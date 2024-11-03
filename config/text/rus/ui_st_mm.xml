@@ -686,6 +686,15 @@
 	<string id="st_opt_max">
 		<text>Сильное</text>
 	</string>
+	<string id="ui_mm_r2_sun_shafts_quality">
+		<text>Качество объемного света солнца</text>
+	</string>
+	<string id="ui_mm_r2_sun_shafts_enabled">
+		<text>Объемный свет солнца</text>
+	</string>
+	<string id="ui_mm_r2_sun_shafts_enabled_hint">
+		<text>Имитация эффекта рассеивания солнечного света в тумане.</text>
+	</string>
 
 	<!-- Глубина цвета -->
 	<string id="ui_mm_r2_rt_format">

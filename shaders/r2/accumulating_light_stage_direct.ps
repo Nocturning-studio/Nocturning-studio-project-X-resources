@@ -8,6 +8,7 @@
 #include "BRDF.xrh"
 #include "shadow_filtering.xrh"
 #include "screen_space_shadows.xrh"
+#include "volumetric_light.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 // Constants
 uniform float sun_far;
@@ -34,16 +35,23 @@ float4 main (Interpolators Input): COLOR0
     ShadowMap = lerp (ShadowMap, 1.0f, ShadowMapFadingFactor);
 #endif    
 
+    // Weapon shadowing
     float NdotL = abs(dot(normalize(GBuffer.Normal), Ldynamic_dir.rgb));
     if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
         ShadowMap *= TraceShadow(Ldynamic_dir, Position);
 
-    float3 SunColor = Ldynamic_color.rgb;// * 2.0f;
+    float3 SunColor = Ldynamic_color.rgb;
 
     Light.Diffuse *= SunColor * ShadowMap.xxx;
     Light.Specular *= SunColor * ShadowMap.xxx;
     Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * (GBuffer.Albedo + 0.5f);
 
-    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, 0.0f);
+    float Volumetric = 0.0f;
+    
+#if SUN_SHAFTS_ENABLED == 1 && FAR_CASCADE == 0
+    Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir);
+#endif
+    
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, Volumetric);
 }
 ///////////////////////////////////////////////////////////////////////////////////

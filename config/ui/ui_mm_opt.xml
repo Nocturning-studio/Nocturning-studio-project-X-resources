@@ -783,6 +783,34 @@
 			<options_item entry="r2_ls_squality" group="mm_opt_video_adv"/>
 		</track_particles_distance>
 
+		<cap_r2_sun_shafts_enabled x="20" y="0" width="143" height="21">
+			<text font="letterica16" r="215" g="195" b="170">ui_mm_r2_sun_shafts_enabled</text>
+			<hint x="0" y="0" changeVisability="1">
+				<text align="l" font="letterica16">ui_mm_r2_sun_shafts_enabled_hint</text>
+				<hint_texture a="190" r="0" g="0" b="0">ui\ui_console</hint_texture>
+				<text_color>
+					<e r="0" g="0" b="0" a="0"/> 		<!-- Hidded -->
+					<h r="215" g="195" b="170" a="160"/> 	<!-- Enabled -->
+				</text_color>
+			</hint>
+		</cap_r2_sun_shafts_enabled>
+		<check_r2_sun_shafts_enabled x="194" y="0" width="243" height="21">
+			<options_item entry="r2_sun_shafts_enabled" group="mm_opt_video_adv"/>
+		</check_r2_sun_shafts_enabled>
+
+		<cap_r2_sun_shafts_quality x="20" y="0" width="143" height="21">
+			<text font="letterica16" r="215" g="195" b="170">ui_mm_r2_sun_shafts_quality</text>
+		</cap_r2_sun_shafts_quality>
+		<list_r2_sun_shafts_quality x="194" y="0" width="245" height="21" list_length="3">
+			<options_item entry="r2_sun_shafts_quality" group="mm_opt_video_adv"/>
+			<text_color>
+				<e r="216" g="186" b="140"/>
+				<d r="227" g="199" b="178"/>
+			</text_color>
+			<list_font_s r="240" g="217" b="182"/>
+			<list_font	 r="216" g="186" b="140" font="letterica16"/>
+		</list_r2_sun_shafts_quality>
+
 		<cap_r2_ao_quality x="20" y="0" width="143" height="21">
 			<text font="letterica16" r="215" g="195" b="170">ui_mm_r2_ao_quality</text>
 		</cap_r2_ao_quality>

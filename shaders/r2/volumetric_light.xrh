@@ -1,0 +1,65 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 03.11.2024
+// Authors: Igor Lobanchikov, Deathman
+// Code by GSC Gameworld
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "shadow_filtering.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+#define RAY_PATH 2.0h
+#define JITTER_TEXTURE_SIZE	128.0f
+///////////////////////////////////////////////////////////////////////////////////
+#if SUN_SHAFTS_QUALITY == 1
+#define RAY_SAMPLES	24
+#elif SUN_SHAFTS_QUALITY == 2
+#define RAY_SAMPLES	32
+#elif SUN_SHAFTS_QUALITY == 3
+#define RAY_SAMPLES	48
+#endif
+///////////////////////////////////////////////////////////////////////////////////
+float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Direction)
+{
+    float OutputColor = 0.0f;
+
+    if (sun_shafts_intensity.x >= 0.01f)
+    {
+        //	Variable ray length, variable step dencity, use jittering
+		float4 Jitter = tex2Dlod0(s_blue_noise, float4(screen_res.x / JITTER_TEXTURE_SIZE * TexCoords.xy / TexCoords.w, 0.0f, 0.0f));
+		float coeff = (RAY_SAMPLES - 1.0f * Jitter.x) / (RAY_SAMPLES * RAY_SAMPLES);
+        float3 direction = Position * coeff;
+
+        float depth = Position.z;
+        float deltaDepth = direction.z;
+
+        float4 current = mul(m_shadow, float4(Position, 1.0f));
+        float4 delta = mul(m_shadow, float4(direction, 0.0f));
+
+        float max_density = sun_shafts_intensity;
+        float density = max_density / RAY_SAMPLES;
+
+        if (depth < 0.0001f)
+			OutputColor = max_density;
+
+        for (int i = 0; i < RAY_SAMPLES; ++i)
+        {
+            //if (depth > 0.3f)
+			OutputColor += density * sample_shadow_map(current, float2(0.0f, 0.0f));
+
+            depth -= deltaDepth;
+            current -= delta;
+        }
+
+        float fSturation = -Light_Direction.z;
+
+        //	Normalize dot product to
+        fSturation = 0.5f * fSturation + 0.5f;
+
+        //	Map saturation to 0.2..1
+        fSturation = 0.80f * fSturation + 0.20f;
+
+		OutputColor *= fSturation;
+	}
+
+	return OutputColor;
+}
