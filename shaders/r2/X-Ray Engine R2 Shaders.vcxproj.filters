@@ -603,6 +603,9 @@
     <None Include="effects_sun.vs">
       <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
     </None>
+    <None Include="accumulating_light_stage_pass_volumetric.ps">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Volumetric\Direct</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">

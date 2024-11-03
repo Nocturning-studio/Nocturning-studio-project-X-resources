@@ -89,6 +89,8 @@ OutputTextures main(float2 TexCoords : TEXCOORD0)
     SceneColor = lerp(SceneColor, fog_params.rgb, Fog);
     float Opacity = pow(Fog, 2.2f);
     
+    SceneColor += tex2Dlod0(s_vollight, TexCoords);
+    
     Output.Texture1 = float4(SceneColor, 0.0f);
 
     //float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;

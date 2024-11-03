@@ -147,6 +147,7 @@
     <None Include="accumulating_light_stage_mask.vs" />
     <None Include="accumulating_light_stage_occlusion_culling.ps" />
     <None Include="accumulating_light_stage_occlusion_culling.vs" />
+    <None Include="accumulating_light_stage_pass_volumetric.ps" />
     <None Include="accumulating_light_stage_point.ps" />
     <None Include="accumulating_light_stage_spot.ps" />
     <None Include="accumulating_light_stage_sun_mask.ps" />
