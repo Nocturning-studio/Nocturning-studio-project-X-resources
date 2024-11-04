@@ -39,6 +39,7 @@
 #include "w_sig550.ltx"
 #include "w_abakan.ltx"
 #include "w_g36.ltx"
+#include "w_pkm.ltx"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Огнестрельное оружие
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -454,7 +455,41 @@ impair			= 1.05
 buck_shot		= 1
 tracer			= on
 wm_size         = 0.05
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[ammo_7.62x54r]:ammo_base
+GroupControlSection	= spawn_group
+discovery_dependency = 
+$spawn			= "weapons\ammo\ammo_7.62x54r" ; option for Level Editor
+class			= AMMO
+cform                   = skeleton
+visual                  = weapons\pkm\ammo_762x54r_box.ogf
+description		= enc_weapons1_ammo_ammo-7.62x54r
+$prefetch 		= 64
 
+cost			= 2000
+
+box_size		= 100
+
+inv_name		= ammo-7.62x54r_s
+inv_name_short	        = ammo-7.62x54r
+inv_weight		= 2.0
+
+inv_grid_width     = 2
+inv_grid_height    = 1
+inv_grid_x         = 10
+inv_grid_y         = 26
+
+
+k_dist			= 1
+k_disp			= 4
+k_hit			= 1
+k_impulse		= 1.25
+k_pierce		             = 1.25
+impair			= 1.25
+buck_shot		= 1
+tracer			= on
+wm_size                 = 0.09
+explosive		= on
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [ammo_7.62x54_7h1]:ammo_base
 GroupControlSection	= spawn_group

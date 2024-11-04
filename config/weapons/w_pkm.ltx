@@ -1,0 +1,194 @@
+[wpn_pkm]:identity_immunities
+GroupControlSection		= spawn_group
+discovery_dependency	= 
+$spawn              	= "weapons\pkm"	; name and section in level editor
+$npc					= on				
+$prefetch 				= 8
+scheduled				= off               ;[] option for ALife Simulator
+cform               	= skeleton
+class               	= WP_LR300			; class of the weapon that corresponding to CPP class
+min_radius          	= 0				; [] for AI
+max_radius          	= 50				; [] for AI
+description				= enc_weapons1_wpn-pkm
+	
+ef_main_weapon_type		= 2
+ef_weapon_type			= 6
+
+;-----------------------------------------------------------------------------------
+holder_range_modifier	= 1.0		       ; во скьJБEБEраБEувеличиваетс€ eye_range 
+holder_fov_modifier		= 0.7              ; во скьJБEБEраБEувеличиваетс€ eye_fov
+;-----------------------------------------------------------------------------------
+
+
+cost					= 20000				; the price of the item
+weapon_class			= assault_rifle		; the type of the box that will be used in buy-menu in multiplayer mode	
+	
+ammo_limit			= 250				; obsolete
+ammo_elapsed			= 100				; obsolete
+	
+ammo_mag_size			= 100				; clip (magazine) size
+fire_modes			= -1
+
+ammo_class			= ammo_7.62x54r   ; name of the ltx-section of used ammo 
+
+hand_dependence			= 1									; how many hands (1 or 2) we used to hold weapon in
+single_handed			= 0
+	
+slot 				= 2									; number of slot in inventory we put weapon in (1 - knife slot, 2 - pistol, 3 - rifle, 4 - grenade, 5 - apparatus)
+animation_slot			= 2									; type of the animation that will be used
+
+
+inv_name	        	= wpn-pkm_name								; name in inventory	
+inv_name_short			= wpn-pkm_name	
+inv_weight			= 7.5							; weight in inventory
+
+inv_grid_width     = 6
+inv_grid_height    = 2
+inv_grid_x         = 9
+inv_grid_y         = 28
+
+
+kill_msg_x		= 0
+kill_msg_y		= 123
+kill_msg_width		= 69
+kill_msg_height		= 30
+
+;params of weapon recoil
+fire_dispersion_base			= 0.1		;угьJ (БEградусах) базовоБEдисперсиБEъAужБE (ъAужБE зажатого БEтисках)
+zoom_fire_dispersion_base		= 0.05
+control_inertion_factor			= 2.4f
+
+;ќтдача
+cam_relax_speed         		= 4	         ;скъAъBть возврата БEисходньD БEБEжеыGБE
+cam_dispersion          		= 0.05		;увеличенБE угБE (БEградусах) БEБEждым выстреБEБE
+cam_dispersion_inc			= 0.15		;увеличениe cam_dispersion БEБEждым выстреБEБE
+cam_dispertion_frac			= 0.9		;ствоБEбудеБEБEдыБEтьБE ъь cam_dispersion*cam_dispertion_frac +- cam_dispersion*(1-cam_dispertion_frac)
+cam_max_angle				= 3.0		;БEБEималБEый угьJ ъCдачи
+cam_max_angle_horz			= 3.0		;(degree) maximum shot horizontal degree 
+cam_step_angle_horz			= 0.25		;(degree) size of step camera moved in horizontal position while shooting
+
+fire_dispersion_condition_factor 	= 5		;увеличение дисперсиБEБEБEъGентаБEБEБEБEБEималБEьK изыMсе 
+misfire_probability 		        = 0.003	;веро€тнъBть ъBечБE БEБEБEБEималБEьK изыMсе 
+misfire_condition_k			= 0.05
+condition_shot_dec 			= 0.00005	;увеличение изыMса БEБEБEждьK выстреБE
+;-----------------------------------------------------------------------------------
+
+fire_point             		=  0.0, 0.27109, 0.87317		; position (3rd person view) for particles of fire 
+;fire_point2            		=  0.0, 0.262, 0.547		; position (3rd person view) for particles of fire (when shooting with secondary fire)
+
+flame_particles				= weapons\generic_weapon03	; particles for shooting effects
+smoke_particles				= weapons\generic_shoot_00
+grenade_flame_particles		= weapons\generic_weapon01
+	
+shell_point		 			= 0.00, 0.262, 0.189			; position (3rd person view) for shell to throw out
+shell_particles	 			= weapons\generic_shells	; name of the particles for shells
+
+PDM_disp_base 				= 1.0
+PDM_disp_vel_factor 			= 2.1
+PDM_disp_accel_factor 			= 2.1
+PDM_crouch	 			= 1.0
+PDM_crouch_no_acc 			= 1.0
+
+; ttc
+hit_power          = 0.70, 0.74, 0.77, 0.8	;size of damage by bullet
+hit_impulse		 		= 200		;size of physic impulse by bullet	
+hit_type 				= fire_wound 	;[] type of the wound
+
+fire_distance            		= 150		;maximum fire distance that bullet can fly
+bullet_speed				= 500		;starting bullet speed
+rpm                      		= 600		;max round per minute
+sprint_allowed			        = false
+
+use_aim_bullet				= false		;ѕьCдерживаетс€ БE БEрвБE суБEер БEБE
+time_to_aim				= 1.0	
+
+silencer_hit_power       		= 0.74
+silencer_hit_impulse	 		= 120
+silencer_fire_distance   		= 200
+silencer_bullet_speed	 		= 600
+
+hud                      	= wpn_pkm_hud				; name of the section of the hud
+
+position         	        = -0.026, -0.215, -0.03			; position (offset) and orientation of the weapon in the hands of 
+character
+orientation      	        = 0,0,0						; (3rd person view)
+
+;--STRAP PARAMETERS-----------------------------------------------------------------
+strap_position         		= -0.18,-0.45,0.2			; position (offset) and orientation of the weapon when it is strapped
+strap_orientation      		= -10,-5,10					; (3rd person view in degrees)
+strap_bone0					= bip01_spine2
+strap_bone1					= bip01_spine1
+
+visual         		        = weapons\pkm\pkm.ogf	; name of the model for 3rd person view
+
+light_color					= 0.6,0.5,0.3				; params for light during the fire
+light_range					= 5							; radius
+light_var_color				= 0.05						
+light_var_range				= 0.5
+light_time 					= 0.2						
+
+
+ph_mass						= 7							; physic mass (kg)
+
+
+;addons
+scope_status			= 0							; 0 - no addon
+silencer_status			= 0							; 1 - permanent
+grenade_launcher_status		= 0							; 2 - attachable
+
+zoom_enabled			= true						; (on,off)zoom mode (right mouse button)
+scope_zoom_factor	    	= 55						; fov for zoom mode
+
+snd_draw					= weapons\generic_draw
+snd_holster					= weapons\generic_holster
+snd_shoot					= weapons\pkm_shot
+snd_shoot1					= weapons\pkm_shot
+snd_shoot2					= weapons\pkm_shot
+snd_shoot3					= weapons\pkm_shot
+snd_empty					= weapons\gen_empty, 0.5
+snd_reload					= weapons\pkm_reload
+
+
+snd_switch					= weapons\groza_switch, 1.0, 0.5
+
+;-----------------------------------------------------------------------------
+;-- HUD DESCRIPTION
+;-----------------------------------------------------------------------------
+ 
+[wpn_pkm_hud]
+
+
+;similar to corresponding params in weapon section but for 1st person view
+
+shell_point          		= 0.15, -0.03, -0.05
+shell_dir		 	= 0.0, 1.0, 0.0
+
+fire_point       	        = 0.25,-0.085,-0.0
+fire_bone               	= wpn_body
+
+orientation             	= 0, 0, 0		
+position                	= 0, 0.0, 0.0
+visual                  	= weapons\pkm\pkm_hud.ogf
+
+;grenade_bone            	= wpn_grenade	; name of the bone in the model for grenade launcher
+
+; animation names
+
+anim_idle					= idle
+anim_idle_aim				= idle_aim
+anim_reload					= reload
+anim_draw					= draw
+anim_holster				= holster
+anim_shoot					= shoot
+anim_idle_sprint			= idle_sprint
+			
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;HUD offset in zoom mode (to all)
+;(use CONSOLE: hud_adjust_mode 0,1,2, then keys WSADQE and P to show current value in console)
+
+zoom_offset             = -0.15490,0.0470,-0.02
+zoom_rotate_x		= 0.040
+zoom_rotate_y		= 0.035
+
+
+zoom_hide_crosshair	= true					;to hide crosshair in zoom 
