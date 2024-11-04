@@ -76,7 +76,7 @@ OutputTextures main(float2 TexCoords : TEXCOORD0)
     
     float3 IndirectDiffuse = Irradiance * LightMapAO * Albedo * kD * RealTimeAO * GBuffer.BackedAO;
     float3 IndirectSpecular = ReflectedSky * LightMapAO * kS;
-    float4 DirectLighting = LightAccumulator.rgb;
+    float3 DirectLighting = LightAccumulator.rgb;
     float3 Emission = GBuffer.Emissive * Albedo;
 
     float3 SceneColor = IndirectDiffuse + IndirectSpecular + DirectLighting + Emission;
