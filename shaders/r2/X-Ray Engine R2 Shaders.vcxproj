@@ -147,12 +147,10 @@
     <None Include="accumulating_light_stage_mask.vs" />
     <None Include="accumulating_light_stage_occlusion_culling.ps" />
     <None Include="accumulating_light_stage_occlusion_culling.vs" />
-    <None Include="accumulating_light_stage_pass_volumetric.ps" />
     <None Include="accumulating_light_stage_point.ps" />
     <None Include="accumulating_light_stage_spot.ps" />
     <None Include="accumulating_light_stage_sun_mask.ps" />
     <None Include="accumulating_light_stage_volume.vs" />
-    <None Include="accumulating_light_stage_volumetric_sun_cascade.s" />
     <None Include="alpha_blend_lightmap_lighted.ps" />
     <None Include="alpha_blend_lightmap_lighted.vs" />
     <None Include="ambient_occlusion_blurring_stage_pass_vertical_filter.ps" />
@@ -346,6 +344,7 @@
     <ClInclude Include="reflections_ssr.xrh" />
     <ClInclude Include="screen_space_shadows.xrh" />
     <ClInclude Include="shadow_filtering.xrh" />
+    <ClInclude Include="volumetric_light.xrh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ambient_occlusion_stage_pass_hbao_plus.ps" />

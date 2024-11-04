@@ -91,6 +91,9 @@
     <ClInclude Include="parallax_shadows.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="volumetric_light.xrh">
+      <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="accumulating_light_stage_mask.vs">
@@ -107,9 +110,6 @@
     </None>
     <None Include="accumulating_light_stage_volume.vs">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
-    </None>
-    <None Include="accumulating_light_stage_volumetric_sun_cascade.s">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Volumetric\Direct</Filter>
     </None>
     <None Include="ambient_occlusion_blurring_stage_pass_bilinear_filter.ps">
       <Filter>Deffered rendering pipeline\Ambient occlusion stage\Blurring</Filter>
@@ -603,9 +603,6 @@
     <None Include="effects_sun.vs">
       <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
     </None>
-    <None Include="accumulating_light_stage_pass_volumetric.ps">
-      <Filter>Deffered rendering pipeline\Light accumulating stage\Volumetric\Direct</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
@@ -643,12 +640,6 @@
     </Filter>
     <Filter Include="Deffered rendering pipeline\Light accumulating stage\Masking">
       <UniqueIdentifier>{2d6d1344-c086-4443-87dc-8abae9513c9d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Volumetric">
-      <UniqueIdentifier>{c5e36bb6-4d63-4f29-9599-377989f0dc34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Deffered rendering pipeline\Light accumulating stage\Volumetric\Direct">
-      <UniqueIdentifier>{6d04a771-ca8b-4a0c-8898-a26aa2bbd143}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deffered rendering pipeline\Ambient occlusion stage\Main calculating">
       <UniqueIdentifier>{d5dcc759-f5b8-44d4-bdd4-1ac710de468f}</UniqueIdentifier>
