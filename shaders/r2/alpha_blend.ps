@@ -1,0 +1,71 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//Authors: Deathman, LVutner
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "fxaa_atoc.xrh"
+#include "gbuffer.xrh"
+#include "BRDF.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+struct v2p
+{
+ 	float2 tc0: TEXCOORD0; // base
+ 	float2 tc1: TEXCOORD1; // lmap
+	float2 tc2: TEXCOORD2; // hemi
+	float3 tc3: TEXCOORD3; // env
+	float3 position: TEXCOORD4;
+    float3 normal : TEXCOORD5;
+    float4 tctexgen : TEXCOORD6;
+  	float3 c0: COLOR0;
+	float3 c1: COLOR1;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+struct PixelShaderOutputStruct
+{
+	float4 Generic_0: COLOR0;
+	float4 Position: COLOR1;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+PixelShaderOutputStruct main (v2p I, float2 Pos2D: VPOS)
+{
+    float3 Albedo = NULL;
+    float Opacity = NULL;
+    
+#if ALPHA_TEST_AA == FXAA_ATOC
+    // Get Albedo and opacity with fxaa
+    calc_fxaa_atoc (I.tc0, Albedo, Opacity);
+#else
+    float4 BaseTextureData = tex2D (s_base, I.tc0);
+    Albedo = BaseTextureData.rgb;
+    Opacity = BaseTextureData.a;
+#endif 
+
+	// lighting
+    float2 s_coords = (Pos2D.xy + 0.5) * screen_res.zw;
+    float Shadow = tex2D(s_shadow_accumulator, s_coords);
+    float Volumetric = tex2D(s_light_accumulator, s_coords).a;
+    
+    float3 WorldSpaceNormal = mul(m_v2w, I.normal);
+    float3 IrradianceActualHour = texCUBElod(env_s0, float4(WorldSpaceNormal, 8));
+    float3 IrradianceNextHour = texCUBElod(env_s0, float4(WorldSpaceNormal, 8));
+    float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
+    Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
+    
+    LightComponents Light = Calculate_Simple_Diffuse_Lighting_Model(0.9, 0.0f, Albedo, I.position, I.normal, L_sun_dir_w); //Fix this hardcode
+    
+    float LightMapAO = pow(pow(avg3(tex2D(s_hemi, I.tc2).rgb) + 0.15f, 1.0f / 2.2f), 2.2f); //Fix this shit
+    
+    float3 Indirect = Irradiance * LightMapAO;
+    float3 Direct = Light.Diffuse * Shadow;
+    Albedo.rgb *= Indirect + Direct + Volumetric * sun_color;
+	
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness (I.position);
+    Albedo = lerp (Albedo, fog_params.rgb, Fog);
+    Opacity *= 1.0f - pow(Fog, 2.2f);
+    
+    PixelShaderOutputStruct Output;
+    Output.Generic_0 = float4 (Albedo, Opacity);
+    Output.Position = PackPositionAndNormal(I.position, NULL);
+    return Output;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

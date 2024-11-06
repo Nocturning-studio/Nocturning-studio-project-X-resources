@@ -275,7 +275,6 @@
     <None Include="scene_combine_stage.vs" />
     <None Include="scene_combine_stage_debug.ps" />
     <None Include="scene_combine_stage_pass_precombine.ps" />
-    <None Include="scene_combine_stage_pass_volumetric.s" />
     <None Include="selflight.ps" />
     <None Include="selflight.s" />
     <None Include="selflight.vs" />
