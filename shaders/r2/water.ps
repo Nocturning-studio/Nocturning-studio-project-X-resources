@@ -1,107 +1,136 @@
 #include "common.xrh"
 #include "gbuffer.xrh"
+#include "BRDF.xrh"
 
 struct vf
 {
-        float4 hpos: POSITION;
-		float2 tbase: TEXCOORD0; // base
-        float2 tnorm0: TEXCOORD1; // nm0
-        float2 tnorm1: TEXCOORD2; // nm1
-        float3 M1: TEXCOORD3;
-        float3 M2: TEXCOORD4;
-        float3 M3: TEXCOORD5;
-        float3 v2point: TEXCOORD6;
-		float4 tctexgen: TEXCOORD7;
-		float3 position: TEXCOORD8;
-        float4 c0: COLOR0;
+    float4 hpos : POSITION;
+    float2 tbase : TEXCOORD0; // base
+    float2 tnorm0 : TEXCOORD1; // nm0
+    float2 tnorm1 : TEXCOORD2; // nm1
+    float3 M1 : TEXCOORD3;
+    float3 M2 : TEXCOORD4;
+    float3 M3 : TEXCOORD5;
+    float3 v2point : TEXCOORD6;
+    float4 tctexgen : TEXCOORD7;
+    float3 position : TEXCOORD8;
+    float4 c0 : COLOR0;
 };
 
 struct PixelShaderOutputStruct
 {
-	float4 Generic_0: COLOR0;
-	float4 Position: COLOR1;
+    float4 Generic_0 : COLOR0;
+    float4 Position : COLOR1;
 };
 
 uniform sampler2D s_nmap;
 uniform samplerCUBE s_env0;
 uniform samplerCUBE s_env1;
 uniform sampler2D s_leaves;
-
+uniform sampler2D s_caustic;
 ////////////////////////////////////////////////////////////////////////////////
-PixelShaderOutputStruct main (vf I)
+float3 SpecularPhong(float3 Point, float3 Normal, float3 Light)
 {
-	float4 base = tex2D (s_base, I.tbase);
-	float3 n0 = tex2D (s_nmap, I.tnorm0);
-	float3 n1 = tex2D (s_nmap, I.tnorm1);
-	float3 Navg = n0 + n1 - 1;
+    float3 LightColor = max(0.0f, sun_color.xyz * 4.0f - 1.0f);
+    return LightColor * pow(dot(normalize(Point + Light), -Normal), 256.0);
+}
+////////////////////////////////////////////////////////////////////////////////
+PixelShaderOutputStruct main(vf I)
+{
+    float4 base = tex2D(s_base, I.tbase);
+    float3 n0 = tex2D(s_nmap, I.tnorm0);
+    float3 n1 = tex2D(s_nmap, I.tnorm1);
+    float3 Navg = n0 + n1 - 1;
 
-	float3 Nw = mul (float3x3 (I.M1, I.M2, I.M3), Navg);
-    Nw = normalize (Nw);
-	float3 v2point = normalize (I.v2point);
-	float3 vreflect = reflect (v2point, Nw);
-#ifndef USE_SOFT_WATER // fake remapping
-    vreflect.y = vreflect.y * 2 - 1;
-#else	//	true remapping. Slow.
-	float3 vreflectabs = abs(vreflect);
-	float vreflectmax = max( vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
-	vreflect /= vreflectmax;
-	if (vreflect.y<0.99)
-		vreflect.y = vreflect.y*2-1;
-#endif
+    float3 Nw = mul(float3x3(I.M1, I.M2, I.M3), Navg);
+    Nw = normalize(Nw);
+    
+    //Irradiance
+    float3 envd0 = texCUBE(s_env0, Nw);
+    float3 envd1 = texCUBE(s_env1, Nw);
+    float3 env_irradiance = lerp(envd0, envd1, L_ambient.w);
+    
+    float3 color = I.c0.xyz + env_irradiance * env_irradiance * I.c0.w;
+    base.xyz *= color;
+    
+    float3 v2point = normalize(I.v2point);
+    float3 vreflect = reflect(v2point, Nw);
 
-	float3 env0 = texCUBE (s_env0, vreflect);
-	float3 env1 = texCUBE (s_env1, vreflect);
-	float3 env = lerp (env0, env1, L_ambient.w);
+    float3 vreflectabs = abs(vreflect);
+    float vreflectmax = max(vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
+    vreflect /= vreflectmax;
+    if (vreflect.y < 0.99)
+        vreflect.y = vreflect.y * 2 - 1;
+
+    float3 env0 = texCUBE(s_env0, vreflect);
+    float3 env1 = texCUBE(s_env1, vreflect);
+    float3 env = lerp(env0, env1, L_ambient.w);
     env *= env * 2;
-    env = lerp (env, fog_params.rgb, fog_sky_influence);
+    env = lerp(env, fog_params.rgb, fog_sky_influence);
 
-    float fresnel = saturate (dot (vreflect, v2point));
-    float power = pow (fresnel, 9);
+    float fresnel = saturate(dot(vreflect, v2point));
+    float power = pow(fresnel, 5.0f);
     float amount = 0.15f + 0.25f * power; // 1=full env, 0=no env
 	
-	float3 c_reflection = env * amount;
-	float3 final = lerp (c_reflection, base.rgb, base.a);
+    float3 c_reflection = env * amount * 0.8f;
+    float3 final = lerp(c_reflection, base.rgb, base.a);
+	
+    float alpha = 0.25f + 0.65f * power;
+    
+    alpha = lerp(alpha, 1.0f, base.w);
 
-    final *= I.c0 * 2;
-	
-    float Opacity = 1.0f;
-	
+#ifdef	USE_SOFT_WATER
 #ifdef	NEED_SOFT_WATER
-	float	alpha	= 0.75f+0.25f*power;                        // 1=full env, 0=no env
-
 	//	Igor: additional depth test
-	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
-	float waterDepth = Depth-I.tctexgen.z;
+    float2 PosTC = I.tctexgen.xy / I.tctexgen.w;
+    float3 Position = GetPosition(PosTC);
+    float Depth = Position.z;
+    float waterDepth = Depth - I.tctexgen.z;
 
 	//	water fog
-	float  fog_exp_intens = -4.0f;
-	float fog	= 1-exp(fog_exp_intens*waterDepth);
-	float3 Fc  	= float3( 0.1f, 0.1f, 0.1f) * water_intensity.r;
-	final 		= lerp (Fc, final, alpha);
+    float fog_exp_intens = -4.0f;
+    float fog = 1 - exp(fog_exp_intens * waterDepth);
+    float3 Fc = float3(0.1f, 0.1f, 0.1f) * water_intensity.r * color;
+    final = lerp(Fc, final, alpha);
 
-	alpha 		= min(alpha, saturate(waterDepth));
-
-	alpha 		= max (fog, alpha);
+    alpha = min(alpha, saturate(waterDepth));
+    alpha = max(fog, alpha);
 
 	//	Leaves
-	float4	leaves	= tex2D(s_leaves, I.tbase);
-			leaves.rgb *= water_intensity.r;
-	float	calc_cos = dot ( I.M3,  v2point);
-	float	calc_depth = saturate(waterDepth*calc_cos);
-	float	fLeavesFactor = smoothstep(0.025, 0.05, calc_depth );
-			fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth );
-	final		= lerp(final, leaves, leaves.a*fLeavesFactor);
-	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
-	Opacity = alpha;
-#endif	//	NEED_SOFT_WATER
+    float4 leaves = tex2D(s_leaves, I.tbase);
+    leaves.rgb *= water_intensity.r;
+    leaves.w *= 1.0f - base.w;
 	
+    float calc_cos = dot(I.M3, v2point);
+    float calc_depth = saturate(waterDepth * calc_cos);
+	
+    float fLeavesFactor = smoothstep(0.025, 0.05, calc_depth);
+    fLeavesFactor *= smoothstep(0.1, 0.075, calc_depth);
+	
+    float2 CausticTexcoord = mul(m_invV, float4(Position, 1.0f)).xz * 0.45f;
+    float3 Caustic = tex2D(s_caustic, CausticTexcoord).yyy;
+    
+    float4 DirectLight = tex2Dlod0(s_light_accumulator, PosTC);
+    DirectLight *= 1.0f - base.w;
+    float Shadow = tex2Dlod0(s_shadow_accumulator, PosTC).r;
+    
+    LightComponents Light = Calculate_PBR_Lighting_Model(base.w * 0.5f, base.a, base.rgb, v2point, Nw, L_sun_dir_w);
+    final += Light.Specular * Shadow * sun_color;
+    final += DirectLight.a * sun_color;
+    final += Caustic * DirectLight * 0.25f * Shadow;
+    
+    final = lerp(final, leaves, leaves.a * fLeavesFactor);
+    alpha = lerp(alpha, leaves.a, leaves.a * fLeavesFactor);
+#endif
+#endif
+
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    float Fog = CalcFogness (I.position);
-    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
-    Opacity *= 1.0f - pow (Fog, 2.2f);
+    float Fog = CalcFogness(I.position);
+    final.rgb = lerp(final.rgb, fog_params.rgb, Fog);
+    alpha *= 1.0f - pow(Fog, 2.2f);
 	
     PixelShaderOutputStruct Output;
-    Output.Generic_0 = float4 (final.rgb, Opacity);
+    Output.Generic_0 = float4(final.rgb, alpha);
     Output.Position = PackPositionAndNormal(I.position, NULL);
     return Output;
 }

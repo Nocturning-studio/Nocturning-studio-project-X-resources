@@ -6,6 +6,7 @@
 uniform float3x4 m_W;
 uniform float3x4 m_invW;
 uniform float3x4 m_V;
+uniform float3x4 m_invV;
 uniform float4x4 m_P;
 uniform float4x4 m_invP;
 uniform float3x4 m_WV;
