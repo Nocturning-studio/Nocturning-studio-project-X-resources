@@ -41,6 +41,7 @@ float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Directio
         if (depth < 0.0001f)
 			OutputColor = max_density;
 
+        [unroll]
         for (int i = 0; i < RAY_SAMPLES; ++i)
         {
             //if (depth > 0.3f)

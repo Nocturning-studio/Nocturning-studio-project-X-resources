@@ -27,6 +27,8 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
 #endif
 
         float result = 0.0;
+        
+        [unroll]
         for (float f = 0.0; f < 1.0; f += 1.0 / AO_SAMPLES)
         {
             float noiseDirection = random(float2(f * 16524.56, f * 23532.43));

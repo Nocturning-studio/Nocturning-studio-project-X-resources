@@ -54,6 +54,7 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
             float stepSizePixels = (radiusPixels * 0.25f) / (STEPS + 1.0f);
 		
+            [unroll]
             for (int i = 0; i < 4; ++i)
             {
                 float negInvR2 = -1.0f / (RADIUS * RADIUS);
@@ -63,6 +64,7 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 		
                 dir = mul (dir, rot);
                 
+                [unroll]
                 for (int j = 0; j < STEPS; ++j)
                 {
                     float2 tcDelta = round (rayPixels * dir) * screen_res.zw;

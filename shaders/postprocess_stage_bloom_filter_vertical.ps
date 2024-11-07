@@ -22,6 +22,7 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
     float coefficientSum = incrementalGaussian.x;
     incrementalGaussian.xy *= incrementalGaussian.yz;
     
+    [unroll]
     for (int i = -BLOOM_SAMPLES_COUNT / 2; i < BLOOM_SAMPLES_COUNT / 2; i++)
     {
         BlurredColor += tex2Dlod0(s_bloom, TexCoords + PixelSize * float2(0, i)) * incrementalGaussian.x;

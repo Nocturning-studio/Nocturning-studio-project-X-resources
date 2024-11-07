@@ -16,6 +16,8 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 
     // Separated blur
     float4 BlurredImageColor = NULL;
+    
+    [unroll]
     for (int i = -(SAMPLES_COUNT / 2); i < SAMPLES_COUNT / 2; i++)
     {
         BlurredImageColor += tex2Dlod0 (s_image, TexCoords + (i, 0.0f) * screen_res.zw);

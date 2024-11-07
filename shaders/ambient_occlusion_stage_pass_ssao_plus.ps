@@ -84,6 +84,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
         float occ = 0.0f;
         
+        [unroll]
         for (int i = 0; i < HBAO_SAMPLES; i++)
         {
             float3 Noise = get_blue_noise (TexCoords + poissonDisk_16[i] * 2.0f);

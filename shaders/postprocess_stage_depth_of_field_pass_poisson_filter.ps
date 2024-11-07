@@ -23,6 +23,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
         float3 SummaryImageColor = NULL;
         float Contribution = 0.0f;
         
+        [unroll]
         for (int i = 0; i < POISSON_SAMPLES_COUNT; i++)
         {
             float2 SampleCoords = TexCoords + poisson25_round[i] * RaySize;

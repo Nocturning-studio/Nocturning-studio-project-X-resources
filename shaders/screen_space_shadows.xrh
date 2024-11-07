@@ -51,7 +51,8 @@ float TraceShadow(float3 LightDirection, float3 Position)
 	// non-normalized projected direction
 	float3 pscdir = pscpos_next.xyz - pscpos_curr;
 
-	for (int i = 0; i < SAMPLES_COUNT; i++)
+	[unroll]
+    for (int i = 0; i < SAMPLES_COUNT; i++)
 	{
 		pscpos_curr += pscdir;
 		if (!isInQuad(pscpos_curr.xy))	
