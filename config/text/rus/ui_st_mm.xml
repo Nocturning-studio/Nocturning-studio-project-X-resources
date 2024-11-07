@@ -388,18 +388,18 @@
 		<text>Придание кадру дополнительной кинематографичности,\nза счет изменения его оттенка.</text>
 	</string>
 
-	<string id="ui_mm_r2_bloom">
+	<string id="ui_mm_r_bloom">
 		<text>Bloom</text>
 	</string>
-	<string id="ui_mm_r2_bloom_hint">
+	<string id="ui_mm_r_bloom_hint">
 		<text>Придание кадру дополнительной кинематографичности,\nза счет размытия источников света и ярких участков сцены.</text>
 	</string>
 
-	<string id="ui_mm_r2_bloom_quality">
+	<string id="ui_mm_r_bloom_quality">
 		<text>Качество Bloom</text>
 	</string>
 
-	<string id="ui_mm_r2_sharpen">
+	<string id="ui_mm_r_sharpen">
 		<text>Sharpen</text>
 	</string>
 
@@ -423,21 +423,21 @@
 		<text>Эффект, имитирующий переотражение солнца между линзами объектива камеры.</text>
 	</string>
 
-	<string id="ui_mm_r2_soft_water">
+	<string id="ui_mm_r_soft_water">
 		<text>Мягкая вода</text>
 	</string>
-	<string id="ui_mm_r2_soft_water_hint">
+	<string id="ui_mm_r_soft_water_hint">
 		<text>Использование более реалистичной воды,\nза счет изменения ее прозрачности при изменении угла взгляда на нее,\nмягкого перехода от воды к берегу,\nа также использования отражений.</text>
 	</string>
 
-	<string id="ui_mm_r2_soft_particles">
+	<string id="ui_mm_r_soft_particles">
 		<text>Мягкие частицы</text>
 	</string>
-	<string id="ui_mm_r2_soft_particles_hint">
+	<string id="ui_mm_r_soft_particles_hint">
 		<text>Использование более плавного перехода\nпри пересечении частицы с поверхностью.</text>
 	</string>
 
-	<string id="ui_mm_r2_barrel_blur">
+	<string id="ui_mm_r_barrel_blur">
 		<text>Размытие по краям экрана</text>
 	</string>
 
@@ -491,24 +491,24 @@
 	</string>
 
 	<!-- Размытие в движении -->
-	<string id="ui_mm_r2_mblur">
+	<string id="ui_mm_r_mblur">
 		<text>Размытие в движении</text>
 	</string>
-	<string id="ui_mm_r2_mblur_hint">
+	<string id="ui_mm_r_mblur_hint">
 		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта размытости изображения при резком движении</text>
 	</string>
-	<string id="ui_mm_r2_mblur_scale">
+	<string id="ui_mm_r_mblur_scale">
 		<text>Сила размытия в движении</text>
 	</string>
 
 	<!-- Глубина резкости -->
-	<string id="ui_mm_r2_dof">
+	<string id="ui_mm_r_dof">
 		<text>Глубина резкости</text>
 	</string>
-	<string id="ui_mm_r2_dof_hint">
+	<string id="ui_mm_r_dof_hint">
 		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта фокусировки.</text>
 	</string>
-	<string id="ui_mm_r2_dof_quality">
+	<string id="ui_mm_r_dof_quality">
 		<text>Качество глубины резкости</text>
 	</string>
 
@@ -521,39 +521,39 @@
 	</string>
 
 	<!-- Автоэкспозиция -->
-	<string id="ui_mm_r2_autoexposure">
+	<string id="ui_mm_r_autoexposure">
 		<text>Автоэкспозиция</text>
 	</string>
-	<string id="ui_mm_r2_autoexposure_hint">
+	<string id="ui_mm_r_autoexposure_hint">
 		<text>Придание кадру дополнительной кинематографичности,\nза счет эффекта автоматической подстройки яркости кадра.</text>
 	</string>
-	<string id="ui_mm_r2_autoexposure_adaptation">
+	<string id="ui_mm_r_autoexposure_adaptation">
 		<text>Скорость изменения экспозиции</text>
 	</string>
-	<string id="ui_mm_r2_autoexposure_adaptation_hint">
+	<string id="ui_mm_r_autoexposure_adaptation_hint">
 		<text>Регулировка эффекта имитации адаптации кинокамеры к освещению.\nЧем больше значение - тем быстрее виртуальная камера будет\nадаптироваться к освещенности сцены.</text>
 	</string>
 
 	<!-- AMD CAS -->
-	<string id="ui_mm_r2_cas">
+	<string id="ui_mm_r_cas">
 		<text>AMD CAS</text>
 	</string>
-	<string id="ui_mm_r2_cas_hint">
+	<string id="ui_mm_r_cas_hint">
 		<text>Contrast Adaptive Sharpening (FidelityFX CAS) – технология, обеспечивающая максимальную\nдетализацию картинки и устраняющая потерю деталей после применения технологии сглаживания и при этом\nсохраняющая максимальную четкость графики с минимальным количеством визуальных дефектов.</text>
 	</string>
 
-	<string id="ui_mm_r2_cas_contrast">
+	<string id="ui_mm_r_cas_contrast">
 		<text>Контрастность CAS</text>
 	</string>
 
-	<string id="ui_mm_r2_cas_sharpening">
+	<string id="ui_mm_r_cas_sharpening">
 		<text>Резкость CAS</text>
 	</string>
 
-	<string id="ui_mm_r2_cas_for_materials">
+	<string id="ui_mm_r_cas_for_materials">
 		<text>CAS для материалов</text>
 	</string>
-	<string id="ui_mm_r2_cas_for_materials_hint">
+	<string id="ui_mm_r_cas_for_materials_hint">
 		<text>Эксперементальная настройка, позволяющая использовать Contrast Adaptive Sharpening\n(FidelityFX CAS) для улучшения четкости текстур игровых объектов.\nМожет давать спорные визуальные результаты, в зависимости от разных параметров текстуры.\nДля применения требуется перезапуск игры.</text>
 	</string>
 
@@ -561,10 +561,10 @@
 	<string id="ui_mm_r_aa_type">
 		<text>Тип сглаживания</text>
 	</string>
-	<string id="ui_mm_r2_anti_aliasing_hint">
+	<string id="ui_mm_r_anti_aliasing_hint">
 		<text>Технология сглаживания "ступенчитасти" на границах объектов.\nПо умолчанию используется NVidia FXAA.</text>
 	</string>
-	<string id="ui_mm_r2_anti_aliasing">
+	<string id="ui_mm_r_anti_aliasing">
 		<text>Сглаживание</text>
 	</string>
 	<string id="st_opt_ssaa">
@@ -630,10 +630,10 @@
 
 
 	<!-- Самозатенение -->
-	<string id="ui_mm_r2_ao_type_hint">
+	<string id="ui_mm_r_ao_type_hint">
 		<text>Программная техника, являющаяся\nприближенной имитацией глобального освещения.\nДанный эффект предназначен для имитации рассеянного\nосвещения в сложных участках геометрии.</text>
 	</string>
-	<string id="ui_mm_r2_ao_quality">
+	<string id="ui_mm_r_ao_quality">
 		<text>Качество ambient occlusion</text>
 	</string>
 	<string id="st_opt_ssao">
@@ -663,15 +663,15 @@
 	</string>
 
 	<!-- Рельеф -->
-	<string id="ui_mm_r2_material_quality">
+	<string id="ui_mm_r_material_quality">
 		<text>Качество материалов</text>
 	</string>
 
 	<!-- Солнце -->
-	<string id="ui_mm_r2_sun_quality">
+	<string id="ui_mm_r_sun_quality">
 		<text>Качество солнца</text>
 	</string>
-	<string id="ui_mm_r2_shadow_filtering">
+	<string id="ui_mm_r_shadow_filtering">
 		<text>Размытие теней</text>
 	</string>
 	<string id="st_opt_disable">
@@ -686,18 +686,18 @@
 	<string id="st_opt_max">
 		<text>Сильное</text>
 	</string>
-	<string id="ui_mm_r2_sun_shafts_quality">
+	<string id="ui_mm_r_sun_shafts_quality">
 		<text>Качество объемного света солнца</text>
 	</string>
-	<string id="ui_mm_r2_sun_shafts_enabled">
+	<string id="ui_mm_r_sun_shafts_enabled">
 		<text>Объемный свет солнца</text>
 	</string>
-	<string id="ui_mm_r2_sun_shafts_enabled_hint">
+	<string id="ui_mm_r_sun_shafts_enabled_hint">
 		<text>Имитация эффекта рассеивания солнечного света в тумане.</text>
 	</string>
 
 	<!-- Глубина цвета -->
-	<string id="ui_mm_r2_rt_format">
+	<string id="ui_mm_r_rt_format">
 		<text>Глубина цвета</text>
 	</string>
 	<string id="st_opt_rgba_32">
@@ -706,7 +706,7 @@
 	<string id="st_opt_rgba_64">
 		<text>64 бит на пиксель</text>
 	</string>
-	<string id="ui_mm_r2_rt_format_hint">
+	<string id="ui_mm_r_rt_format_hint">
 		<text>Глубина цвета определяется количеством бит памяти на один пиксель изображения.\nСнижение количества бит на пиксель может снизить загрузку видеопамяти вашего\nграфического ускорителя и уменьшить время расчета кадра, в замен на снижение\nкачества изображения из-за появления грубых цветовых переходов.</text>
 	</string>
 
