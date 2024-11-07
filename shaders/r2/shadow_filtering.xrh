@@ -7,13 +7,7 @@
 #include "filters.xrh"
 ////////////////////////////////////////////////////////////////////////////
 //#if SHADOW_FILTER == LOW_FILTERING
-#if NEAR_CASCADE
 #define SHADOW_FILTERING_SAMPLES_COUNT 8
-#elif MIDDLE_CASCADE
-#define SHADOW_FILTERING_SAMPLES_COUNT 4
-#else
-#define SHADOW_FILTERING_SAMPLES_COUNT 1
-#endif
 #define OFFSET_ARRAY box_coords
 //#elif SHADOW_FILTER == MIDDLE_FILTERING
 //#define SHADOW_FILTERING_SAMPLES_COUNT 9

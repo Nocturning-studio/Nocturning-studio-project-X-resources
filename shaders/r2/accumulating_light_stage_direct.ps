@@ -19,13 +19,7 @@ struct Interpolators
     float4 TexCoords: TEXCOORD0;
 };
 ///////////////////////////////////////////////////////////////////////////////////
-struct OutputTextures
-{
-    float4 LightAccumulator : COLOR0;
-    float4 ShadowAccumulator : COLOR1;
-};
-///////////////////////////////////////////////////////////////////////////////////
-OutputTextures main(Interpolators Input)
+float4 main (Interpolators Input): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
 
@@ -58,12 +52,6 @@ OutputTextures main(Interpolators Input)
     Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir);
 #endif
     
-    OutputTextures Output;
-    
-    Output.LightAccumulator.rgb = Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface;
-    Output.LightAccumulator.a = Volumetric;
-    Output.ShadowAccumulator = ShadowMap;
-    
-    return Output;
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, Volumetric);
 }
 ///////////////////////////////////////////////////////////////////////////////////

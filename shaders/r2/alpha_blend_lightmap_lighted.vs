@@ -16,8 +16,6 @@ struct vf
 	float2 tch: TEXCOORD2;
 	float3 tc2: TEXCOORD3;
 	float3 position: TEXCOORD4;
-    float3 normal : TEXCOORD5;
-    float4 tctexgen : TEXCOORD6;
 	float3 c0: COLOR0; // c0=hemi+v-lights, 	c0.a = dt*
 	float3 c1: COLOR1; // c1=sun, 		c1.a = dt+
 };
@@ -37,10 +35,6 @@ vf main (v_static v)
     o.position = mul (m_WV, v.P);
     o.c0 = v_hemi (norm_w); // just hemisphere
     o.c1 = v_sun (norm_w); // sun
-    o.normal = norm_w;
-    o.tctexgen = mul(m_texgen, pos_w);
-    float3 Pe = mul(m_V, pos_w);
-    o.tctexgen.z = Pe.z;
-	
+
     return o;
 }
