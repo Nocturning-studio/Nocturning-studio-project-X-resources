@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e27d3328-904a-4aa1-b62f-932a7aa0a614}</ProjectGuid>
+    <RootNamespace>SM30XRayEngineShaders</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>X-Ray Engine Shaders</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)shared\;$(SolutionDir)r2\;$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)shared\;$(SolutionDir)r2\;$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)shared\;$(SolutionDir)r2\;$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)shared\;$(SolutionDir)r2\;$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="accumulating_light_stage_direct.ps" />
+    <None Include="accumulating_light_stage_mask.vs" />
+    <None Include="accumulating_light_stage_occlusion_culling.ps" />
+    <None Include="accumulating_light_stage_occlusion_culling.vs" />
+    <None Include="accumulating_light_stage_point.ps" />
+    <None Include="accumulating_light_stage_spot.ps" />
+    <None Include="accumulating_light_stage_sun_mask.ps" />
+    <None Include="accumulating_light_stage_volume.vs" />
+    <None Include="alpha_blend_lightmap_lighted.ps" />
+    <None Include="alpha_blend_lightmap_lighted.vs" />
+    <None Include="ambient_occlusion_blurring_stage_pass_vertical_filter.ps" />
+    <None Include="ambient_occlusion_blurring_stage_pass_bilinear_filter.ps" />
+    <None Include="ambient_occlusion_blurring_stage_pass_horizontal_filter.ps" />
+    <None Include="ambient_occlusion_stage_pass_gtao.ps" />
+    <None Include="ambient_occlusion_stage_pass_ssao_plus.ps" />
+    <None Include="ambient_occlusion_stage_pass_ssao.ps" />
+    <None Include="bloom_common.xrh" />
+    <ClInclude Include="chromatic_abberations.xrh" />
+    <ClInclude Include="depth_of_field_common.xrh" />
+    <None Include="common_effects.xrh" />
+    <None Include="effects_sun.ps" />
+    <None Include="effects_sun.s" />
+    <None Include="effects_sun.vs" />
+    <ClInclude Include="fog.xrh" />
+    <None Include="gbuffer_stage_dynamic_mesh_selflight.ps" />
+    <None Include="gbuffer_stage_dynamic_mesh_selflight.vs" />
+    <None Include="models_light_panel.ps" />
+    <None Include="clouds.ps" />
+    <None Include="clouds.s" />
+    <None Include="clouds.vs" />
+    <None Include="copy.ps" />
+    <None Include="copy_p.ps" />
+    <None Include="details_lod.s" />
+    <None Include="distort.ps" />
+    <None Include="distort.s" />
+    <None Include="dumb.ps" />
+    <None Include="dumb.vs" />
+    <None Include="editor.vs" />
+    <None Include="effects_lightplanes.s" />
+    <None Include="effects_wallmark.s" />
+    <None Include="effects_wallmarkblend.s" />
+    <None Include="effects_wallmarkmult.s" />
+    <None Include="effects_wallmarkset.s" />
+    <None Include="effects_water.s" />
+    <None Include="effects_waterryaska.s" />
+    <None Include="effects_waterstuden.s" />
+    <None Include="gbuffer_stage_detail_object.ps" />
+    <None Include="gbuffer_stage_detail_object.vs" />
+    <None Include="gbuffer_stage_detail_object_animated.vs" />
+    <None Include="gbuffer_stage_dynamic_mesh.vs" />
+    <None Include="gbuffer_stage_multiple_object.vs" />
+    <None Include="gbuffer_stage_multiple_object_animated.vs" />
+    <None Include="gbuffer_stage_multiple_object_billboard.ps" />
+    <None Include="gbuffer_stage_multiple_object_billboard.vs" />
+    <None Include="gbuffer_stage_particle.ps" />
+    <None Include="gbuffer_stage_particle.vs" />
+    <None Include="gbuffer_stage_static_mesh.ps" />
+    <None Include="gbuffer_stage_static_mesh.vs" />
+    <None Include="gbuffer_stage_terrain.ps" />
+    <None Include="gbuffer_stage_terrain.vs" />
+    <None Include="gbuffer_stage_terrain_lq.ps" />
+    <None Include="gbuffer_stage_terrain_lq.vs" />
+    <None Include="hud_crosshair.s" />
+    <None Include="hud_movie.s" />
+    <None Include="models_lightplanes.s" />
+    <None Include="models_metallreflect.s" />
+    <None Include="models_pautina.s" />
+    <None Include="models_selflight.s" />
+    <None Include="models_selflightl.s" />
+    <None Include="models_xanomaly.s" />
+    <None Include="models_xdistort.s" />
+    <None Include="models_xdistortcolor.s" />
+    <None Include="models_xdistortcolorl.s" />
+    <None Include="models_xdistortcolorlinv.s" />
+    <None Include="models_xdistortinv.s" />
+    <None Include="models_xglass.s" />
+    <None Include="models_xglass2.s" />
+    <None Include="models_xlens.s" />
+    <None Include="models_xmonolith.s" />
+    <None Include="models_xwindows.s" />
+    <None Include="models_light_panel.vs" />
+    <None Include="model_def_lq.ps" />
+    <None Include="model_def_lq.vs" />
+    <None Include="model_distort.vs" />
+    <None Include="model_distort4ghost.vs" />
+    <None Include="model_distort4glass.vs" />
+    <None Include="model_distort_inv.vs" />
+    <None Include="model_env_lq.ps" />
+    <None Include="model_env_lq.vs" />
+    <None Include="overlay_stage_apply.ps" />
+    <None Include="particle-clip.vs" />
+    <None Include="particle.ps" />
+    <None Include="particle.vs" />
+    <None Include="particle2t.ps" />
+    <None Include="particles_xadd.s" />
+    <None Include="particles_xdistort.s" />
+    <None Include="particle_alphaonly.ps" />
+    <None Include="particle_distort.ps" />
+    <None Include="particle_s-aadd.ps" />
+    <None Include="particle_s-add.ps" />
+    <None Include="particle_s-blend.ps" />
+    <None Include="particle_s-mul.ps" />
+    <None Include="PCSS.xrh" />
+    <None Include="portal.ps" />
+    <None Include="portal.s" />
+    <None Include="portal.vs" />
+    <None Include="postprocess.ps" />
+    <None Include="postprocess.s" />
+    <None Include="postprocess_stage_antialiasing_pass_fxaa.ps" />
+    <None Include="postprocess_stage_autoexposure_pass_downsampling_step_1.ps" />
+    <None Include="postprocess_stage_autoexposure_pass_downsampling_step_2.ps" />
+    <None Include="postprocess_stage_autoexposure_pass_downsampling_step_3.ps" />
+    <None Include="postprocess_stage_barrrel_blur_horizontal_pass.ps" />
+    <None Include="postprocess_stage_barrrel_blur_vertical_pass.ps" />
+    <None Include="postprocess_stage_bloom_blades_filter_horizontal.ps" />
+    <None Include="postprocess_stage_bloom_blades_filter_vertical.ps" />
+    <None Include="postprocess_stage_bloom_prepare.ps" />
+    <None Include="postprocess_stage_bloom_combine.ps" />
+    <None Include="postprocess_stage_bloom_filter_horizontal.ps" />
+    <None Include="postprocess_stage_bloom_filter_vertical.ps" />
+    <None Include="postprocess_stage_contrast_adaptive_sharpening.ps" />
+    <None Include="postprocess_stage_depth_of_field_pass_horizontal_filter.ps" />
+    <None Include="postprocess_stage_depth_of_field_pass_poisson_filter.ps" />
+    <None Include="postprocess_stage_depth_of_field_pass_vertical_filter.ps" />
+    <None Include="postprocess_stage_distortion.ps" />
+    <None Include="postprocess_stage_fog_scattering_pass_horizontal_filter.ps" />
+    <None Include="postprocess_stage_fog_scattering_pass_vertical_filter.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_combine.ps" />
+    <None Include="postprocess_stage_motion_blur_pass_save_frame.ps" />
+    <None Include="postprocess_stage_reflections_pass_horizontal_filter.ps" />
+    <None Include="postprocess_stage_reflections_pass_render.ps" />
+    <None Include="postprocess_stage_reflections_pass_vertical_filter.ps" />
+    <None Include="scene_combine_stage.ps" />
+    <None Include="scene_combine_stage.vs" />
+    <None Include="scene_combine_stage_debug.ps" />
+    <None Include="scene_combine_stage_pass_precombine.ps" />
+    <None Include="scene_combine_stage_pass_volumetric.s" />
+    <None Include="selflight.ps" />
+    <None Include="selflight.s" />
+    <None Include="selflight.vs" />
+    <None Include="shadow_direct_dynamic_mesh.vs" />
+    <None Include="shadow_direct_dynamic_mesh_alphatest.vs" />
+    <None Include="shadow_direct_multiple_object.vs" />
+    <None Include="shadow_direct_multiple_object_animated.vs" />
+    <None Include="shadow_direct_static_mesh.ps" />
+    <None Include="shadow_direct_static_mesh.vs" />
+    <None Include="shadow_direct_static_mesh_alphatest.ps" />
+    <None Include="shadow_direct_static_mesh_alphatest.vs" />
+    <ClInclude Include="common_constants.xrh" />
+    <ClInclude Include="common_math.xrh" />
+    <None Include="simple.ps" />
+    <None Include="simple.vs" />
+    <None Include="simple_color.ps" />
+    <None Include="simple_color.vs" />
+    <None Include="simple_quad.vs" />
+    <ClInclude Include="skinning.xrh" />
+    <None Include="sky2.ps" />
+    <None Include="sky2.vs" />
+    <None Include="alpha_blend_vertex_lighted.ps" />
+    <None Include="alpha_blend_vertex_lighted.vs" />
+    <ClInclude Include="tonemapping.xrh" />
+    <None Include="water.ps" />
+    <None Include="water.vs" />
+    <None Include="waterd.ps" />
+    <None Include="waterd.vs" />
+    <None Include="waterd_soft.ps" />
+    <None Include="waterd_soft.vs" />
+    <None Include="water_regular.ps" />
+    <None Include="water_regular.vs" />
+    <None Include="water_ryaska.ps" />
+    <None Include="water_soft.ps" />
+    <None Include="water_soft.vs" />
+    <None Include="water_studen.ps" />
+    <None Include="water_studen.vs" />
+    <None Include="wmark.ps" />
+    <None Include="wmark.vs" />
+    <None Include="yuv2rgb.ps" />
+    <ClInclude Include="zbuffer.xrh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="accumulation_helper.xrh" />
+    <ClInclude Include="alpha_test.xrh" />
+    <ClInclude Include="ambient_light.xrh" />
+    <ClInclude Include="ao_from_height.xrh" />
+    <ClInclude Include="BRDF.xrh" />
+    <ClInclude Include="common.xrh" />
+    <ClInclude Include="common_defines.xrh" />
+    <ClInclude Include="common_define_associations.xrh" />
+    <ClInclude Include="common_functions.xrh" />
+    <ClInclude Include="common_iostructs.xrh" />
+    <ClInclude Include="common_policies.xrh" />
+    <ClInclude Include="common_samplers.xrh" />
+    <ClInclude Include="common_uniforms.xrh" />
+    <ClInclude Include="contrast_adaptive_sharpening.xrh" />
+    <ClInclude Include="displacement.xrh" />
+    <ClInclude Include="filters.xrh" />
+    <ClInclude Include="fxaa.xrh" />
+    <ClInclude Include="fxaa_atoc.xrh" />
+    <ClInclude Include="gbuffer.xrh" />
+    <ClInclude Include="hashed_alpha.xrh" />
+    <ClInclude Include="lightmap.xrh" />
+    <ClInclude Include="material.xrh" />
+    <ClInclude Include="material_components.xrh" />
+    <ClInclude Include="normal_map_functions.xrh" />
+    <ClInclude Include="parallax_shadows.xrh" />
+    <ClInclude Include="reflection.xrh" />
+    <ClInclude Include="reflections_ssr.xrh" />
+    <ClInclude Include="screen_space_shadows.xrh" />
+    <ClInclude Include="shadow_filtering.xrh" />
+    <ClInclude Include="volumetric_light.xrh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ambient_occlusion_stage_pass_hbao_plus.ps" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
