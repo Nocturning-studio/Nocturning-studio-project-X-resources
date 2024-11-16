@@ -11,11 +11,11 @@
 #define JITTER_TEXTURE_SIZE	128.0f
 ///////////////////////////////////////////////////////////////////////////////////
 #if SUN_SHAFTS_QUALITY == 1
-#define RAY_SAMPLES	24
-#elif SUN_SHAFTS_QUALITY == 2
 #define RAY_SAMPLES	32
-#elif SUN_SHAFTS_QUALITY == 3
+#elif SUN_SHAFTS_QUALITY == 2
 #define RAY_SAMPLES	48
+#elif SUN_SHAFTS_QUALITY == 3
+#define RAY_SAMPLES	64
 #endif
 ///////////////////////////////////////////////////////////////////////////////////
 float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Direction)

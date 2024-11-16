@@ -87,7 +87,7 @@ void GetPositionAndNormal(in float2 TexCoords, inout float3 Position, inout floa
 
 float GetSceneRoughness(float2 TexCoords)
 {
-    return sRgbToLinear(tex2Dlod0(s_gbuffer_3, TexCoords).g);
+    return tex2Dlod0(s_gbuffer_3, TexCoords).g;
 }
 ////////////////////////////////////////////////////////////////////////////
 GBufferPacked PackGBuffer(GBuffer Input)

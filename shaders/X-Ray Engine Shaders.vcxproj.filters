@@ -219,9 +219,6 @@
     <None Include="scene_combine_stage.vs">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
     </None>
-    <None Include="scene_combine_stage_pass_volumetric.s">
-      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
-    </None>
     <None Include="details_lod.s">
       <Filter>Deffered rendering pipeline\GBuffer stage\Geometry types\Multiple usage object %28LOD%29\Low quality geometry %28Billboard%29</Filter>
     </None>

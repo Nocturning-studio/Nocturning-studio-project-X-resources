@@ -8,29 +8,48 @@
 #include "bloom_common.xrh"
 ////////////////////////////////////////////////////////////////////////////
 uniform float2 cas_params;
+uniform float4 hdr_params;
 ////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     float4 ImageColor = float4(CAS(s_image, TexCoords, cas_params.x, cas_params.y), 1.0f);
-    float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
-    ImageColor = exponential_tonemapping(ImageColor).rgbb * Exposure * 1.5f;
     
     float4 Offset = screen_res.zwzw * float4(-1, -1, +1, +1);
-    float4 BloomColor = tex2Dlod0(s_bloom, TexCoords);
+    float4 BloomColor = NULL;
     BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy);
     BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy);
     BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw);
     BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw);
-    BloomColor *= 1.0f / 5.0f;
+    BloomColor *= 1.0f / 4.0f;
     
-    float4 BloomBladesColor = tex2Dlod0(s_bloom_blades, TexCoords);
+    float4 BloomBladesColor = NULL;
     BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xy);
     BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zy);
     BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xw);
     BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zw);
-    BloomBladesColor *= 1.0f / 5.0f;
+    BloomBladesColor *= 1.0f / 4.0f;
     
-    return BloomColor + BloomBladesColor + ImageColor;
+    ImageColor += BloomColor + BloomBladesColor;
+    
+    float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
+    //ImageColor.rgb = ACESFilm(ImageColor.rgb * Exposure * 1.5f);
+    //ImageColor.rgb = Reinhard2(ImageColor.rgb, Exposure * 1.5f);
+    
+    //ImageColor.rgb = TexCoords.xxx;
+    
+    //if (TexCoords.y < 0.5f)
+    //{
+        const float white_level = 1.0f;
+        const float luminance_saturation = hdr_params.y;
+    //Color *= white_level;
+        const float pixel_luminance = avg3(ImageColor.rgb);
+        const float tone_mapped_luminance = 1.0f - exp(-pixel_luminance / white_level);
+
+        ImageColor.rgb = tone_mapped_luminance * pow(ImageColor.rgb / pixel_luminance, luminance_saturation) * hdr_params.x * 2.0f;
+    
+        ImageColor.rgb = LinearTosRgb(ImageColor.rgb);
+    //}
+    return ImageColor;
     //return BloomBladesColor;
     //return BloomColor;
 }
