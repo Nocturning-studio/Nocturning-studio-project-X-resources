@@ -44,7 +44,7 @@ float4 main (Interpolators Input): COLOR0
 
     Light.Diffuse *= SunColor * ShadowMap.xxx;
     Light.Specular *= SunColor * ShadowMap.xxx;
-    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * (GBuffer.Albedo + 0.5f);
+    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * GBuffer.Albedo;
 
     float Volumetric = 0.0f;
     
