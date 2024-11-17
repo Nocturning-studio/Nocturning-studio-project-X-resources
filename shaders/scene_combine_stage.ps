@@ -11,6 +11,7 @@
 #include "BRDF.xrh"
 ////////////////////////////////////////////////////////////////////////////
 uniform float debug_mode;
+uniform float4 ambient_color;
 ////////////////////////////////////////////////////////////////////////////
 struct OutputTextures
 {
@@ -35,7 +36,7 @@ OutputTextures main(float2 TexCoords : TEXCOORD0)
 
     // Get ambient
     float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
-    float LightMapAO = saturate(GBuffer.AO + 0.1f); //pow(pow(GBuffer.AO + 0.15f, 1.0f / 2.2f), 2.2f);
+    float LightMapAO = saturate(pow(GBuffer.AO, 2.2f) + ambient_color.a);
 
     // Get F0 
     float3 F0 = 0.04f;
