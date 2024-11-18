@@ -18,10 +18,10 @@
 	<string id="ui_mm_detail_density">
 		<text>Плотность травы</text>
 	</string>
-	<string id="ui_mm_r2_sun">
+	<string id="ui_mm_r_sun">
 		<text>Тень от солнца</text>
 	</string>
-	<string id="ui_mm_r2_sun_details">
+	<string id="ui_mm_r_sun_details">
 		<text>Тень травы</text>
 	</string>
 	<string id="ui_mm_render_2">

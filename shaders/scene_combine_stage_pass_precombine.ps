@@ -1,0 +1,29 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 26.11.2023
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+#include "reflection.xrh"
+//#include "reflections_ssr.xrh"
+#include "BRDF.xrh"
+////////////////////////////////////////////////////////////////////////////
+float4 main (float2 TexCoords: TEXCOORD0): COLOR
+{
+    //GBuffer GBuffer = UnpackGBuffer(TexCoords);
+
+    //float3 IndirectDiffuse = NULL;//CalculateAmbientWithBlurredEnvironment(GBuffer.AO, GBuffer.Normal, GBuffer.Roughness);
+    
+    //float RealTimeAO = tex2Dlod0(s_ao, TexCoords).r;
+    //IndirectDiffuse *= RealTimeAO;
+
+    //float3 SceneColor = GBuffer.Albedo * (IndirectDiffuse + Light.Diffuse) + Light.Specular;
+
+    //float Fog = CalcFogness (GBuffer.Position);
+    //SceneColor = lerp (SceneColor, fog_params.rgb, Fog);
+    //float Opacity = pow (Fog, 2.2f);
+	
+    return NULL;
+}
+////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,22 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+// Created: 21.12.2023
+// Author: Deathman
+// Nocturning studion for NS Project X
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "bloom_common.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR
+{
+    float4 ImageColor = tex2Dlod0(s_image, TexCoords);
+    float BloomAmount = GetFogBloomAmount(ImageColor.rgb);
+    
+    float4 Offset = bloom_resolution.zwzw * float4(-1, -1, +1, +1);
+    ImageColor += tex2Dlod0(s_image, TexCoords + Offset.xy);
+    ImageColor += tex2Dlod0(s_image, TexCoords + Offset.zy);
+    ImageColor += tex2Dlod0(s_image, TexCoords + Offset.xw);
+    ImageColor += tex2Dlod0(s_image, TexCoords + Offset.zw);
+    
+    return ImageColor * (1.0f / 5.0f) * BloomAmount;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,34 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 19.12.2023
+//	Author		: Deathman
+//	NSProjectX Nocturning Studio - 2023
+//////////////////////////////////////////////////////////////////////////////////////////
+// Depth based ambient occlusion filter from X-Ray Engine 2.0
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords: TEXCOORD0): COLOR
+{
+    float center_depth = GetDepth(TexCoords);
+    float ao_sum = 0.0f;
+    float total_weight = 0.0f;
+
+    [unroll]
+    for (int i = -3; i < 3; i++)
+    {
+        float2 sample_uv = TexCoords + float2 (0.0f, i + 0.5f) / screen_res.xy;
+        
+        float sample_ao = tex2Dlod0 (s_ao, sample_uv).r;
+        float sample_depth = GetDepth(sample_uv);
+
+        float depth_result = 1.0f - saturate (pow ((sample_depth - center_depth), 2.0f) / (0.001f * center_depth)) + 0.2f;
+
+        total_weight += depth_result;
+
+        ao_sum += sample_ao * depth_result;
+    }
+
+    return ao_sum / total_weight;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

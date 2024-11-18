@@ -1,0 +1,102 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Created: 06.08.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "material_components.xrh"
+#include "displacement.xrh"
+#include "parallax_shadows.xrh"
+#include "normal_map_functions.xrh"
+#include "fxaa_atoc.xrh"
+#include "ao_from_height.xrh"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct MaterialParams
+{
+    float3 Albedo;
+    float Opacity;
+    float3 Normal;
+    float Height;
+    float Roughness;
+    float Metallness;
+    float AO;
+    //float ParallaxShadows;
+    float Subsurface;
+    float Emissive;
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
+{
+    MaterialParams Material;
+    
+    float3 ViewVector = GetViewVector(Position, TBN);
+    
+    UV = GetDisplacement(Position, ViewVector, UV, BASE_MATERIAL);
+
+    //float3 LightDirection = GetLightDirection(sun_dir, TBN);
+    
+    //Material.ParallaxShadows = ShadowCalc(Position, LightDirection, UV, BASE_MATERIAL);
+    
+    Material.Albedo = GetAlbedo(UV);
+
+    Material.Opacity = GetOpacity(UV);
+
+    Material.Normal = GetNormalMap(UV);
+
+    Material.Height = GetHeight(UV);
+
+    Material.Roughness = GetRoughness(UV);
+
+    Material.Metallness = GetMetallness(UV);
+
+    Material.Subsurface = GetSubsurface(UV);
+
+    Material.Emissive = GetEmissive(UV);
+
+#if USE_BAKED_AO
+    Material.AO = GetBakedAO(UV);
+#elif !defined(USE_BAKED_AO) && MATERIAL_QUALITY >= HIGHT_QUALITY
+    Material.AO = AOfromHeight(UV, length(Position));
+#else
+    Material.AO = 1.0f;
+#endif
+
+#ifdef USE_TDETAIL
+    // Create detail UV - dt_params is scaler
+    float2 DetailUV = UV * dt_params;
+
+    // Calculate displacement for detail texture only if we have good quality for materials
+#if USE_DETAIL_BUMP && MATERIAL_QUALITY >= MIDDLE_QUALITY
+    DetailUV = GetDetailDisplacement(Position, ViewVector, DetailUV, DETAIL_MATERIAL);
+#endif
+
+    // Combine main albedo with detail
+    Material.Albedo *= 2.0f * GetDetailAlbedo(DetailUV);
+
+#ifdef USE_DETAIL_BUMP
+    float3 DetailNormal = GetDetailNormal(DetailUV);
+
+    // Correctly blend two maps
+    Material.Normal = Blend_Normal_Maps(Material.Normal, DetailNormal);
+
+    // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is smaller
+    Material.Height += GetDetailHeight(DetailUV) * 0.2f;
+
+    //Material.Roughness *= 2.0f * GetDetailRoughness(DetailUV);
+#endif // DETAIL_BUMP
+#endif // USE_TDETAIL
+
+#ifdef USE_BUMP
+    // Transformate height map from [0; 1] space to [1; 2] and make normals more power
+    Material.Normal.xy *= Material.Height + 1.0f;
+
+    Material.Normal.z = pow4(Material.Normal.z);
+
+    // Make normals more power with heightmap
+    Material.Normal.z *= Material.Height;
+#endif
+
+    Material.Normal = normalize(Material.Normal);
+
+    return Material;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

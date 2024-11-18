@@ -1,0 +1,59 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 22.11.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+#include "BRDF.xrh"
+#include "shadow_filtering.xrh"
+#include "screen_space_shadows.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	float4 HomogeniousPosition: POSITION;
+    float4 TexCoords: TEXCOORD0;
+};
+///////////////////////////////////////////////////////////////////////////////////
+float4 main (Interpolators Input): COLOR0
+{
+    GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
+
+    float3 LightDirection = normalize (GBuffer.Position - Ldynamic_pos.xyz);
+
+    float AttenuationFactor = CalculateAttenuation (GBuffer.Position, Ldynamic_pos.xyz, Ldynamic_pos.w);
+    
+    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.015f, 1.0f);
+    float4 ShadowMapTexCoords = mul (m_shadow, Position);
+  
+#ifdef USE_SHADOW_MAPPING
+    float ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
+#else
+    float ShadowMap = 1.0f;
+    LightComponents Light = Calculate_Diffuse_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
+#endif
+    
+#ifdef USE_LIGHT_MAPPING
+#ifdef  USE_LIGHT_MAP_XFORM
+    ShadowMapTexCoords.x = dot (Position, m_lmap[0]);
+    ShadowMapTexCoords.y = dot (Position, m_lmap[1]);
+#endif
+    float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
+#else
+    float3 LightMap = float3 (1.0f, 1.0f, 1.0f);
+#endif
+    
+    float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
+    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+        ShadowMap *= TraceShadow(LightDirection, Position);
+
+    LightMap *= ShadowMap * AttenuationFactor;
+      
+    Light.Diffuse *= Ldynamic_color.rgb * LightMap;
+    Light.Specular *= Ldynamic_color.rgb * LightMap;
+    Light.Subsurface *= Ldynamic_color.rgb * LightMap * GBuffer.Subsurface * GBuffer.Albedo;
+    
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, 0.0f);
+}
+///////////////////////////////////////////////////////////////////////////////////

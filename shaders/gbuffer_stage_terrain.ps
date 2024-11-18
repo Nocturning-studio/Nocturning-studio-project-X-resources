@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////////////////////////
+// Created: 07.08.2023
+// Autor: Deathman
+// Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////////
+//TODO: REVRITE FOR NEW MATERIALS FORMAT
+////////////////////////////////////////////////////////////////////////////////
+#define USE_FOR_TERRAIN_MATERIAL
+////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "material_components.xrh"
+#include "normal_map_functions.xrh"
+#include "displacement.xrh"
+#include "parallax_shadows.xrh"
+#include "gbuffer.xrh"
+#include "ao_from_height.xrh"
+////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+	float4 HomogeniousPosition: POSITION;
+	float3 Position: TEXCOORD0;
+	float3 TBN0: TEXCOORD1;
+	float3 TBN1: TEXCOORD2;
+	float3 TBN2: TEXCOORD3;
+	float2 UV: TEXCOORD4;
+	float2 DetailUV: TEXCOORD5;
+};
+////////////////////////////////////////////////////////////////////////////////
+GBufferPacked main (Interpolators Input)
+{
+    GBuffer GBuffer;
+	
+	// Get detail textures map (4 channels = 4 textures)
+    float4 BlendMask = GetTerrainDetailMask(Input.UV);
+
+	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
+	float3 DiffuseTextureData = tex2D (s_base, Input.UV);
+
+	// Combine transform matrix for displacement and normal mapping
+	float3x3 TBN = float3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
+
+	float3 ViewVector = GetViewVector(Input.Position, TBN);
+
+	// Choose displacement type and calculate UV displacement
+    float2 DetailUV = GetTerrainDisplacement(Input.Position, ViewVector, Input.DetailUV, BlendMask, TERRAIN_MATERIAL);
+	
+	// Get tangent space sun direction
+    //float3 LightDirection = GetLightDirection(sun_dir, TBN);
+    
+	// Get parralx shadows
+    //float ParallaxShadows = ShadowCalc(Input.Position, LightDirection, Input.DetailUV, TERRAIN_MATERIAL, BlendMask);
+
+	// details albedo data, multiplicated by detail map
+    float3 DetailAlbedo = GetTerrainDetailAlbedo(BlendMask, DetailUV);
+    GBuffer.Albedo = 2.0f * DiffuseTextureData.rgb * DetailAlbedo;
+
+	// Get DXT comressed normals + AO + Roughness for all details in 4 textures set
+    float4 DetailBumpData = GetTerrainDetailBump(BlendMask, DetailUV);
+
+	// Get DXT decompressing data + heightmap for all details in 4 textures set
+    float4 DetailBumpDecompressionData = GetTerrainDetailBumpDecompression(BlendMask, DetailUV);
+
+	// Transform normal map color from [0; 1] space to [-1; 1] with DTX decompressing
+	float3 NormalMap = DetailBumpData.abg + (DetailBumpDecompressionData.rgb - 1.0f);
+
+	 // Reconstruct z component for normals (actually z component used for Baked AO)
+    NormalMap.z = sqrt (1.0f - dot (NormalMap.xy, NormalMap.xy));
+
+    float HeightMap = DetailBumpDecompressionData.a;
+
+	// Transformate height map from [0; 1] space to [1; 2] and make normals more power
+    NormalMap.xy *= HeightMap + 1.0f;
+
+	NormalMap.z = pow2(NormalMap.z);
+
+	// Make normals more power with heightmap
+    NormalMap.z *= HeightMap;
+
+    NormalMap = normalize (NormalMap);
+	
+	// Out normal for Geometry buffer
+    GBuffer.Normal = normalize (mul (TBN, NormalMap));
+	
+    GBuffer.Position = Input.Position;
+	
+	// Get light map ambient
+    GBuffer.AO = tex2D(s_base, Input.UV).a * AO_BRIGHTNESS;
+
+	// Get baked ao from details
+    GBuffer.BackedAO = AOfromHeight(DetailUV, Input.Position.z, BlendMask);
+
+	// Create glossiness from details
+    GBuffer.Roughness = invert(DetailBumpData.r);
+	
+	GBuffer.Metallness = 0.0f;
+
+	GBuffer.Subsurface = 0.0f;
+
+	GBuffer.Emissive = 0.0f;
+
+    return PackGBuffer (GBuffer);
+}
+////////////////////////////////////////////////////////////////////////////////

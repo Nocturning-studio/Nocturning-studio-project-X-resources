@@ -1,0 +1,57 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 20.11.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+#include "BRDF.xrh"
+#include "shadow_filtering.xrh"
+#include "screen_space_shadows.xrh"
+#include "volumetric_light.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+// Constants
+uniform float sun_far;
+///////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+    float4 HomogeniousPosition: POSITION;
+    float4 TexCoords: TEXCOORD0;
+};
+///////////////////////////////////////////////////////////////////////////////////
+float4 main (Interpolators Input): COLOR0
+{
+    GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
+
+    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
+    
+    float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.01575f, 1.0f);
+    float4 ShadowMapTexCoords = mul (m_shadow, Position);
+    float ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    
+    // Fading with distance
+#ifdef USE_SMOOTH_FADING
+    float ShadowMapFadingFactor = smoothstep(sun_far * 0.85f, sun_far, length (GBuffer.Position));
+    ShadowMap = lerp (ShadowMap, 1.0f, ShadowMapFadingFactor);
+#endif    
+
+    // Weapon shadowing
+    float NdotL = abs(dot(normalize(GBuffer.Normal), Ldynamic_dir.rgb));
+    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+        ShadowMap *= TraceShadow(Ldynamic_dir, Position);
+
+    float3 SunColor = Ldynamic_color.rgb;
+
+    Light.Diffuse *= SunColor * ShadowMap.xxx;
+    Light.Specular *= SunColor * ShadowMap.xxx;
+    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * GBuffer.Albedo;
+
+    float Volumetric = 0.0f;
+    
+#if SUN_SHAFTS_ENABLED == 1 && FAR_CASCADE == 0
+    Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir);
+#endif
+    
+    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, Volumetric);
+}
+///////////////////////////////////////////////////////////////////////////////////

@@ -107,31 +107,12 @@ function options_dialog:UpdateControls()
 	opt:SetCurrentValues("mm_opt_controls")
 
 	opt:SetCurrentValues("key_binding")
-
-	if not xrRender_test_r2_hw() then
-		self.combo_r2:SetCurrentID		(0)
-		self.combo_r2:Enable			(false)
-	end
 	
 	self:UpdateDependControls()
 end
 
 function options_dialog:UpdateDependControls()
-	
-	local _current_id	= self.combo_r2:CurrentID()
 
-	for i,j in pairs(self.m_preconditions) do
-		j				(i, _current_id)
-	end
---[[	
-	if self.combo_r2:CurrentID()==1 then
-		self.ch_r2_sun:Enable			(true)
-		self.ch_r2_sun_det:Enable		(true)
-	else
-		self.ch_r2_sun:Enable			(false)
-		self.ch_r2_sun_det:Enable		(false)
-	end
-]]
 end
 
 function options_dialog:InitCallBacks()

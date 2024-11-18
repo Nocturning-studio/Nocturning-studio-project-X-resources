@@ -1,0 +1,21 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 26.11.2023
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+////////////////////////////////////////////////////////////////////////////
+float3 CalculateAmbientWithBlurredEnvironment(float LightMapAO, float3 Normal, float Roughness)
+{
+    float3 WorldSpaceNormal = mul(m_v2w, Normal);
+
+    float3 EnvironmentActual = texCUBElod(env_s0, float4(WorldSpaceNormal, Roughness * 8.0f)).rgb;
+    float3 EnvironmentNext = texCUBElod(env_s1, float4(WorldSpaceNormal, Roughness * 8.0f)).rgb;
+
+    float3 Environment = lerp(EnvironmentActual, EnvironmentNext, env_color.w);
+
+    Environment = env_color.rgb * lerp(Environment, fog_color.rgb, fog_sky_influence);
+
+    return Environment * LightMapAO + L_ambient.rgb;
+}
+////////////////////////////////////////////////////////////////////////////

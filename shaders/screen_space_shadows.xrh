@@ -1,0 +1,75 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 16.08.2024
+// Screen space shadows by Mihan323
+// Ported from S.T.A.L.K.E.R. DWM by Deathman
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+#define SAMPLES_COUNT 25
+#define SIZE_SCALE 0.05f
+///////////////////////////////////////////////////////////////////////////////////
+float4 ViewSpaceToProjection(float3 ViewSpaceData, float Offset)
+{
+	return mul(m_P, float4(ViewSpaceData, Offset));
+}
+///////////////////////////////////////////////////////////////////////////////////
+bool isInRange(float Value, float Min, float Max)
+{
+	return Value >= Min && Value <= Max;
+}
+
+bool isInQuad(float2 Value)
+{
+	float2 lt = float2(0, 0);
+	float2 rb = float2(1, 1);
+
+	return isInRange(Value.x, lt.x, rb.x) && isInRange(Value.y, lt.y, rb.y);
+}
+///////////////////////////////////////////////////////////////////////////////////
+float3 CalcProjection(float3 ViewSpaceData)
+{
+	float4 ProjectionSpaceData = ViewSpaceToProjection(ViewSpaceData, 1.0f);
+
+	ProjectionSpaceData /= ProjectionSpaceData.w;
+	ProjectionSpaceData.xy = ProjectionSpaceData.xy * 0.5f + 0.5f;
+	ProjectionSpaceData.y = 1.0f - ProjectionSpaceData.y;
+
+	return ProjectionSpaceData;
+}
+///////////////////////////////////////////////////////////////////////////////////
+float TraceShadow(float3 LightDirection, float3 Position)
+{
+	// Create non-normalized projected screen space position
+	float3 pscpos_curr = CalcProjection(Position);
+
+	// non-normalized projected screen pos with direction
+	float scale = SIZE_SCALE / SAMPLES_COUNT;
+	float3 vsdir = -LightDirection * scale;
+	float3 vspos_next = Position + vsdir;
+	float3 pscpos_next = CalcProjection(vspos_next);
+
+	// non-normalized projected direction
+	float3 pscdir = pscpos_next.xyz - pscpos_curr;
+
+	[unroll]
+    for (int i = 0; i < SAMPLES_COUNT; i++)
+	{
+		pscpos_curr += pscdir;
+		if (!isInQuad(pscpos_curr.xy))	
+			return 1.0f;
+
+		float vsdepth_hit = GetDepth(pscpos_curr.xy);
+		if (vsdepth_hit <= 0.01f) 
+			return 1.0f;
+
+		float3 fvs_pos_hit = float3(pscpos_curr.xy, 1.0f);
+		float4 fpvspos_hit = ViewSpaceToProjection(fvs_pos_hit * vsdepth_hit, 1.0f);
+		float pscdepth_hit = fpvspos_hit.z / fpvspos_hit.w;
+
+		if (pscdepth_hit < pscpos_curr.z) 
+			return 0.0f;
+	}
+
+	return 1.0f;
+}
+///////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,24 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+struct Interpolators
+{
+    float4 HomogeniousPosition : POSITION;
+    float2 UV : TEXCOORD0;
+    float3 Position : TEXCOORD1;
+    float3 Color : COLOR0;
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 main(Interpolators Input) : COLOR0
+{
+    float4 Albedo = tex2D (s_base, Input.UV);
+    
+    // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness(Input.Position);
+    Albedo.rgb = lerp (Albedo.rgb, fog_params.rgb, Fog);
+    Albedo *= 1.0f - pow (Fog, 2.2f);
+    
+    return Albedo;
+}
+//////////////////////////////////////////////////////////////////////////////////////////

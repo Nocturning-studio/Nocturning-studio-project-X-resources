@@ -1,0 +1,47 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Created: 21.12.2023
+// Author: Deathman
+// Nocturning studio for NS Project X
+///////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+///////////////////////////////////////////////////////////////////////////////////
+#define DOF_SEARCH_SIZE 4
+///////////////////////////////////////////////////////////////////////////////////
+float3 GetPositionWithSky(float2 TexCoords)
+{
+    float3 Position = GetPosition(TexCoords);
+    
+    if (all(Position) == 0.0f)
+        Position.z = 150.0f;
+    
+    return Position;
+}
+///////////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
+{    
+    float BlurPower = pow(CalcFogness(GetPositionWithSky(TexCoords)), EXP);
+    float2 RaySize = screen_res.zw;
+    float3 SummaryImageColor = NULL;
+    float Contribution = 0.0f;
+        
+    [unroll]
+    for (int i = -DOF_SEARCH_SIZE / 2; i < DOF_SEARCH_SIZE / 2; i++)
+    {
+        float2 SampleCoords = TexCoords + float2(0, i) * RaySize;
+        
+        float3 SampleColor = tex2Dlod0(s_image, SampleCoords);
+
+        float SampleContribution = pow(CalcFogness(GetPositionWithSky(SampleCoords)), EXP);
+        
+        SummaryImageColor += SampleColor * SampleContribution;
+        
+        Contribution += SampleContribution;
+    }
+    
+    float4 BlurredImageColor = float4((SummaryImageColor / Contribution), 1.0f) * BlurPower;
+    float4 UnblurredImageColor = tex2Dlod0(s_image, TexCoords) * (1.0f - BlurPower);
+    
+    return BlurredImageColor + UnblurredImageColor;
+}
+///////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,382 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 20.11.2023
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_brdf_lut;
+////////////////////////////////////////////////////////////////////////////
+// https://www.xrhadertoy.com/view/WscyRl
+// https://habr.com/ru/articles/426123/
+// https://habr.com/ru/articles/326852/
+////////////////////////////////////////////////////////////////////////////
+float GGX_Distribution(float cosThetaNH, float alpha) 
+{
+    float alpha2 = alpha * alpha;
+    float NH_sqr = saturate(cosThetaNH * cosThetaNH);
+    float den = NH_sqr * alpha2 + (1.0 - NH_sqr);
+    return alpha2 / (PI * den * den);
+}
+
+float GGX_PartialGeometry(float cosThetaN, float alpha) 
+{
+    float cosTheta_sqr = saturate(cosThetaN * cosThetaN);
+    float tan2 = (1 - cosTheta_sqr) / cosTheta_sqr;
+    float GP = 2 / (1 + sqrt(1 + alpha * alpha * tan2));
+    return GP;
+}
+
+float SmithG(float NDotV, float alphaG)
+{
+    float a = alphaG * alphaG;
+    float b = NDotV * NDotV;
+    return (2.0 * NDotV) / (NDotV + sqrt(a + b - a * b));
+}
+
+float3 fresnelSchlick(float cosTheta, float3 F0)
+{
+    return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
+}
+
+float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
+{
+    return F0 + (max(1.0 - roughness, F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
+////////////////////////////////////////////////////////////////////////////
+//https://www.xrhadertoy.com/view/3tlBW7
+////////////////////////////////////////////////////////////////////////////
+// Trowbridge-Reitz AKA GGX
+float GGXDistribution(float3 n, float3 h, float roughness) 
+{
+    float a_2 = roughness * roughness;
+    return a_2 / (PI * pow(pow(safe_dot(n, h), 2.0f) * (a_2 - 1.0f) + 1.0f, 2.0f));
+}
+
+// Schlick-Beckmann
+float GGXGeometry(float cosTheta, float k) 
+{
+    return (cosTheta) / (cosTheta * (1.0 - k) + k);
+}
+
+float GGXSmiths(float NdotV, float NdotL, float roughness) 
+{
+    float k = pow(roughness + 1.0, 2.0) / 8.0;
+    return GGXGeometry(NdotV, k) * GGXGeometry(NdotL, k);
+}
+
+// Anisotropic distribution and visibility functions from Filament GGX
+float GGXDistributionAnisotropic(float NoH, float3 h, float3 t, float3 b, float at, float ab)
+{
+    float ToH = dot(t, h);
+    float BoH = dot(b, h);
+    float a2 = at * ab;
+    float3 v = float3(ab * ToH, at * BoH, a2 * NoH);
+    float v2 = dot(v, v);
+    float w2 = a2 / v2;
+    return a2 * w2 * w2 * (1.0f / PI);
+}
+
+// Smiths GGX correlated anisotropic
+float GGXSmithsAnisotropic(float at, float ab, float ToV, float BoV, float ToL, float BoL, float NoV, float NoL) 
+{
+    float lambdaV = NoL * length(float3(at * ToV, ab * BoV, NoV));
+    float lambdaL = NoV * length(float3(at * ToL, ab * BoL, NoL));
+    float v = 0.5f / (lambdaV + lambdaL);
+    return saturate(v);
+}
+
+float2 getBRDFIntegrationMap(float x, float y)
+{
+    // Avoid reading outside the tile in the atlas
+    float2 texCoord = clamp(float2(x, y), 0.000001, 0.99);
+    texCoord = float2(texCoord.x / 2.0, texCoord.y / 2.0 + 0.5);
+    return tex2Dlod0(s_brdf_lut, texCoord).rg;
+}
+////////////////////////////////////////////////////////////////////////////
+// Unreal engine 4
+////////////////////////////////////////////////////////////////////////////
+// GGX / Trowbridge-Reitz
+// [Walter et al. 2007, "Microfacet models for refraction through rough surfaces"]
+float D_GGX(float a2, float NoH)
+{
+    float d = (NoH * a2 - NoH) * NoH + 1.0f;
+    return a2 / (PI * d * d);
+}
+
+// [Heitz 2014, "Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs"]
+float Vis_SmithJoint(float a2, float NoV, float NoL)
+{
+    float Vis_SmithV = NoL * sqrt(NoV * (NoV - NoV * a2) + a2);
+    float Vis_SmithL = NoV * sqrt(NoL * (NoL - NoL * a2) + a2);
+    return 0.5 * rcp(Vis_SmithV + Vis_SmithL);
+}
+
+// [Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"]
+float3 F_Schlick(float3 SpecularColor, float VoH)
+{
+    float Fc = pow5(1 - VoH);					// 1 sub, 3 mul
+    //return Fc + (1 - Fc) * SpecularColor;		// 1 add, 3 mad
+
+    // Anything less than 2% is physically impossible and is instead considered to be shadowing
+    return saturate(50.0 * SpecularColor.g) * Fc + (1 - Fc) * SpecularColor;
+
+}
+
+float3 fresnel(float cosTheta, float3 F0) {
+    return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
+}
+////////////////////////////////////////////////////////////////////////////
+float getMipLevelFromRoughness(float roughness, float lodCount) 
+{
+    float ROUGHNESS_1_MIP_RESOLUTION = 1.5;
+    float deltaLod = lodCount - ROUGHNESS_1_MIP_RESOLUTION;
+    return deltaLod * (sqrt(1.0 + 24.0 * roughness) - 1.0) / 4.0;
+}
+////////////////////////////////////////////////////////////////////////////
+float3 getSpecularDominantDir(float3 rd, float3 n, float roughness)
+{
+    // The dominant direction of specular reflection for
+    // rough materials is different from the "mirror" direction.
+    // This is an approximation used in Frostbite for a GGX BRDF.
+    // https://seblagarde.files.wordpress.com/2015/07/course_notes_moving_frostbite_to_pbr_v32.pdf
+    float smoothness = clamp(1.0f - roughness, 0.0f, 1.0f);
+    float lerpFactor = smoothness * (sqrt(smoothness) + roughness);
+    return normalize(lerp(n, reflect(rd, n), lerpFactor));
+}
+////////////////////////////////////////////////////////////////////////////
+// https://www.xrhadertoy.com/view/ltfyD8
+// https://www.xrhadertoy.com/view/Wt23zt
+////////////////////////////////////////////////////////////////////////////
+float Oren_Nayar_Diffuse(float3 LightDirection, float3 ViewDirection, float3 Normal, float Roughness)
+{
+    float NdotL = saturate(dot(Normal, LightDirection));
+    float VdotL = dot(ViewDirection, LightDirection);
+    float NdotV = abs(dot(Normal, ViewDirection)) + 0.1f;
+    float RoughnessSqr = pow(Roughness, 2.0f);
+
+    float s = VdotL - NdotL * NdotV;
+    float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
+    return NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) +
+                    (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
+}
+////////////////////////////////////////////////////////////////////////////
+// Subsurface scattering
+////////////////////////////////////////////////////////////////////////////
+float3 SubsurfaceScattering(float3 Normal, float3 Point, float3 Albedo, float Roughness, float Subsurface, float3 LightDirection)
+{
+    Roughness = pow(Roughness - 0.3f, 2.0f);
+    return Roughness / (PI * pow(pow(saturate(-dot(-normalize(Point), -normalize(LightDirection))), 2.0f) *
+        (Roughness - 1.0) + 1.0, 2.0f)) * (abs(dot(normalize(Normal), -normalize(Point))) + 1.0) * 0.5 * Albedo * Subsurface;
+}
+
+//https://github.com/FlaxEngine/FlaxEngine/blob/master/Source/Shaders/Lighting.hlsl
+/*
+LightingData SubsurfaceShading(GBufferSample gBuffer, float energy, float3 L, float3 V, half3 N)
+{
+    LightingData lighting = StandardShading(gBuffer, energy, L, V, N);
+#if defined(USE_GBUFFER_CUSTOM_DATA)
+    // Fake effect of the light going through the material
+    float3 subsurfaceColor = gBuffer.CustomData.rgb;
+    float opacity = gBuffer.CustomData.a;
+    float3 H = normalize(V + L);
+    float inscatter = pow(saturate(dot(L, -V)), 12.1f) * lerp(3, 0.1f, opacity);
+    float normalContribution = saturate(dot(N, H) * opacity + 1.0f - opacity);
+    float backScatter = gBuffer.AO * normalContribution / (PI * 2.0f);
+    lighting.Transmission = lerp(backScatter, 1, inscatter) * subsurfaceColor;
+#endif
+    return lighting;
+}
+
+LightingData FoliageShading(GBufferSample gBuffer, float energy, float3 L, float3 V, half3 N)
+{
+    LightingData lighting = StandardShading(gBuffer, energy, L, V, N);
+#if defined(USE_GBUFFER_CUSTOM_DATA)
+    // Fake effect of the light going through the thin foliage
+    float3 subsurfaceColor = gBuffer.CustomData.rgb;
+    float wrapNoL = saturate((-dot(N, L) + 0.5f) / 2.25);
+    float VoL = dot(V, L);
+    float scatter = D_GGX(0.36, saturate(-VoL));
+    lighting.Transmission = subsurfaceColor * (wrapNoL * scatter);
+#endif
+    return lighting;
+}
+*/
+////////////////////////////////////////////////////////////////////////////
+//https://www.xrhadertoy.com/view/wd3GDX
+////////////////////////////////////////////////////////////////////////////
+float Alpha2FromGloss(float gloss)
+{
+    float roughness = 1.0 - gloss;
+    float alpha = roughness * roughness;
+    float alpha2 = alpha * alpha;
+    return alpha2;
+}
+////////////////////////////////////////////////////////////////////////////
+// Ultimate lighting model
+////////////////////////////////////////////////////////////////////////////
+struct LightComponents
+{
+    float3 Diffuse;
+    float3 Specular;
+    float3 Subsurface;
+};
+
+//---------------------------------------------------------//
+// Full PBR lighting model for metallic-roughness materials//
+//---------------------------------------------------------//
+LightComponents Calculate_PBR_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Roughness = Roughness + 0.015f;
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float3 ViewDirection = -normalize(Point);
+    float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    float NdotV = max(dot(Normal, ViewDirection), 1e-5);
+    float NdotH = saturate(dot(Normal, HalfWayDirection));
+    float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
+    float VdotL = dot(ViewDirection, LightDirection);
+    float LdotH = dot(LightDirection, HalfWayDirection);
+    float RoughnessSqr = pow2(Roughness);
+    float RoughnessSqr2 = pow2(RoughnessSqr);
+
+    // Get F0 
+    float3 F0 = 0.04f;
+    F0 = lerp(F0, Albedo, Metallness);
+    float3 kS = fresnelSchlickRoughness(F0, HdotV, Roughness);
+    float3 kD = (1.0f - kS) * (1.0f - Metallness);
+
+    // Cook-Torrance specular model
+    float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
+    float V = Vis_SmithJoint(RoughnessSqr, NdotV, NdotL) * NdotL * (4.0f * HdotV / NdotH);
+    Light.Specular = D * V * kS;
+
+    // Oren-Nayar diffuse model
+    float s = VdotL - NdotL * NdotV;
+    float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
+    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
+    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
+    Light.Diffuse = mad(NdotL, x, y) * kD;
+
+    // Fake effect of the light going through the thin foliage
+    float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
+    float scatter = D_GGX(0.36, saturate(-VdotL));
+    Light.Subsurface = wrapNoL * scatter;
+
+    return Light;
+}
+
+//----------------------------------------------//
+// Phong lighting model for X-Ray materials     //
+//----------------------------------------------//
+LightComponents Calculate_Phong_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Roughness = max(Roughness, 0.001f);
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float3 ViewDirection = -normalize(Point);
+    float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    float NdotH = max(dot(Normal, HalfWayDirection), 0.00001f);
+    float VdotL = dot(ViewDirection, LightDirection);
+    float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
+    float Glossiness = saturate(pow(invert(Roughness) + 0.25f, 4.0f));
+
+    Light.Diffuse = NdotL;
+    float norm_factor = (128.0f+1.0f) / (2.0f*PI);
+    float3 F = fresnelSchlickRoughness(0.04f, HdotV, invert(Glossiness));
+    Light.Specular = pow(NdotH, 128.0f) * Glossiness * norm_factor * (Albedo + 0.5f) * F;
+    
+    float Scatter = dot(Normal, -LightDirection) * dot(HalfWayDirection, ViewDirection);
+    Scatter = saturate(Scatter);
+    Scatter *= 0.5f;
+    Light.Subsurface = Scatter;
+    
+    return Light;
+}
+
+//----------------------------------------------//
+// Lighting model for non shadowed light sources//
+//----------------------------------------------//
+LightComponents Calculate_PBR_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float3 ViewDirection = -normalize(Point);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    float NdotV = max(dot(Normal, ViewDirection), 1e-5);
+    float VdotL = dot(ViewDirection, LightDirection);
+    float RoughnessSqr = pow2(Roughness);
+
+    // Oren-Nayar diffuse model
+    float s = VdotL - NdotL * NdotV;
+    float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
+    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
+    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
+    Light.Diffuse = mad(NdotL, x, y);
+
+    Light.Specular = NULL;
+    Light.Subsurface = NULL;
+
+    return Light;
+}
+
+LightComponents Calculate_Simple_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+    Normal = normalize(Normal);
+    LightDirection = -normalize(LightDirection);
+    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
+    
+    Light.Diffuse = NdotL;
+
+    Light.Specular = NULL;
+    Light.Subsurface = NULL;
+
+    return Light;
+}
+
+//#define STALKER_BUILD
+LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+#ifdef STALKER_BUILD
+    Light = Calculate_Simple_Diffuse_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
+#else
+    Light = Calculate_PBR_Diffuse_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
+#endif
+
+    return Light;
+}
+
+LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+{
+    LightComponents Light;
+
+#ifdef STALKER_BUILD
+    Light = Calculate_Phong_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
+#else
+    Light = Calculate_PBR_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
+#endif
+
+    return Light;
+}
+////////////////////////////////////////////////////////////////////////////
+// Spot\Point lighting
+////////////////////////////////////////////////////////////////////////////
+float CalculateAttenuation(float3 Point, float3 LightPosition, float LightSourceRange)
+{
+    float3 LightDirection = Point - LightPosition;
+    float LightRadiusSquared = dot(LightDirection, LightDirection);
+    return saturate(1.0f - LightRadiusSquared * LightSourceRange);
+}
+////////////////////////////////////////////////////////////////////////////
