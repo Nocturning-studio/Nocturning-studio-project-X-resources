@@ -203,16 +203,6 @@ LightingData FoliageShading(GBufferSample gBuffer, float energy, float3 L, float
 }
 */
 ////////////////////////////////////////////////////////////////////////////
-//https://www.xrhadertoy.com/view/wd3GDX
-////////////////////////////////////////////////////////////////////////////
-float Alpha2FromGloss(float gloss)
-{
-    float roughness = 1.0 - gloss;
-    float alpha = roughness * roughness;
-    float alpha2 = alpha * alpha;
-    return alpha2;
-}
-////////////////////////////////////////////////////////////////////////////
 // Ultimate lighting model
 ////////////////////////////////////////////////////////////////////////////
 struct LightComponents
@@ -221,11 +211,10 @@ struct LightComponents
     float3 Specular;
     float3 Subsurface;
 };
-
 //---------------------------------------------------------//
 // Full PBR lighting model for metallic-roughness materials//
 //---------------------------------------------------------//
-LightComponents Calculate_PBR_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
 {
     LightComponents Light;
 
@@ -268,42 +257,10 @@ LightComponents Calculate_PBR_Lighting_Model(float Roughness, float Metallness, 
 
     return Light;
 }
-
-//----------------------------------------------//
-// Phong lighting model for X-Ray materials     //
-//----------------------------------------------//
-LightComponents Calculate_Phong_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
-{
-    LightComponents Light;
-
-    Roughness = max(Roughness, 0.001f);
-    Normal = normalize(Normal);
-    LightDirection = -normalize(LightDirection);
-    float3 ViewDirection = -normalize(Point);
-    float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
-    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
-    float NdotH = max(dot(Normal, HalfWayDirection), 0.00001f);
-    float VdotL = dot(ViewDirection, LightDirection);
-    float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
-    float Glossiness = saturate(pow(invert(Roughness) + 0.25f, 4.0f));
-
-    Light.Diffuse = NdotL;
-    float norm_factor = (128.0f+1.0f) / (2.0f*PI);
-    float3 F = fresnelSchlickRoughness(0.04f, HdotV, invert(Glossiness));
-    Light.Specular = pow(NdotH, 128.0f) * Glossiness * norm_factor * (Albedo + 0.5f) * F;
-    
-    float Scatter = dot(Normal, -LightDirection) * dot(HalfWayDirection, ViewDirection);
-    Scatter = saturate(Scatter);
-    Scatter *= 0.5f;
-    Light.Subsurface = Scatter;
-    
-    return Light;
-}
-
 //----------------------------------------------//
 // Lighting model for non shadowed light sources//
 //----------------------------------------------//
-LightComponents Calculate_PBR_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
+LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
 {
     LightComponents Light;
 
@@ -324,49 +281,6 @@ LightComponents Calculate_PBR_Diffuse_Lighting_Model(float Roughness, float Meta
 
     Light.Specular = NULL;
     Light.Subsurface = NULL;
-
-    return Light;
-}
-
-LightComponents Calculate_Simple_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
-{
-    LightComponents Light;
-
-    Normal = normalize(Normal);
-    LightDirection = -normalize(LightDirection);
-    float NdotL = max(dot(Normal, LightDirection), 0.00001f);
-    
-    Light.Diffuse = NdotL;
-
-    Light.Specular = NULL;
-    Light.Subsurface = NULL;
-
-    return Light;
-}
-
-//#define STALKER_BUILD
-LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
-{
-    LightComponents Light;
-
-#ifdef STALKER_BUILD
-    Light = Calculate_Simple_Diffuse_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
-#else
-    Light = Calculate_PBR_Diffuse_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
-#endif
-
-    return Light;
-}
-
-LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, float3 Albedo, float3 Point, float3 Normal, float3 LightDirection)
-{
-    LightComponents Light;
-
-#ifdef STALKER_BUILD
-    Light = Calculate_Phong_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
-#else
-    Light = Calculate_PBR_Lighting_Model(Roughness, Metallness, Albedo, Point, Normal, LightDirection);
-#endif
 
     return Light;
 }

@@ -69,7 +69,7 @@ float GetEmissive(float2 UV)
 float GetRoughness(float2 UV)
 {
 #if USE_BUMP
-    return invert(tex2D(s_bump, UV).r);
+    return pow2(invert(tex2D(s_bump, UV).r));
 #elif USE_CUSTOM_ROUGHNESS
     return tex2D(s_custom_roughness, UV).r;
 #else
