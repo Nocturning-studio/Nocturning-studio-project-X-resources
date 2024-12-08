@@ -52,7 +52,7 @@ float4 main(float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR0
 
         float occ = 0.0f;
 
-        [unroll]
+        [unroll (GTAO_SLICES)]
         for (int slice = 0; slice < GTAO_SLICES; slice++)
         {
             float phi = (slice + noiseDirection) * PI_BY_SLICES;
@@ -73,7 +73,7 @@ float4 main(float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR0
             {
                 float cHorizonCos = -1.0f;
 
-                [unroll]
+                [unroll (GTAO_SAMPLE)]
                 for (int sample = 0; sample < GTAO_SAMPLE; sample++)
                 {
                     float2 s = max(screen_radius * (float(sample) + noiseOffset), 4.0f + float(sample)) * screen_res_mul; // fix for multiplying s by sample=0 from Unity code
@@ -93,6 +93,8 @@ float4 main(float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR0
         }
 
         occ /= GTAO_SLICES;
+
+	occ = pow(occ, 2.2f);
 
         // Create smooth render distance border
         float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75f, RENDER_DISTANCE, length (Position));

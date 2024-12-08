@@ -7,8 +7,8 @@
 #define AO_SAMPLES 8.0
 #define AO_ATTENUATION 5.0
 #define AO_RADIUS 0.1
-#define AO_POWER 2.0
-#define AO_RENDER_DISTANCE 50.0f
+#define AO_POWER 4.4
+#define AO_RENDER_DISTANCE 25.0f
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float AOfromHeight(float2 UV, float WorldSpaceDepth
 #ifdef USE_FOR_TERRAIN_MATERIAL
@@ -28,11 +28,18 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
 
         float result = 0.0;
         
+        float c, s;
+        sincos(PI, c, s);
+        float2x2 rot = float2x2(c, -s, s, c);
+        float2 dir;
+        sincos(5.0f * PI, dir.y, dir.x);
+        
         [unroll]
         for (float f = 0.0; f < 1.0; f += 1.0 / AO_SAMPLES)
         {
+            dir = mul(dir, rot);
             float noiseDirection = random(float2(f * 16524.56, f * 23532.43));
-            float2 noiseOffset = CalcRotationOffset(noiseDirection) * AO_RADIUS;
+            float2 noiseOffset = noiseDirection * dir * AO_RADIUS;
             noiseOffset = noiseOffset * 2.0 - 1.0;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL

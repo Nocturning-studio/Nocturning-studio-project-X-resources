@@ -1,0 +1,58 @@
+////////////////////////////////////////////////////////////////////////////
+//	Created		: 19.11.2024
+//	Author		: Deathman
+//  Nocturning studio for NS Project X
+////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "bloom_common.xrh"
+#include "chromatic_abberations.xrh"
+#include "contrast_adaptive_sharpening.xrh"
+////////////////////////////////////////////////////////////////////////////
+uniform float2 cas_params;
+////////////////////////////////////////////////////////////////////////////
+float4 main(float2 TexCoords : TEXCOORD0) : COLOR
+{
+    float3 ImageColor = CAS(s_image, TexCoords, cas_params.x, cas_params.y);
+    
+    float4 Offset = screen_res.zwzw * float4(-1, -1, +1, +1);
+    
+    float3 BloomColor = NULL;
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw);
+    ImageColor.rgb += BloomColor * 0.25f;
+    
+    float3 BloomBladesColor = NULL;
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xy);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zy);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xw);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zw);
+    ImageColor.rgb += BloomBladesColor * 0.25f;
+    
+#ifdef USE_CHROMATIC_ABBERATION
+    ImageColor.rgb = ChromaticAberration(s_image, ImageColor.rgb, TexCoords);
+#endif
+    
+#if VIGNETTE_MODE >= 1
+#if VIGNETTE_MODE == 1
+    float VignettePower = 0.5f;  
+#elif VIGNETTE_MODE == 2
+    float VignettePower = vignette_power;
+#endif
+	//https://www.xrhadertoy.com/view/ms3GDs
+    float Vignette = pow(16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y), VignettePower);//0.1f);
+    ImageColor.rgb *= Vignette;// + (1.0f - Vignette) * (1.0f - VignettePower);
+#endif    
+
+#ifdef USE_SEPIA
+    ImageColor.rgb *= sepia_params.rgb + (1.0f - sepia_params.rgb) * (1.0f - sepia_params.a);
+#endif
+    
+    //float Exposure = tex2Dlod0(s_autoexposure, float2(0.5, 0.5)).r;
+    
+    //ImageColor.rgb *= Exposure.xxx * 1.0f;
+    
+    return float4(ImageColor, 1.0f);
+}
+////////////////////////////////////////////////////////////////////////////

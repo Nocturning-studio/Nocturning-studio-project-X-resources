@@ -5,11 +5,8 @@ struct v2p
 {
  	float2 tc0: TEXCOORD0; // base
 	float4 c: COLOR0; // diffuse
-
-#ifdef	USE_SOFT_PARTICLES
-//	Igor: for additional depth dest
 	float4 tctexgen	: TEXCOORD1;
-#endif	//	USE_SOFT_PARTICLES
+    float3 position : TEXCOORD2;
 };
 
 //	Must be less than view near
@@ -18,15 +15,26 @@ struct v2p
 // Pixel
 float4 main (v2p I): COLOR
 {
-	float4 result = I.c * tex2D (s_base, I.tc0);
+    float4 Albedo = tex2D(s_base, I.tc0);
+    //Albedo.rgb = sRgbToLinear(Albedo.rgb);
+    float4 result = I.c * Albedo;
 
 	//	Igor: additional depth test
-#ifdef	USE_SOFT_PARTICLES
 	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
 	float spaceDepth = Depth-I.tctexgen.z-DEPTH_EPSILON;
 	result.a *= Contrast( saturate(spaceDepth*1.3f), 2);
 	result.rgb *= Contrast( saturate(spaceDepth*1.3f), 2);
-#endif	//	USE_SOFT_PARTICLES
 	
-    return result;
+	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness(I.position);
+    //Fixit when original particle textures with no alpha will be replaced
+    //result.rgb = ApplyFogness(result.rgb, Fog);
+    float FogOpacity = invert(pow(Fog, 4.4f));
+    
+//#ifdef USE_INV_ALPHA
+//#endif
+    
+    float Opacity = result.a * FogOpacity;
+	
+    return float4(result.rgb, Opacity);
 }

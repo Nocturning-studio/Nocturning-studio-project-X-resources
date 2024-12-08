@@ -8,6 +8,7 @@
 #define USE_FOR_TERRAIN_MATERIAL
 ////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
+#include "material_helper.xrh"
 #include "material_components.xrh"
 #include "normal_map_functions.xrh"
 #include "displacement.xrh"
@@ -94,9 +95,9 @@ GBufferPacked main (Interpolators Input)
 	
 	GBuffer.Metallness = 0.0f;
 
-	GBuffer.Subsurface = 0.0f;
+    GBuffer.SubSurfacePower = 0.0f;
 
-	GBuffer.Emissive = 0.0f;
+    GBuffer.EmissionPower = 0.0f;
 
     return PackGBuffer (GBuffer);
 }

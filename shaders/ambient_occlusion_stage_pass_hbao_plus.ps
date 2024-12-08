@@ -7,7 +7,7 @@
 #include "gbuffer.xrh"
 //////////////////////////////////////////////////////////////////////////////////////////
 // Options
-#define POWER 2.2f
+#define POWER 4.4f
 #define	RADIUS 2.0f
 #define BIAS 0.0f//0.007f
 #define STEPS 4
@@ -54,7 +54,7 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
             float stepSizePixels = (radiusPixels * 0.25f) / (STEPS + 1.0f);
 		
-            [unroll]
+            [unroll (4)]
             for (int i = 0; i < 4; ++i)
             {
                 float negInvR2 = -1.0f / (RADIUS * RADIUS);
@@ -64,7 +64,7 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 		
                 dir = mul (dir, rot);
                 
-                [unroll]
+                [unroll (STEPS)]
                 for (int j = 0; j < STEPS; ++j)
                 {
                     float2 tcDelta = round (rayPixels * dir) * screen_res.zw;

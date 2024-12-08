@@ -171,7 +171,9 @@
 			<text font="letterica16" r="215" g="195" b="170">ui_mm_fullscreen</text>
 		</cap_fullscreen>
 		<check_fullscreen x="164" y="230" width="30" height="21">
-			<options_item entry="rs_fullscreen" group="mm_opt_video"/>	
+			<options_item entry="rs_fullscreen" group="mm_opt_video"/>
+			<sound_e>ui\ui_check_box_enabled</sound_e>	
+			<sound_d>ui\ui_check_box_disabled</sound_d>	
 		</check_fullscreen>
 
 		<cap_vsync x="20" y="260" width="143" height="21">

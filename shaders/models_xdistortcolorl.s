@@ -1,5 +1,5 @@
 function normal    (shader, t_base, t_second, t_detail)
-  shader:begin  ("model_distort","particle")    -- particle_alphaonly
+  shader:begin  ("model_distort","particle_inv_alpha")    -- particle_alphaonly
       : sorting  (2,true)
       : blend    (true,blend.srcalpha,blend.invsrcalpha)
       : aref     (true,0)

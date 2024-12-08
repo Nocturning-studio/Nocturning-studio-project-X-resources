@@ -3,33 +3,16 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-float3 ACES(const float3 x)
-{
-    const float a = 2.51f;
-    const float b = 0.03f;
-    const float c = 2.43f;
-    const float d = 0.59f;
-    const float e = 0.14f;
-    return (x * (a * x + b)) / (x * (c * x + d) + e);
-}
-////////////////////////////////////////////////////////////////////////////
 // X-Ray 2.0
 ////////////////////////////////////////////////////////////////////////////
 static const float3 luminance_weights = float3(0.2125f, 0.7154f, 0.0721f);
 ////////////////////////////////////////////////////////////////////////////
-float get_luminance(float3 Color)
+float3 LumaWeightedReinhard(float3 Color)
 {
-    return dot(Color, luminance_weights);
-}
-
-float3 exponential_tonemapping(float3 Color)
-{
-    const float white_level = 1.25f;
-    const float luminance_saturation = 1.05f;
-    //Color *= white_level;
-    const float pixel_luminance = get_luminance(Color);
+    const float white_level = 1.0f;
+    const float luminance_saturation = 1.00f;
+    const float pixel_luminance = dot(Color, luminance_weights);
     const float tone_mapped_luminance = 1.0f - exp(-pixel_luminance / white_level);
-
     return tone_mapped_luminance * pow(Color / pixel_luminance, luminance_saturation) * white_level;
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -44,8 +27,6 @@ float3 uncharted2(float3 x)
     return (((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F);
 }
 ////////////////////////////////////////////////////////////////////////////
-#define USE_SRGB
-////////////////////////////////////////////////////////////////////////////
 float3 sRgbToLinear(float3 vValue)
 {
     return vValue * (vValue * (vValue * 0.305306011 + 0.682171111) + 0.012522878);
@@ -58,21 +39,51 @@ float3 LinearTosRgb(float3 vColor)
     float3 S3 = sqrt(S2);
     return (0.585122381 * S1 + 0.783140355 * S2 - 0.368262736 * S3);
 }
+////////////////////////////////////////////////////////////////////////////
+float3 LogToLinear(float3 logColor)
+{
+    const float linearRange = 14.0f;
+    const float linearGrey = 0.18f;
+    const float exposureGrey = 444.0f;
+    return exp2((logColor - exposureGrey / 1023.0) * linearRange) * linearGrey;
+}
 
-/*
-https://www.reddit.com/r/vulkan/comments/s6b7qy/compute_shader_unorm_render_srgb/?rdt=39684
-float floatToSrgb(float value)
+float3 LinearToLog(float3 linearColor)
 {
-    const float inv_12_92 = 0.0773993808;
-    return value <= 0.04045
-       ? value * inv_12_92
-       : pow((value + 0.055) / 1.055, 2.4);
+    const float linearRange = 14.0f;
+    const float linearGrey = 0.18f;
+    const float exposureGrey = 444.0f;
+    return saturate(log2(linearColor) / linearRange - log2(linearGrey) / linearRange + exposureGrey / 1023.0f);
 }
-vec3 vec3ToSrgb(vec3 value)
+////////////////////////////////////////////////////////////////////////////
+//https://www.shadertoy.com/view/lcdXz4
+////////////////////////////////////////////////////////////////////////////
+float HSV_RGB_Helper(float n, float h, float s, float v)
 {
-    return vec3(floatToSrgb(value.x), floatToSrgb(value.y), floatToSrgb(value.z));
+    float k = fmod(n + (h * 6.0f), 6.0f);
+    return v - (v * s * clamp(min(k, 4.0f - k), 0.0f, 1.0f));
 }
-*/
+
+float3 HSV_To_RGB(float3 hsv)
+{
+    float3 t = clamp(hsv, 0.0f, 1.0f);
+    return float3(HSV_RGB_Helper(5.0f, t.x, t.y, t.z), HSV_RGB_Helper(3.0f, t.x, t.y, t.z), HSV_RGB_Helper(1.0f, t.x, t.y, t.z));
+}
+
+float3 OETF_REC709(float3 linearColor)
+{
+    float a = 0.0031308;
+    float b = 0.055;
+    float c = 12.92;
+    float m = 1.0 / 2.4;
+	
+    float3 color = clamp(linearColor, 0.0f, 1.0f);
+    color.x = color.x > a ? ((1.0f + b) * pow(color.x, m) - b) : (c * color.x);
+    color.y = color.y > a ? ((1.0f + b) * pow(color.y, m) - b) : (c * color.y);
+    color.z = color.z > a ? ((1.0f + b) * pow(color.z, m) - b) : (c * color.z);
+	
+    return color;
+}
 ////////////////////////////////////////////////////////////////////////////
 float3 Reinhard(float3 Color) 
 {
@@ -82,36 +93,6 @@ float3 Reinhard(float3 Color)
 float3 Reinhard2(float3 Color, float Exposure) 
 {
     return (Color * (1.0f + Color / pow2(Exposure))) / (1.0f + Color);
-}
-////////////////////////////////////////////////////////////////////////////
-// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
-float3 ACESFilm(float3 x) {
-    return clamp((x * (2.51f * x + 0.03f)) / (x * (2.43f * x + 0.59f) + 0.14f), 0.0f, 1.0f);
-}
-////////////////////////////////////////////////////////////////////////////
-// https://twitter.com/jimhejl/status/633777619998130176
-float3 ToneMapFilmic_Hejl2015(float3 hdr, float whitePt) {
-    float4 vh = float4(hdr, whitePt);
-    float4 va = 1.425 * vh + 0.05;
-    float4 vf = (vh * va + 0.004) / (vh * (va + 0.55) + 0.0491) - 0.0821;
-    return vf.rgb / vf.www;
-}
-////////////////////////////////////////////////////////////////////////////
-float3 CalcTonemap(float3 Color)
-{
-    //Color = sRgbToLinear(Color);
-    Color = Reinhard2(Color, 4.0f) * 2.0;
-    //Color = pow(Color, 0.8f);
-    //Color = Color / (Color + 1.0f);
-    //Color = 1.0f - exp(-Color * 1.5);
-    //Color = pow(Color, 1.0f / 2.2f);
-    //Color = LinearTosRgb(Color);
-    return Color;
-}
-////////////////////////////////////////////////////////////////////////////
-float3 GammaCorrect(float3 Color)
-{
-    return pow(Color, 2.2f);
 }
 ////////////////////////////////////////////////////////////////////////////
 float3 CalcExposure(float3 Color, float Exposure)

@@ -44,7 +44,7 @@ float4 main (Interpolators Input): COLOR0
 
     Light.Diffuse *= SunColor * ShadowMap.xxx;
     Light.Specular *= SunColor * ShadowMap.xxx;
-    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.Subsurface * GBuffer.Albedo;
+    Light.Subsurface *= SunColor * ShadowMap.xxx * GBuffer.SubSurfacePower * GBuffer.Albedo;
 
     float Volumetric = 0.0f;
     
@@ -52,6 +52,6 @@ float4 main (Interpolators Input): COLOR0
     Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir);
 #endif
     
-    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, Volumetric);
+    return float4(Light.Diffuse + Light.Specular + Light.Subsurface, Volumetric);
 }
 ///////////////////////////////////////////////////////////////////////////////////

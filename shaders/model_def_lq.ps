@@ -17,13 +17,13 @@ struct PixelShaderOutputStruct
 PixelShaderOutputStruct main (v2p I)
 {
 	float4 t_base = tex2D (s_base, I.tc0);
-
+    
 	float3 light = I.c0;
 	float3 final = light * t_base * 2;
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);
-    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
+    final.rgb = ApplyFogness(final.rgb, Fog);
     float Opacity = (1.0f - pow (Fog, 2.2f)) * t_base.a;
     
     PixelShaderOutputStruct Output;

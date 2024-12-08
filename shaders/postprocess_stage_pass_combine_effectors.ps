@@ -1,0 +1,57 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//	Created		: 30.11.2024
+//	Author		: Deathman
+//	NSProjectX Nocturning Studio - 2024
+//////////////////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+//////////////////////////////////////////////////////////////////////////////////////////
+struct v2p
+{
+	float4 color: COLOR0; // multiplier, color.w = noise_amount
+	float4 gray: COLOR1; // (.3,.3,.3.,amount)
+ 	float2 tc0: TEXCOORD0; // base1 (duality)
+ 	float2 tc1: TEXCOORD1; // base2 (duality)
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+uniform sampler2D s_grad0;
+uniform sampler2D s_grad1;
+uniform sampler2D s_noise0;
+uniform sampler2D s_noise1;
+uniform sampler2D s_noise2;
+//////////////////////////////////////////////////////////////////////////////////////////
+uniform float4 c_brightness;
+uniform float4 c_colormap;
+//////////////////////////////////////////////////////////////////////////////////////////
+float4 main (v2p I): COLOR
+{
+    //Duality
+    float3 ImageColor0 = tex2Dlod0(s_image, I.tc0);
+    float3 ImageColor1 = tex2Dlod0(s_image, I.tc1);
+    float3 ImageColor = (ImageColor0 + ImageColor1) * 0.5f;
+    
+    //Gradient LUT
+    float grad_i = dot(ImageColor, (0.3333h).xxx);
+    float3 Grad0 = tex2Dlod0(s_grad0, float2(grad_i, 0.5f));
+    float3 Grad1 = tex2Dlod0(s_grad1, float2(grad_i, 0.5f));
+    float3 Colormap = lerp(Grad0, Grad1, c_colormap.y);
+    ImageColor = lerp(ImageColor, Colormap, c_colormap.x);
+    
+    //Gray
+    float gray = dot(ImageColor, I.gray.rgb);
+    ImageColor = lerp(gray, ImageColor, I.gray.w);
+
+    //Noising
+    float3 noised = ImageColor * hash33(I.tc0) * 2.0f;
+    ImageColor = lerp(noised, ImageColor, I.color.w);
+    
+    //Radiation
+    ImageColor += tex2Dlod0(s_noise0, I.tc0).r;
+    ImageColor += tex2Dlod0(s_noise1, I.tc0).r;
+    ImageColor += tex2Dlod0(s_noise2, I.tc0).r;
+    
+    //Additional brightness
+    ImageColor = (ImageColor * I.color.rgb + c_brightness.rgb) * 2.0f;
+    
+    return float4(ImageColor, 1);
+}
+//////////////////////////////////////////////////////////////////////////////////////////

@@ -48,8 +48,8 @@ float4 main (Interpolators Input): COLOR0
     
     Light.Diffuse *= Ldynamic_color.rgb * LightMap;
     Light.Specular *= Ldynamic_color.rgb * LightMap;
-    Light.Subsurface *= Ldynamic_color.rgb * LightMap * GBuffer.Subsurface * GBuffer.Albedo;
+    Light.Subsurface *= Ldynamic_color.rgb * LightMap * GBuffer.SubSurfacePower * GBuffer.Albedo;
     
-    return float4(Light.Diffuse * GBuffer.Albedo + Light.Specular + Light.Subsurface, 0.0f);
+    return float4(Light.Diffuse + Light.Specular + Light.Subsurface, 0.0f);
 }
 ///////////////////////////////////////////////////////////////////////////////////

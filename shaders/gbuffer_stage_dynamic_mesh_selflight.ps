@@ -39,9 +39,9 @@ GBufferPacked main (Interpolators Input)
 	
 	GBuffer.Metallness = 0.0f;
 
-	GBuffer.Subsurface = 0.0f;
+    GBuffer.SubSurfacePower = 0.0f;
 
-	GBuffer.Emissive = EMISSIVE_POWER;
+    GBuffer.EmissionPower = EMISSIVE_POWER;
 
     return PackGBuffer (GBuffer);
 }

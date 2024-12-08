@@ -3,10 +3,15 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
+#include "common.xrh"
+#include "gbuffer.xrh"
+////////////////////////////////////////////////////////////////////////////
+#define DOF_SEARCH_SIZE 4
+////////////////////////////////////////////////////////////////////////////
 uniform float4 dof_params; // x - near, y - focus, z - far, w - sky distance
 uniform float3 dof_kernel; // x, y - resolution pre-scaled, z - just kernel size
 ////////////////////////////////////////////////////////////////////////////
-float DOFFactor(float Depth)
+float COC(float Depth)
 {
     float dist_to_focus = Depth - dof_params.y;
     float blur_far = saturate(dist_to_focus / (dof_params.z - dof_params.y));
@@ -14,5 +19,22 @@ float DOFFactor(float Depth)
     float blur = blur_near + blur_far;
     blur = pow(blur, EXP);
     return blur;
+}
+
+float FogFactor(float3 Position)
+{
+    return CalcFogness(Position) * GetFogDensity() * 0.35f;
+}
+
+float GetBlurFactor(float2 TexCoords)
+{
+    float3 Position = GetPosition(TexCoords);
+    
+    float Result = 0.0f;
+    
+    Result += COC(Position.z);
+    Result += FogFactor(Position);
+    
+    return Result;
 }
 ////////////////////////////////////////////////////////////////////////////

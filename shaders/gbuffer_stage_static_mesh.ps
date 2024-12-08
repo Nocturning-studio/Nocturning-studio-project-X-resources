@@ -42,11 +42,7 @@ GBufferPacked main (Interpolators Input)
     GBuffer.Position = Input.Position;
 	
 #ifdef USE_LIGHTMAP
-	// Get and separate static light data
-	LightMapData LightMap;
-	LightMap = Unpack_LightMap(Input.LightMapUV);
-
-	GBuffer.AO = LightMap.AO;
+	GBuffer.AO = Unpack_LightMap(Input.LightMapUV);
 #else//USE_LIGHTMAP
     GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
 #endif//USE_LIGHTMAP
@@ -57,9 +53,9 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.Metallness = Material.Metallness;
 
-	GBuffer.Subsurface = Material.Subsurface;
+    GBuffer.SubSurfacePower = Material.SubSurfacePower;
 
-	GBuffer.Emissive = Material.Emissive;
+    GBuffer.EmissionPower = Material.EmissionPower;
 
     return PackGBuffer (GBuffer);
 }

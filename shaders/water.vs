@@ -70,7 +70,7 @@ vf main (v_vert v)
                 // L_final        = v.N.w        + L_ambient;
 
     o.hpos = mul (m_VP, P); // xform, input in world coords
-    o.position = P;
+    o.position = mul(m_WV, v.P);
 
     o.c0 = float4 (L_final, 0.0f);
 

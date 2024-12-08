@@ -38,4 +38,3 @@ function l_special        (shader, t_base, t_second, t_detail)
   shader:sampler        ("s_image")       :texture  ("$user$generic0") : f_none ()
   shader:sampler        ("s_gbuffer_2")       :texture  ("$user$gbuffer_2") : f_none ()
 end
-

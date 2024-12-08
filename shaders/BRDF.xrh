@@ -145,29 +145,34 @@ float3 getSpecularDominantDir(float3 rd, float3 n, float roughness)
     return normalize(lerp(n, reflect(rd, n), lerpFactor));
 }
 ////////////////////////////////////////////////////////////////////////////
-// https://www.xrhadertoy.com/view/ltfyD8
-// https://www.xrhadertoy.com/view/Wt23zt
+// https://www.shadertoy.com/view/MsSczh
 ////////////////////////////////////////////////////////////////////////////
-float Oren_Nayar_Diffuse(float3 LightDirection, float3 ViewDirection, float3 Normal, float Roughness)
+float Oren_Nayar_Diffuse(float3 ViewDirection, 
+                         float3 Normal, 
+                         float3 LdotV, 
+                         float3 NdotL, 
+                         float3 NdotV, 
+                         float Roughness)
 {
-    float NdotL = saturate(dot(Normal, LightDirection));
-    float VdotL = dot(ViewDirection, LightDirection);
-    float NdotV = abs(dot(Normal, ViewDirection)) + 0.1f;
-    float RoughnessSqr = pow(Roughness, 2.0f);
+    float s = LdotV - NdotL * NdotV;
+    float t = lerp(1.0f, max(NdotL, NdotV), step(0.0f, s));
 
-    float s = VdotL - NdotL * NdotV;
-    float t = lerp(NdotL, min(1, NdotL / NdotV), step(0.0f, s));
-    return NdotL * ((1.0f - 0.5f * RoughnessSqr / (RoughnessSqr + 0.33f)) +
-                    (0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t));
+    float sigma2 = pow2(Roughness);
+    float A = 1. - .5 * (sigma2 / ((sigma2 + .33) + .000001));
+    float B = .45 * sigma2 / (sigma2 + .09) + .00001;
+    
+    float ga = dot(ViewDirection - Normal * NdotV, Normal - Normal * NdotL);
+
+    return max(0.0f, NdotL) * (A + B * max(0.0f, ga) * sqrt((1.0f - NdotV * NdotV) * (1.0f - NdotL * NdotL)) / max(NdotL, NdotV));
 }
 ////////////////////////////////////////////////////////////////////////////
 // Subsurface scattering
 ////////////////////////////////////////////////////////////////////////////
-float3 SubsurfaceScattering(float3 Normal, float3 Point, float3 Albedo, float Roughness, float Subsurface, float3 LightDirection)
+float3 SubsurfaceScattering(float3 Normal, float3 Point, float3 Albedo, float Roughness, float SubSurfacePower, float3 LightDirection)
 {
     Roughness = pow(Roughness - 0.3f, 2.0f);
     return Roughness / (PI * pow(pow(saturate(-dot(-normalize(Point), -normalize(LightDirection))), 2.0f) *
-        (Roughness - 1.0) + 1.0, 2.0f)) * (abs(dot(normalize(Normal), -normalize(Point))) + 1.0) * 0.5 * Albedo * Subsurface;
+        (Roughness - 1.0) + 1.0, 2.0f)) * (abs(dot(normalize(Normal), -normalize(Point))) + 1.0) * 0.5 * Albedo * SubSurfacePower;
 }
 
 //https://github.com/FlaxEngine/FlaxEngine/blob/master/Source/Shaders/Lighting.hlsl
@@ -203,7 +208,43 @@ LightingData FoliageShading(GBufferSample gBuffer, float energy, float3 L, float
 }
 */
 ////////////////////////////////////////////////////////////////////////////
+//https://www.shadertoy.com/view/XXSBzd
+////////////////////////////////////////////////////////////////////////////
+#define constant1_FON (0.5f - 2.0f / (3.0f * PI))
+#define constant2_FON (2.0f / 3.0f - 28.0f / (15.0f * PI))
+////////////////////////////////////////////////////////////////////////////
+float E_FON_approx2(float mu, float r)
+{
+    float mucomp = invert(mu);
+    float mucomp2 = pow2(mucomp);
+    const float2x2 Gcoeffs = float2x2(0.0571085289f, -0.332181442f, 0.491881867f, 0.0714429953f);
+    float GoverPi = dot(mul(Gcoeffs, float2(mucomp, mucomp2)), float2(1.0f, mucomp2));
+    return (1.0f + r * GoverPi);
+}
+
+float3 f_EON_Opt(float3 Albedo, float Roughness, float NdotL, float NdotV, float LdotV)
+{
+    float s = LdotV - NdotL * NdotV; // QON s term
+    float sovertF = s > 0.0f ? s / max(NdotV, NdotL) : s; // FON s/t
+    float AF = 1.0f / (1.0f + constant1_FON * Roughness); // FON A coeff.
+    float3 f_ss = (Albedo) * AF * (1.0f + Roughness * sovertF); // single-scatter
+    
+    float EFo = E_FON_approx2(NdotV, Roughness) * AF; // FON wo albedo (exact)
+    float EFi = E_FON_approx2(NdotL, Roughness) * AF;
+
+    float avgEF = AF * (1.0f + constant2_FON * Roughness); // avg. albedo
+    float3 rho_ms = (Albedo * Albedo) / (1.0f - Albedo * (1.0f - avgEF));
+    const float eps = 1.0e-7f;
+    
+    // multi-scatter lobe:(removed the max on numerator as didn't appear to make any difference)
+    float3 f_ms = (rho_ms) * (avgEF * (1.0f - EFo) * (1.0f - EFi) / max(eps, 1.0f - avgEF));
+    
+    return f_ss + f_ms;
+}
+////////////////////////////////////////////////////////////////////////////
 // Ultimate lighting model
+////////////////////////////////////////////////////////////////////////////
+#define USE_LAMBERT_DIFFUSE 1
 ////////////////////////////////////////////////////////////////////////////
 struct LightComponents
 {
@@ -227,7 +268,7 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
     float NdotV = max(dot(Normal, ViewDirection), 1e-5);
     float NdotH = saturate(dot(Normal, HalfWayDirection));
     float HdotV = saturate(dot(HalfWayDirection, ViewDirection));
-    float VdotL = dot(ViewDirection, LightDirection);
+    float LdotV = dot(ViewDirection, LightDirection);
     float LdotH = dot(LightDirection, HalfWayDirection);
     float RoughnessSqr = pow2(Roughness);
     float RoughnessSqr2 = pow2(RoughnessSqr);
@@ -240,19 +281,28 @@ LightComponents Calculate_Lighting_Model(float Roughness, float Metallness, floa
 
     // Cook-Torrance specular model
     float D = D_GGX(RoughnessSqr2, NdotH) * NdotH / (4.0f * HdotV);
-    float V = Vis_SmithJoint(RoughnessSqr, NdotV, NdotL) * NdotL * (4.0f * HdotV / NdotH);
+    float V = Vis_SmithJoint(RoughnessSqr, NdotV, saturate(NdotL)) * saturate(NdotL) * (4.0f * HdotV / NdotH);
     Light.Specular = D * V * kS;
+    
+    // Disney diffuse model
+    //float fDiffuse90 = lerp(0.0f, 0.5f, Roughness) + 2.0f * LdotH * LdotH * Roughness;
+    //float3 vDiffuse0 = lerp(1.0f - F0 * 0.25f, 1.0f, Roughness);
+    //float3 vDiffuseL = vDiffuse0 + (fDiffuse90 - vDiffuse0) * pow5(1.0f - saturate(NdotL));
+    //float3 vDiffuseV = vDiffuse0 + (fDiffuse90 - vDiffuse0) * pow5(1.0f - abs(NdotV));
+    //Light.Diffuse = NdotL * kD; //saturate(NdotL) * vDiffuseL * vDiffuseV * lerp(1.0f, 1.0f / 1.51f, Roughness) * kD;
 
-    // Oren-Nayar diffuse model
-    float s = VdotL - NdotL * NdotV;
-    float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
-    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
-    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
-    Light.Diffuse = mad(NdotL, x, y) * kD;
+#if USE_EON2_DIFFUSE
+    Light.Diffuse = f_EON_Opt(Albedo, Roughness, NdotL, NdotV, LdotV) * NdotL * kD;
+#elif USE_OREN_NAYAR_DIFFUSE
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo * kD / PI * 2.0f;
+#elif USE_LAMBERT_DIFFUSE
+    Light.Diffuse = Albedo * NdotL * kD / PI * 2.0f;
+#endif
 
+    
     // Fake effect of the light going through the thin foliage
     float wrapNoL = saturate((-NdotL + 0.5f) / 2.25);
-    float scatter = D_GGX(0.36, saturate(-VdotL));
+    float scatter = D_GGX(0.36, saturate(-LdotV));
     Light.Subsurface = wrapNoL * scatter;
 
     return Light;
@@ -269,15 +319,21 @@ LightComponents Calculate_Diffuse_Lighting_Model(float Roughness, float Metallne
     float3 ViewDirection = -normalize(Point);
     float NdotL = max(dot(Normal, LightDirection), 0.00001f);
     float NdotV = max(dot(Normal, ViewDirection), 1e-5);
-    float VdotL = dot(ViewDirection, LightDirection);
-    float RoughnessSqr = pow2(Roughness);
+    float LdotV = dot(ViewDirection, LightDirection);
+    float3 HalfWayDirection = normalize(ViewDirection + LightDirection);
+    float LdotH = dot(LightDirection, HalfWayDirection);
 
-    // Oren-Nayar diffuse model
-    float s = VdotL - NdotL * NdotV;
-    float t = lerp(NdotL, min(1.0f, NdotL / NdotV), step(0.0f, s));
-    float x = invert(0.5f * RoughnessSqr / (RoughnessSqr + 0.33f));
-    float y = 0.45f * RoughnessSqr / (RoughnessSqr + 0.09f) * s * t;
-    Light.Diffuse = mad(NdotL, x, y);
+    // Get F0 
+    float3 F0 = 0.04f;
+    F0 = lerp(F0, Albedo, Metallness);
+    
+#if USE_EON2_DIFFUSE
+    Light.Diffuse = f_EON_Opt(Albedo, Roughness, NdotL, NdotV, LdotV) * NdotL;
+#elif USE_OREN_NAYAR_DIFFUSE
+    Light.Diffuse = Oren_Nayar_Diffuse(ViewDirection, Normal, LdotV, NdotL, NdotV, Roughness) * Albedo / PI;
+#elif USE_LAMBERT_DIFFUSE
+    Light.Diffuse = Albedo * NdotL / PI;
+#endif
 
     Light.Specular = NULL;
     Light.Subsurface = NULL;

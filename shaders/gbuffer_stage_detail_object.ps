@@ -5,7 +5,6 @@
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "gbuffer.xrh"
-#include "fxaa_atoc.xrh"
 #include "alpha_test.xrh"
 #include "contrast_adaptive_sharpening.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
@@ -22,19 +21,11 @@ GBufferPacked main (Interpolators Input)
 {
     GBuffer GBuffer;
 	
-	float3 Albedo;
-    float Opacity;
-	
-#if defined(USE_ALPHA_TEST) && (ALPHA_TEST_AA == FXAA_ATOC)
-    calc_fxaa_atoc(Input.UV, Albedo, Opacity);
-#else//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
-    Albedo = tex2D (s_base, Input.UV).rgb;
-    Opacity = tex2D (s_base, Input.UV).a;
-#endif//USE_ALPHA_TEST && (ALPHA_TEST_AA == FXAA_ATOC)
+    float4 BaseTextureData = tex2D(s_base, Input.UV);
 
-	calc_alpha_test(Input.UV, Opacity);
+    calc_alpha_test(Input.UV, BaseTextureData.a);
 
-    GBuffer.Albedo = Albedo;
+    GBuffer.Albedo = BaseTextureData.rgb;
 	
     GBuffer.AO = Input.Lighting.x * AO_BRIGHTNESS;
 
@@ -48,9 +39,9 @@ GBufferPacked main (Interpolators Input)
 
 	GBuffer.Metallness = 0.0f;
 
-	GBuffer.Subsurface = 1.0f;
+    GBuffer.SubSurfacePower = 1.0f;
 
-	GBuffer.Emissive = 0.0f;
+    GBuffer.EmissionPower = 0.0f;
 	
     return PackGBuffer (GBuffer);
 }

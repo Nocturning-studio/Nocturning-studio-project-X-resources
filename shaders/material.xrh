@@ -3,11 +3,11 @@
 // Author: Deathman
 // Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "material_helper.xrh"
 #include "material_components.xrh"
 #include "displacement.xrh"
 #include "parallax_shadows.xrh"
 #include "normal_map_functions.xrh"
-#include "fxaa_atoc.xrh"
 #include "ao_from_height.xrh"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialParams
@@ -19,9 +19,8 @@ struct MaterialParams
     float Roughness;
     float Metallness;
     float AO;
-    //float ParallaxShadows;
-    float Subsurface;
-    float Emissive;
+    float SubSurfacePower;
+    float EmissionPower;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
@@ -31,33 +30,36 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     float3 ViewVector = GetViewVector(Position, TBN);
     
     UV = GetDisplacement(Position, ViewVector, UV, BASE_MATERIAL);
-
-    //float3 LightDirection = GetLightDirection(sun_dir, TBN);
     
-    //Material.ParallaxShadows = ShadowCalc(Position, LightDirection, UV, BASE_MATERIAL);
+    MaterialComponents UnpackedMaterial;
     
-    Material.Albedo = GetAlbedo(UV);
+#if USE_BUMP
+    UnpackedMaterial = UnpackBumpMaterial(UV);
+#else
+    UnpackedMaterial = UnpackMaterial(UV);
+    UnpackedMaterial = UpdateMaterial(UV, UnpackedMaterial);
+#endif
+    
+    Material.Albedo = UnpackedMaterial.Albedo;
 
-    Material.Opacity = GetOpacity(UV);
+    Material.Opacity = UnpackedMaterial.Opacity;
 
-    Material.Normal = GetNormalMap(UV);
+    Material.Normal = UnpackedMaterial.Normal;
 
-    Material.Height = GetHeight(UV);
+    Material.Height = UnpackedMaterial.Height;
 
-    Material.Roughness = GetRoughness(UV);
+    Material.Roughness = UnpackedMaterial.Roughness;
 
-    Material.Metallness = GetMetallness(UV);
+    Material.Metallness = UnpackedMaterial.Metallness;
 
-    Material.Subsurface = GetSubsurface(UV);
+    Material.SubSurfacePower = UnpackedMaterial.SubSurfacePower;
 
-    Material.Emissive = GetEmissive(UV);
-
-#if USE_BAKED_AO
-    Material.AO = GetBakedAO(UV);
-#elif !defined(USE_BAKED_AO) && MATERIAL_QUALITY >= HIGHT_QUALITY
+    Material.EmissionPower = UnpackedMaterial.EmissionPower;
+    
+#if !defined(USE_BAKED_AO) && MATERIAL_QUALITY >= HIGHT_QUALITY
     Material.AO = AOfromHeight(UV, length(Position));
 #else
-    Material.AO = 1.0f;
+    Material.AO = UnpackedMaterial.AO;
 #endif
 
 #ifdef USE_TDETAIL
@@ -69,32 +71,35 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
     DetailUV = GetDetailDisplacement(Position, ViewVector, DetailUV, DETAIL_MATERIAL);
 #endif
 
-    // Combine main albedo with detail
-    Material.Albedo *= 2.0f * GetDetailAlbedo(DetailUV);
+    MaterialComponents UnpackedDetailMaterial;
 
-#ifdef USE_DETAIL_BUMP
-    float3 DetailNormal = GetDetailNormal(DetailUV);
-
+#if USE_DETAIL_BUMP
+    UnpackedDetailMaterial = UnpackDetailBumpMaterial(DetailUV);
+    
     // Correctly blend two maps
-    Material.Normal = Blend_Normal_Maps(Material.Normal, DetailNormal);
+    Material.Normal = Blend_Normal_Maps(Material.Normal, UnpackedMaterial.Normal);
 
     // Combine main height map with detail height map, multiplicated by coeffient, make detail height map influence is smaller
     Material.Height += GetDetailHeight(DetailUV) * 0.2f;
 
-    //Material.Roughness *= 2.0f * GetDetailRoughness(DetailUV);
-#endif // DETAIL_BUMP
+    //Material.Roughness *= 2.0f * UnpackedDetailMaterial.Roughness;
+#else
+    UnpackedDetailMaterial = UnpackDetailMaterial(DetailUV);
+#endif
+    
+    // Combine main albedo with detail
+    Material.Albedo *= 2.0f * UnpackedDetailMaterial.Albedo;
 #endif // USE_TDETAIL
 
 #ifdef USE_BUMP
-    // Transformate height map from [0; 1] space to [1; 2] and make normals more power
-    Material.Normal.xy *= Material.Height + 1.0f;
-
+    // Make normals more power
     Material.Normal.z = pow4(Material.Normal.z);
 
     // Make normals more power with heightmap
+    Material.Normal.xy *= Material.Height + 1.0f;
     Material.Normal.z *= Material.Height;
 #endif
-
+    
     Material.Normal = normalize(Material.Normal);
 
     return Material;

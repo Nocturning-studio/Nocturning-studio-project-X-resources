@@ -8,6 +8,7 @@
 struct Interpolators
 {
     float2 TexCoords: TEXCOORD0;
+    float2 Pos2D : TEXCOORD1;
     float4 HomogeniousPosition: POSITION;
 };
 ////////////////////////////////////////////////////////////////////////////
@@ -15,7 +16,8 @@ Interpolators main (float4 VertexPosition: POSITION)
 {
     Interpolators Output;
     
-    Output.HomogeniousPosition = float4 (VertexPosition.x, -VertexPosition.y, 0.0f, 1.0f);
+    Output.Pos2D = float2(VertexPosition.x, -VertexPosition.y);
+    Output.HomogeniousPosition = float4(Output.Pos2D, 0.0f, 1.0f);
     Output.TexCoords = VertexPosition.zw;
     
     return Output;

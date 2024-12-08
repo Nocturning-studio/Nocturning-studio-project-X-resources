@@ -58,13 +58,16 @@ float4 main (v2p I): COLOR
     final.w = dot (accum3, 1 / 4.h);
     float result = dot (final, 1 / 4.h);
 
-    float scale = MiddleGray.x / (result * MiddleGray.y + MiddleGray.z);
+    float keyValue = 1.03f - (2.0f / (2.0f + log2(result + 1.0f)));
+    float exposure = keyValue / result;
+    
+    //float scale = MiddleGray.x / (exposure * MiddleGray.y + MiddleGray.z);
     float scale_prev = tex2D(s_autoexposure, I.tc0).x;
-	float rvalue = lerp(scale_prev, scale, MiddleGray.w);
+    float rvalue = lerp(scale_prev, exposure, MiddleGray.w);
 
 	//clamp(rvalue, 1.f / 8.f, 2.0f);
 
-    clamp(rvalue, 1.f / 8.f, 2.0f);
+    clamp(rvalue, 0.9f, 1.1f);
     
     return rvalue;
 }

@@ -7,16 +7,7 @@
     <ClInclude Include="gbuffer.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="displacement.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="lightmap.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="material.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="normal_map_functions.xrh">
       <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ambient_light.xrh">
@@ -58,23 +49,8 @@
     <ClInclude Include="contrast_adaptive_sharpening.xrh">
       <Filter>Postprocess\Contrast adaptive sharpening</Filter>
     </ClInclude>
-    <ClInclude Include="fxaa_atoc.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="alpha_test.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="hashed_alpha.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="BRDF.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ao_from_height.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="material_components.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="fxaa.xrh">
       <Filter>Postprocess\Anti-Aliasing</Filter>
@@ -84,9 +60,6 @@
     </ClInclude>
     <ClInclude Include="screen_space_shadows.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="parallax_shadows.xrh">
-      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="volumetric_light.xrh">
       <Filter>Deffered rendering pipeline\Light accumulating stage\Helpers</Filter>
@@ -109,11 +82,32 @@
     <ClInclude Include="depth_of_field_common.xrh">
       <Filter>Postprocess\Depth of field</Filter>
     </ClInclude>
-    <ClInclude Include="fog.xrh">
-      <Filter>Helpers\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="tonemapping.xrh">
       <Filter>Helpers\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="material.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="material_components.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="normal_map_functions.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="parallax_shadows.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="ao_from_height.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="displacement.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="alpha_test.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Alpha test</Filter>
+    </ClInclude>
+    <ClInclude Include="hashed_alpha.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Alpha test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,23 +246,20 @@
     <None Include="postprocess_stage_distortion.ps">
       <Filter>Postprocess\Distortion</Filter>
     </None>
-    <None Include="postprocess.ps">
-      <Filter>Postprocess\Effectors</Filter>
-    </None>
-    <None Include="postprocess.s">
+    <None Include="postprocess_stage_pass_combine_effectors.ps">
       <Filter>Postprocess\Effectors</Filter>
     </None>
     <None Include="alpha_blend_lightmap_lighted.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Alpha blend\Lightmap lighted</Filter>
+      <Filter>Forward rendering\Alpha blend\Lightmap lighted</Filter>
     </None>
     <None Include="alpha_blend_lightmap_lighted.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Alpha blend\Lightmap lighted</Filter>
+      <Filter>Forward rendering\Alpha blend\Lightmap lighted</Filter>
     </None>
     <None Include="alpha_blend_vertex_lighted.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Alpha blend\Vertex lighted</Filter>
+      <Filter>Forward rendering\Alpha blend\Vertex lighted</Filter>
     </None>
     <None Include="alpha_blend_vertex_lighted.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Alpha blend\Vertex lighted</Filter>
+      <Filter>Forward rendering\Alpha blend\Vertex lighted</Filter>
     </None>
     <None Include="clouds.ps">
       <Filter>Deffered rendering pipeline\Environment\Clouds</Filter>
@@ -286,220 +277,202 @@
       <Filter>Deffered rendering pipeline\Environment\Skybox</Filter>
     </None>
     <None Include="water.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="water.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="water_regular.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="water_regular.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="water_ryaska.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="water_soft.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="water_soft.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="water_studen.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="water_studen.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="waterd.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="waterd.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="waterd_soft.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="waterd_soft.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="effects_water.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="effects_waterryaska.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="effects_waterstuden.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Water</Filter>
-    </None>
-    <None Include="effects_lightplanes.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Light panels</Filter>
+      <Filter>Forward rendering\Models\Water</Filter>
     </None>
     <None Include="models_light_panel.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Light panels</Filter>
+      <Filter>Forward rendering\Models\Light panels</Filter>
     </None>
     <None Include="models_light_panel.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Light panels</Filter>
+      <Filter>Forward rendering\Models\Light panels</Filter>
     </None>
     <None Include="models_lightplanes.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Light panels</Filter>
+      <Filter>Forward rendering\Models\Light panels</Filter>
     </None>
     <None Include="models_selflight.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Selflight</Filter>
+      <Filter>Forward rendering\Models\Selflight</Filter>
     </None>
     <None Include="models_selflightl.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Selflight</Filter>
+      <Filter>Forward rendering\Models\Selflight</Filter>
     </None>
     <None Include="selflight.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Selflight</Filter>
+      <Filter>Forward rendering\Models\Selflight</Filter>
     </None>
     <None Include="selflight.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Selflight</Filter>
+      <Filter>Forward rendering\Models\Selflight</Filter>
     </None>
     <None Include="selflight.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Selflight</Filter>
+      <Filter>Forward rendering\Models\Selflight</Filter>
     </None>
     <None Include="wmark.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="wmark.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="effects_wallmark.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="effects_wallmarkblend.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="effects_wallmarkmult.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="effects_wallmarkset.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Wallmark</Filter>
+      <Filter>Forward rendering\Effects\Wallmark</Filter>
     </None>
     <None Include="distort.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="distort.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="model_distort.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="model_distort_inv.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="model_distort4ghost.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="model_distort4glass.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="models_xdistort.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="models_xdistortcolor.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="models_xdistortcolorl.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="models_xdistortcolorlinv.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="models_xdistortinv.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Distort</Filter>
+      <Filter>Forward rendering\Models\Distort</Filter>
     </None>
     <None Include="particle.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_alphaonly.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_distort.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_s-aadd.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_s-add.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_s-blend.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle_s-mul.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle2t.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particle-clip.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particles_xadd.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="particles_xdistort.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Particle</Filter>
+      <Filter>Forward rendering\Models\Particle</Filter>
     </None>
     <None Include="yuv2rgb.ps">
       <Filter>Video converting</Filter>
     </None>
     <None Include="model_def_lq.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Dynamic models</Filter>
+      <Filter>Forward rendering\Models\Dynamic models</Filter>
     </None>
     <None Include="model_def_lq.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Dynamic models</Filter>
+      <Filter>Forward rendering\Models\Dynamic models</Filter>
     </None>
     <None Include="model_env_lq.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Dynamic models</Filter>
+      <Filter>Forward rendering\Models\Dynamic models</Filter>
     </None>
     <None Include="model_env_lq.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Dynamic models</Filter>
+      <Filter>Forward rendering\Models\Dynamic models</Filter>
     </None>
     <None Include="models_metallreflect.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Metal reflect</Filter>
+      <Filter>Forward rendering\Models\Metal reflect</Filter>
     </None>
     <None Include="models_xanomaly.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Anomaly</Filter>
+      <Filter>Forward rendering\Models\Anomaly</Filter>
     </None>
     <None Include="models_xlens.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Lens</Filter>
+      <Filter>Forward rendering\Models\Lens</Filter>
     </None>
     <None Include="models_xglass2.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Glass</Filter>
+      <Filter>Forward rendering\Models\Glass</Filter>
     </None>
     <None Include="models_xglass.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Glass</Filter>
+      <Filter>Forward rendering\Models\Glass</Filter>
     </None>
     <None Include="models_xmonolith.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Monolith</Filter>
+      <Filter>Forward rendering\Models\Monolith</Filter>
     </None>
     <None Include="models_xwindows.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Window</Filter>
+      <Filter>Forward rendering\Models\Window</Filter>
     </None>
     <None Include="hud_crosshair.s">
-      <Filter>Forward rendering pipeline\Hud</Filter>
+      <Filter>Forward rendering\Hud</Filter>
     </None>
     <None Include="hud_movie.s">
-      <Filter>Forward rendering pipeline\Hud</Filter>
+      <Filter>Forward rendering\Hud</Filter>
     </None>
     <None Include="models_pautina.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Pautina</Filter>
+      <Filter>Forward rendering\Models\Pautina</Filter>
     </None>
     <None Include="portal.ps">
-      <Filter>Forward rendering pipeline\Portals %28Occlusion culling%29</Filter>
+      <Filter>Forward rendering\Portals %28Occlusion culling%29</Filter>
     </None>
     <None Include="portal.s">
-      <Filter>Forward rendering pipeline\Portals %28Occlusion culling%29</Filter>
+      <Filter>Forward rendering\Portals %28Occlusion culling%29</Filter>
     </None>
     <None Include="portal.vs">
-      <Filter>Forward rendering pipeline\Portals %28Occlusion culling%29</Filter>
+      <Filter>Forward rendering\Portals %28Occlusion culling%29</Filter>
     </None>
     <None Include="copy.ps">
       <Filter>Dummy shaders</Filter>
@@ -577,7 +550,7 @@
       <Filter>Deffered rendering pipeline\Light accumulating stage\Accumulating</Filter>
     </None>
     <None Include="overlay_stage_apply.ps">
-      <Filter>Forward rendering pipeline\Overlays</Filter>
+      <Filter>Forward rendering\Overlays</Filter>
     </None>
     <None Include="scene_combine_stage_pass_precombine.ps">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
@@ -613,24 +586,78 @@
       <Filter>Postprocess\Bloom</Filter>
     </None>
     <None Include="effects_sun.s">
-      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+      <Filter>Forward rendering\Effects\Sun</Filter>
     </None>
     <None Include="effects_sun.ps">
-      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+      <Filter>Forward rendering\Effects\Sun</Filter>
     </None>
     <None Include="effects_sun.vs">
-      <Filter>Forward rendering pipeline\Editor blenders\Sun</Filter>
+      <Filter>Forward rendering\Effects\Sun</Filter>
     </None>
     <None Include="common_effects.xrh">
       <Filter>Helpers\Common</Filter>
+    </None>
+    <None Include="height_fog.xrh">
+      <Filter>Helpers\Effects</Filter>
+    </None>
+    <None Include="fog_helper.xrh">
+      <Filter>Helpers\Effects</Filter>
+    </None>
+    <None Include="scene_combine_stage_pass_postprocess.ps">
+      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
+    </None>
+    <None Include="effects_rain.s">
+      <Filter>Forward rendering\Effects\Rain</Filter>
+    </None>
+    <None Include="effects_rain.ps">
+      <Filter>Forward rendering\Effects\Rain</Filter>
+    </None>
+    <None Include="effects_rain.vs">
+      <Filter>Forward rendering\Effects\Rain</Filter>
+    </None>
+    <None Include="effects_lightplanes.s">
+      <Filter>Forward rendering\Effects\Light panels</Filter>
+    </None>
+    <None Include="effects_flare.s">
+      <Filter>Forward rendering\Effects\Lens flares</Filter>
+    </None>
+    <None Include="effects_bullet_tracer.s">
+      <Filter>Forward rendering\Effects\Bullet tracer</Filter>
+    </None>
+    <None Include="effects_lightning.s">
+      <Filter>Forward rendering\Effects\Lightning</Filter>
+    </None>
+    <None Include="output_to_screen_stage.ps">
+      <Filter>Output to screen</Filter>
+    </None>
+    <None Include="postprocess_stage_pass_radiation.ps">
+      <Filter>Postprocess\Effectors</Filter>
+    </None>
+    <None Include="postprocess_stage_pass_night_vision.ps">
+      <Filter>Postprocess\Effectors</Filter>
+    </None>
+    <None Include="material_helper.xrh">
+      <Filter>Deffered rendering pipeline\GBuffer stage\Helpers\Material</Filter>
+    </None>
+    <None Include="scene_combine_stage_apply_volumetric.ps">
+      <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
+    </None>
+    <None Include="particle_inv_alpha.ps">
+      <Filter>Forward rendering\Models\Particle</Filter>
+    </None>
+    <None Include="LUT.xrh">
+      <Filter>Postprocess\Effectors\helpers</Filter>
+    </None>
+    <None Include="postprocess_stage_pass_lut.ps">
+      <Filter>Postprocess\Effectors</Filter>
+    </None>
+    <None Include="postprocess_stage_pass_resolve_gamma.ps">
+      <Filter>Postprocess\Effectors</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Deffered rendering pipeline">
       <UniqueIdentifier>{4374e531-64ce-484c-9089-84c51f5b4ef3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline">
-      <UniqueIdentifier>{8f041950-b603-4519-8b6c-168d383d44aa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Helpers">
       <UniqueIdentifier>{d5a4b750-aa4d-4b69-a005-43b957ee45dd}</UniqueIdentifier>
@@ -716,80 +743,14 @@
     <Filter Include="Helpers\Misc">
       <UniqueIdentifier>{ec56ee53-30d0-4c07-a170-201a0cb66c45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders">
-      <UniqueIdentifier>{8d5aa899-c786-4cec-b6ca-f8aa1c7bd292}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Overlays">
-      <UniqueIdentifier>{ab5a929b-fac3-4c66-acb5-1d9cef47be65}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Alpha blend">
-      <UniqueIdentifier>{cd2917fb-abaf-444e-a79f-767fcb18dc6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Alpha blend\Lightmap lighted">
-      <UniqueIdentifier>{98d6205f-0f5e-440e-bbf6-648eaeeebbb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Alpha blend\Vertex lighted">
-      <UniqueIdentifier>{03ec6368-94ac-444d-bf67-a7c9bf1bf9f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Water">
-      <UniqueIdentifier>{ffbd90a9-5091-4c5b-99b5-6e7447c7045b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Light panels">
-      <UniqueIdentifier>{861f78c9-f6c3-44c5-9805-2f9cda3b607a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Selflight">
-      <UniqueIdentifier>{7eabb0a4-9cfa-4d9c-a96c-f99755f5ff6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Wallmark">
-      <UniqueIdentifier>{4b8fa3e6-7bb2-448a-afab-b28c35a767e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Distort">
-      <UniqueIdentifier>{c1033052-f63e-4414-bf9c-f305bccbc7a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Particle">
-      <UniqueIdentifier>{1ffb1068-4642-42ba-854e-581669cd5ddb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Video converting">
       <UniqueIdentifier>{3959833a-f727-496f-9d76-4384e61be357}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Dynamic models">
-      <UniqueIdentifier>{b086d87c-f5ff-4491-834a-7c7f3a49f27b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Anomaly">
-      <UniqueIdentifier>{8cb7d878-7d17-4cd5-be04-0df57f41ce07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Window">
-      <UniqueIdentifier>{d7334035-af13-483b-9a76-83aafa4fc44b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Lens">
-      <UniqueIdentifier>{b3a5bc0b-cc48-4032-b622-008959e82c69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Glass">
-      <UniqueIdentifier>{4d26ba62-e59a-41e4-a1b3-4f216268db54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Metal reflect">
-      <UniqueIdentifier>{6b0427fc-986e-48c7-8bf0-f5289a4a16f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Monolith">
-      <UniqueIdentifier>{5ec9a333-140f-45ca-9970-b5b9206f5fd1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Hud">
-      <UniqueIdentifier>{d6b58d58-82b0-4987-b34d-38844e4cf367}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Pautina">
-      <UniqueIdentifier>{422d6f65-b857-46dc-9a5c-a4e4409ee0ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Portals %28Occlusion culling%29">
-      <UniqueIdentifier>{480d0b11-e9e2-4bf1-9e37-06676de399a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dummy shaders">
       <UniqueIdentifier>{7d1c70ae-13b3-4b8c-9ea2-69f2b9ca9c91}</UniqueIdentifier>
     </Filter>
     <Filter Include="Deffered rendering pipeline\GBuffer stage\Geometry types\Dynamic mesh\Selflight">
       <UniqueIdentifier>{8f3353f6-1063-40ae-82ab-28090fa7aaa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Forward rendering pipeline\Editor blenders\Sun">
-      <UniqueIdentifier>{a2d41156-ec75-430e-954d-668f41b982ef}</UniqueIdentifier>
     </Filter>
     <Filter Include="Postprocess">
       <UniqueIdentifier>{4dfa69e8-757d-4f3b-829d-e8278ee3bbf3}</UniqueIdentifier>
@@ -841,6 +802,102 @@
     </Filter>
     <Filter Include="Helpers\Effects">
       <UniqueIdentifier>{81c9c353-e125-4be2-ae67-923cffcfa3c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering">
+      <UniqueIdentifier>{8f041950-b603-4519-8b6c-168d383d44aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Overlays">
+      <UniqueIdentifier>{ab5a929b-fac3-4c66-acb5-1d9cef47be65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Hud">
+      <UniqueIdentifier>{d6b58d58-82b0-4987-b34d-38844e4cf367}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Portals %28Occlusion culling%29">
+      <UniqueIdentifier>{480d0b11-e9e2-4bf1-9e37-06676de399a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models">
+      <UniqueIdentifier>{2c34a330-b741-41b3-8450-7ee99bc15568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Water">
+      <UniqueIdentifier>{ffbd90a9-5091-4c5b-99b5-6e7447c7045b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Window">
+      <UniqueIdentifier>{d7334035-af13-483b-9a76-83aafa4fc44b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects">
+      <UniqueIdentifier>{694075dd-8d14-41e7-ab62-3782b0fec958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Wallmark">
+      <UniqueIdentifier>{4b8fa3e6-7bb2-448a-afab-b28c35a767e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Sun">
+      <UniqueIdentifier>{a2d41156-ec75-430e-954d-668f41b982ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Selflight">
+      <UniqueIdentifier>{7eabb0a4-9cfa-4d9c-a96c-f99755f5ff6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Pautina">
+      <UniqueIdentifier>{422d6f65-b857-46dc-9a5c-a4e4409ee0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Particle">
+      <UniqueIdentifier>{1ffb1068-4642-42ba-854e-581669cd5ddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Rain">
+      <UniqueIdentifier>{208a812a-3984-4e08-87b3-6c5b783aba6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Monolith">
+      <UniqueIdentifier>{5ec9a333-140f-45ca-9970-b5b9206f5fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Metal reflect">
+      <UniqueIdentifier>{6b0427fc-986e-48c7-8bf0-f5289a4a16f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Light panels">
+      <UniqueIdentifier>{e34187d8-655b-4071-a4f8-c85d7fd79ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Light panels">
+      <UniqueIdentifier>{861f78c9-f6c3-44c5-9805-2f9cda3b607a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Lens">
+      <UniqueIdentifier>{b3a5bc0b-cc48-4032-b622-008959e82c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Glass">
+      <UniqueIdentifier>{4d26ba62-e59a-41e4-a1b3-4f216268db54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Dynamic models">
+      <UniqueIdentifier>{b086d87c-f5ff-4491-834a-7c7f3a49f27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Distort">
+      <UniqueIdentifier>{c1033052-f63e-4414-bf9c-f305bccbc7a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Models\Anomaly">
+      <UniqueIdentifier>{8cb7d878-7d17-4cd5-be04-0df57f41ce07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Alpha blend">
+      <UniqueIdentifier>{cd2917fb-abaf-444e-a79f-767fcb18dc6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Alpha blend\Lightmap lighted">
+      <UniqueIdentifier>{98d6205f-0f5e-440e-bbf6-648eaeeebbb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Alpha blend\Vertex lighted">
+      <UniqueIdentifier>{03ec6368-94ac-444d-bf67-a7c9bf1bf9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Lens flares">
+      <UniqueIdentifier>{3493f1c0-3ae0-47bb-9d16-2c4125bb4dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Bullet tracer">
+      <UniqueIdentifier>{0b83d99e-a31d-4927-8331-6771fc27cf68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Effects\Lightning">
+      <UniqueIdentifier>{d7a7808d-c0cf-4c14-9e25-378b160725ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Output to screen">
+      <UniqueIdentifier>{648fe681-49b5-43c4-a3c7-b8c3886c27cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\GBuffer stage\Helpers\Material">
+      <UniqueIdentifier>{8b5d0151-4c9c-4189-83cd-8c8571002ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deffered rendering pipeline\GBuffer stage\Helpers\Alpha test">
+      <UniqueIdentifier>{5dae007b-6590-4763-9968-577b7d86a00b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

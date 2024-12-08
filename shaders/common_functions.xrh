@@ -278,3 +278,25 @@ float2 CalcRotationOffset(float noiseDirection)
     return lerp (noiseOffset, noiseDirection, 0.5f);
 }
 ////////////////////////////////////////////////////////////////////////////
+//https://www.shadertoy.com/view/flGXRm
+////////////////////////////////////////////////////////////////////////////
+float hash(float n)
+{
+    return frac(sin(n) * 43758.5453123f);
+}
+
+float random(float income)
+{
+    return frac((sin(income) * 4698.0101255f) + (sin(income) * 29189.92918f) + (sin(income) * 8.327f));
+}
+
+float3 hash33(float2 uv)
+{
+    uv *= 0.5f;
+    float3 result = NULL;
+    result.r = sin(random(uv.x * (timers.x + 250.0f) - uv.y * (timers.x + 2125.0f)));
+    result.g = sin(random(uv.x * (timers.x + 80.0f) + uv.y * (timers.x + 1.0f)));
+    result.b = sin(random(uv.x * (timers.x + 8.0f) - uv.y * (timers.x + 32.0f)));
+    return result;
+}
+////////////////////////////////////////////////////////////////////////////

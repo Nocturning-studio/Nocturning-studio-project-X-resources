@@ -51,13 +51,8 @@
 #define GBUFFER_LIGHTMAP_AO 8
 #define GBUFFER_BAKED_AO 9
 #define DIRECT_LIGHT 10
-#define DIRECT_DIFFUSE 11
-#define DIRECT_SPECULAR 12
-#define INDIRECT_LIGHT 13
-#define INDIRECT_LIGHT_DIFFUSE 14
-#define INDIRECT_LIGHT_SPECULAR 15
-#define SUBSURFACE_SCATTERING 16
-#define REAL_TIME_AO 17
+#define INDIRECT_LIGHT 11
+#define REAL_TIME_AO 12
 
 ////////////////////////////////////////////////////////////////////////////
 // Material types

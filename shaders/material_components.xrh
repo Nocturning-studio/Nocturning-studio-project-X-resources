@@ -6,46 +6,156 @@
 #include "common.xrh"
 #include "normal_map_functions.xrh"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 GetViewVector(float3 Position, float3x3 TBN)
+struct MaterialComponents
 {
-    TBN = transpose(TBN);
-    return normalize(mul(TBN, -Position));
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*----------------------------------------------------------------------------------------------------------------*/
-//Main material components
-/*----------------------------------------------------------------------------------------------------------------*/
-float3 GetAlbedo(float2 UV)
-{
-    return tex2D(s_base, UV);
-}
+    float3 Albedo;
+    float Opacity;
+    float3 Normal;
+    float Height;
+    float Roughness;
+    float Metallness;
+    float EmissionPower;
+    float SubSurfacePower;
+    float AO;
+};
 
-float GetOpacity(float2 UV)
+/*================================================================================================================*/
+//Base material components
+/*================================================================================================================*/
+//Bump material storage type
+/*----------------------------------------------------------------------------------------------------------------*/
+MaterialComponents UnpackBumpMaterial(float2 UV)
 {
-    return tex2D(s_base, UV).a;
-}
-
-float3 GetNormalMap(float2 UV)
-{
-#if USE_BUMP
-    // DXT Compressed normals
-    float2 CompressedNormalMap = tex2D(s_bump, UV).ab;
+    MaterialComponents Output;
+    
+    // Get storage buffers
+    float4 AlbedoData = tex2D(s_base, UV);
+    float4 BumpData = tex2D(s_bump, UV);
+    float4 BumpXData = tex2D(s_bumpX, UV);
+    
+    // --Get Albedo--
+    Output.Albedo = AlbedoData.rgb;
+    
+    // --Get Opacity--
+    Output.Opacity = AlbedoData.a;
+    
+    // --Get Normal--
+   
+    // DXT Compressed normals (TBN = ABG)
+    float3 CompressedNormal = BumpData.wzx;
 
     // Decompressing data + 0.5f
-    float2 DecompressingData = tex2D(s_bumpX, UV).rg;
+    float3 DecompressionData = BumpXData.xyz;
 
-    // Transform normal map color from [0; 1] space to [-1; 1]
-    float2 PackedNormal = (CompressedNormalMap + (DecompressingData - 1.0f));
+    // Transform normal map color from [0; 1] space to [-1; 1] and decompress
+    // DecompressionData = Decompress data + 0.5f
+    float3 DecompressedNormal = NULL;
+    
+    DecompressedNormal.xy = CompressedNormal + (DecompressionData - 1.0f);
+    
+    DecompressedNormal.z = sqrt(1.0f - dot(DecompressedNormal.xy, DecompressedNormal.xy));
+    
+    Output.Normal = DecompressedNormal;
+    
+    // --Get Roughness--
+    
+    // Separate glossiness from buffer and invert, for create roughness
+    float Roughness = invert(BumpData.r);
+    
+    // Twice power for PBR BRDF
+    Roughness = pow2(Roughness);
+    
+    Output.Roughness = Roughness;
+    
+    // --Get height--
+    Output.Height = BumpXData.a;
 
-    // Reconstruct Z component
-    return Unpack_Normal_Map(PackedNormal);
-#elif USE_CUSTOM_NORMAL
-    return tex2D(s_custom_normal, UV) * 2.0f - 1.0f;
-#else
-    return float3(0.0f, 0.0f, 1.0f);
-#endif
+    // --PLACEHOLDERS--
+    Output.EmissionPower = 0.0f;
+    Output.Metallness = 0.0f;
+    Output.SubSurfacePower = 0.0f;
+    Output.AO = 1.0f;
+    
+    return Output;
 }
 
+/*----------------------------------------------------------------------------------------------------------------*/
+//xrMaterial storage type (In future)
+/*----------------------------------------------------------------------------------------------------------------*/
+MaterialComponents UnpackMaterial(float2 UV)
+{
+    MaterialComponents Output;
+
+    // Get storage buffers
+    float4 AlbedoData = tex2D(s_base, UV);
+    
+    // --Get Albedo--
+    Output.Albedo = AlbedoData.rgb;
+    
+    // --Get Opacity--
+    Output.Opacity = AlbedoData.a;
+    
+    // --PLACEHOLDERS--
+    Output.Normal = float3(0, 0, 1);
+    Output.Roughness = 1.0f;
+    Output.Height = 1.0f;
+    Output.EmissionPower = 0.0f;
+    Output.Metallness = 0.0f;
+    Output.SubSurfacePower = 0.0f;
+    Output.AO = 1.0f;
+    
+    return Output;
+}
+
+/*----------------------------------------------------------------------------------------------------------------*/
+//Separated material storage type (1 component = 1 sample: Slow - for debugging)
+/*----------------------------------------------------------------------------------------------------------------*/
+MaterialComponents UpdateMaterial(float2 UV, MaterialComponents Input)
+{
+    MaterialComponents Output;
+    
+    // Initialize new material
+    Output = Input;
+    
+    // --Get Normal--
+#if USE_CUSTOM_NORMAL
+    Output.Normal = tex2D(s_custom_normal, UV) * 2.0f - 1.0f;
+#endif
+    
+    // --Get Roughness--
+#if USE_CUSTOM_ROUGHNESS
+    Output.Roughness = tex2D(s_custom_roughness, UV).r;
+#endif
+    
+    // --Get Metallness--
+#if USE_CUSTOM_METALLNESS
+    Output.Metallness = tex2D(s_custom_metallness, UV).r;
+#endif
+    
+    // --Get height--
+#if USE_CUSTOM_DISPLACEMENT
+    Output.Height = tex2D(s_custom_displacement, UV).r;
+#endif
+    
+    // --Get Emission Power--
+#if USE_CUSTOM_EMISSIVE
+    Output.EmissionPower = tex2D(s_custom_emissive, UV).r;
+#endif
+    
+    // --Get Subsuface scattering Power--
+#if USE_CUSTOM_SUBSURFACE
+    Output.SubSurfacePower = tex2D(s_custom_subsurface, UV).r;
+#endif
+    
+#if USE_BAKED_AO
+    Output.AO = tex2D(s_baked_ao, UV).r;
+#endif
+    
+    return Output;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Specific functions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float GetHeight(float2 UV)
 {
 #if USE_BUMP
@@ -56,85 +166,96 @@ float GetHeight(float2 UV)
     return 1.0f;
 #endif
 }
-
-float GetEmissive(float2 UV)
-{
-#if USE_CUSTOM_EMISSIVE
-    return tex2Dlod0(s_custom_emissive, UV).r;
-#else
-    return 0.0f;
-#endif
-}
-
-float GetRoughness(float2 UV)
-{
-#if USE_BUMP
-    return pow2(invert(tex2D(s_bump, UV).r));
-#elif USE_CUSTOM_ROUGHNESS
-    return tex2D(s_custom_roughness, UV).r;
-#else
-    return 1.0f;
-#endif
-}
-
-float GetMetallness(float2 UV)
-{
-#if USE_CUSTOM_METALLNESS
-    return tex2D(s_custom_metallness, UV).r;
-#else
-    return 0.0f;
-#endif
-}
-
-float GetSubsurface(float2 UV)
-{
-#if USE_CUSTOM_SUBSURFACE
-    return tex2D(s_custom_subsurface, UV).r;
-#else
-    return 0.0f;
-#endif
-}
-
-float GetBakedAO(float2 UV)
-{
-    return tex2D(s_baked_ao, UV).r;
-}
-/*----------------------------------------------------------------------------------------------------------------*/
+/*================================================================================================================*/
 //Detail material components
+/*================================================================================================================*/
+//Bump material storage type
 /*----------------------------------------------------------------------------------------------------------------*/
-float3 GetDetailAlbedo(float2 UV)
+MaterialComponents UnpackDetailBumpMaterial(float2 UV)
 {
-    return tex2D(s_detail, UV);
-}
-
-float3 GetDetailNormal(float2 UV)
-{
-#if USE_DETAIL_BUMP
-    // DXT Compressed normals
-    float2 CompressedNormalMap = tex2D(s_detailBump, UV).ab;
+    MaterialComponents Output;
+    
+    // Get storage buffers
+    float4 AlbedoData = tex2D(s_detail, UV);
+    float4 BumpData = tex2D(s_detailBump, UV);
+    float4 BumpXData = tex2D(s_detailBumpX, UV);
+    
+    // --Get Albedo--
+    Output.Albedo = AlbedoData.rgb;
+    
+    // --Get Opacity--
+    Output.Opacity = 1.0f;
+    
+    // --Get Normal--
+   
+    // DXT Compressed normals (TBN = ABG)
+    float3 CompressedNormal = BumpData.wzx;
 
     // Decompressing data + 0.5f
-    float2 DecompressingData = tex2D(s_detailBumpX, UV).rg;
+    float3 DecompressionData = BumpXData.xyz;
 
-    // Transform normal map color from [0; 1] space to [-1; 1]
-    float2 PackedNormal = (CompressedNormalMap + (DecompressingData - 1.0f));
+    // Transform normal map color from [0; 1] space to [-1; 1] and decompress
+    // DecompressionData = Decompress data + 0.5f
+    float3 DecompressedNormal = NULL;
+    
+    DecompressedNormal.xy = CompressedNormal + (DecompressionData - 1.0f);
+    
+    DecompressedNormal.z = sqrt(1.0f - dot(DecompressedNormal.xy, DecompressedNormal.xy));
+    
+    Output.Normal = DecompressedNormal;
+    
+    // --Get Roughness--
+    
+    // Separate glossiness from buffer and invert, for create roughness
+    float Roughness = invert(BumpData.r);
+    
+    // Twice power for PBR BRDF
+    Roughness = pow2(Roughness);
+    
+    Output.Roughness = Roughness;
+    
+    // --Get height--
+    Output.Height = BumpXData.a;
 
-    // Reconstruct Z component
-    return Unpack_Normal_Map(PackedNormal);
-#else
-    return float3(0.0f, 0.0f, 1.0f);
-#endif
+    // --PLACEHOLDERS--
+    Output.EmissionPower = 0.0f;
+    Output.Metallness = 0.0f;
+    Output.SubSurfacePower = 0.0f;
+    Output.AO = 1.0f;
+    
+    return Output;
 }
 
-float GetDetailRoughness(float2 UV)
+/*----------------------------------------------------------------------------------------------------------------*/
+//xrMaterial storage type (In future)
+/*----------------------------------------------------------------------------------------------------------------*/
+MaterialComponents UnpackDetailMaterial(float2 UV)
 {
-#if USE_DETAIL_BUMP
-    return invert(tex2D(s_detailBump, UV).r);
-#else
-    return 1.0f;
-#endif
-}
+    MaterialComponents Output;
 
+    // Get storage buffers
+    float4 AlbedoData = tex2D(s_detail, UV);
+    
+    // --Get Albedo--
+    Output.Albedo = AlbedoData.rgb;
+    
+    // --Get Opacity--
+    Output.Opacity = AlbedoData.a;
+    
+    // --PLACEHOLDERS--
+    Output.Normal = float3(0, 0, 1);
+    Output.Roughness = 1.0f;
+    Output.Height = 1.0f;
+    Output.EmissionPower = 0.0f;
+    Output.Metallness = 0.0f;
+    Output.SubSurfacePower = 0.0f;
+    Output.AO = 1.0f;
+    
+    return Output;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Specific functions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float GetDetailHeight(float2 UV)
 {
 #if USE_DETAIL_BUMP
@@ -143,9 +264,9 @@ float GetDetailHeight(float2 UV)
     return 0.5f;
 #endif
 }
-/*----------------------------------------------------------------------------------------------------------------*/
-//Detail material components
-/*----------------------------------------------------------------------------------------------------------------*/
+/*================================================================================================================*/
+//Terrain material components
+/*================================================================================================================*/
 float4 GetTerrainDetailMask(float2 UV)
 {
     float4 BlendMask = tex2D(s_mask, UV);

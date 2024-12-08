@@ -13,7 +13,7 @@ struct v2p
 struct PixelShaderOutputStruct
 {
 	float4 Generic_0: COLOR0;
-	float4 Position: COLOR1;
+	//float4 Position: COLOR1;
 };
 
 #define POWER .5f
@@ -51,14 +51,14 @@ PixelShaderOutputStruct main (v2p I)
     float3 final = float3 (faded, 0.08f);
 #endif
     
-	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
-    float Fog = CalcFogness (I.position);
-    final.rgb = lerp (final.rgb, fog_params.rgb, Fog);
-    alpha *= 1.0f - pow (Fog, 2.2f);
+    // Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
+    float Fog = CalcFogness(I.position);
+    //final.rgb = ApplyFogness(final.rgb, Fog);
+    alpha *= invert(pow(Fog, 4.4f));
     
     PixelShaderOutputStruct Output;
     Output.Generic_0 = float4 (final.rgb, alpha);
-    Output.Position = PackPositionAndNormal(I.position, NULL);
+    //Output.Position = PackPositionAndNormal(I.position, NULL);
     return Output;
 }
 

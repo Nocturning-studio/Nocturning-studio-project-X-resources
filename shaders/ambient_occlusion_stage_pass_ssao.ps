@@ -10,7 +10,7 @@
 #define USE_ATTENUATION
 #define SSAO_ATTENUATION_DISTANCE 0.5f
 #define SSAO_NORMAL float(0.0000)
-#define SSAO_POWER  float(2.2)
+#define SSAO_POWER  float(4.4)
 #define	SSAO_RADIUS float(0.4)
 //////////////////////////////////////////////////////////////////////////////////////////
 // Presets
@@ -71,7 +71,7 @@ float4 main (float2 TexCoords: TEXCOORD0, float2 Position2D: VPOS): COLOR
 
         float occ = 0.0f;
         
-        [unroll]
+        [unroll (SSAO_SAMPLES)]
         for (int i = 0; i < SSAO_SAMPLES; i++)
         {
             float st = (i + hash.y) / SSAO_SAMPLES;

@@ -14,8 +14,8 @@ duality_h		= 0
 duality_v		= 0
 blur			= 1
 gray			= .7	;.9
-noise			= .2	;.5
-noise_scale		= 1
+noise			= 0.0
+noise_scale		= 0
 noise_color		= 155,155,155,70
 
 ;---------------------------------------------------------------------
@@ -26,14 +26,40 @@ pp_eff_name		= radiation.ppe
 radius_min		= 0.5
 radius_max		= 1.1
 
-
 [postprocess_rad]
+pp_eff_name	= radiation.ppe
 pp_eff_cyclic	= 1
 pp_eff_overlap  = true
+noise		= 0.0
+radius_min	= 0.3
+radius_max	= 1.0
 
+[postprocess_rad_weak]
 pp_eff_name	= radiation.ppe
-radius_min		= 0.3
-radius_max		= 1.0
+pp_eff_cyclic	= 1
+pp_eff_overlap  = true
+radiation_intensity = 1.0
+noise		= 0.0
+radius_min	= 0.0
+radius_max	= 1.0
+
+[postprocess_rad_average]
+pp_eff_name	= radiation.ppe
+pp_eff_cyclic	= 1
+pp_eff_overlap  = true
+radiation_intensity = 1.0
+noise		= 0.0
+radius_min	= 0.0
+radius_max	= 1.0
+
+[postprocess_rad_strong]
+pp_eff_name	= radiation.ppe
+pp_eff_cyclic	= 1
+pp_eff_overlap  = true
+radiation_intensity = 1.0
+noise		= 0.0
+radius_min	= 0.0
+radius_max	= 1.0
 
 [postprocess_psi]
 pp_eff_cyclic	= 1
@@ -122,8 +148,8 @@ cam_eff_name	= camera_effects\hit_front_right.anm
 cam_eff_name	= camera_effects\hit_back_right.anm
 
 [effector_nightvision]
-pp_eff_name		= nightvision.ppe
-pp_eff_cyclic	= 0
+;pp_eff_name		= nightvision.ppe
+;pp_eff_cyclic	= 0
 
 [snd_shock_effector]
 ;pp_eff_name		= duality_circle.ppe
@@ -184,9 +210,9 @@ cam_eff_name	= camera_effects\hit_back_right.anm
 
 ;Postprocesss
 [effector_nightvision_bad]
-pp_eff_name = nightvision_bad.ppe
-pp_eff_cyclic = 1
+;pp_eff_name = nightvision_bad.ppe
+;pp_eff_cyclic = 1
 
 [effector_nightvision_good]
-pp_eff_name = nightvision_good.ppe
-pp_eff_cyclic = 1
+;pp_eff_name = nightvision_good.ppe
+;pp_eff_cyclic = 1

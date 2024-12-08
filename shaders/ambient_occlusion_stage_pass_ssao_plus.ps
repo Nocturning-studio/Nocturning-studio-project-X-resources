@@ -11,26 +11,11 @@
 #define USE_ATTENUATION
 #define HBAO_ATTENUATION_DISTANCE 0.5f
 #define HBAO_NORMAL float(0.0050)
-#define HBAO_POWER  float(2.2)
+#define HBAO_POWER  float(4.4)
 #define	HBAO_RADIUS float(0.4)
 //////////////////////////////////////////////////////////////////////////////////////////
-// Presets
-#if AO_QUALITY == LOW_QUALITY
-#define HBAO_SAMPLES 4
-#define HBAO_RENDER_DISTANCE 20.0f
-#elif AO_QUALITY == MIDDLE_QUALITY
-#define HBAO_SAMPLES 4
-#define HBAO_RENDER_DISTANCE 30.0f
-#elif AO_QUALITY == HIGHT_QUALITY
-#define HBAO_SAMPLES 6
-#define HBAO_RENDER_DISTANCE 40.0f
-#elif AO_QUALITY == ULTRA_QUALITY
-#define HBAO_SAMPLES 8
+#define HBAO_SAMPLES 12
 #define HBAO_RENDER_DISTANCE 50.0f
-#elif AO_QUALITY == UNDEFINED_QUALITY
-#define HBAO_SAMPLES 1
-#define HBAO_RENDER_DISTANCE 25.0f
-#endif
 //////////////////////////////////////////////////////////////////////////////////////////
 float3 get_blue_noise (float2 UV)
 {
@@ -84,7 +69,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR
 
         float occ = 0.0f;
         
-        [unroll]
+        [unroll (HBAO_SAMPLES)]
         for (int i = 0; i < HBAO_SAMPLES; i++)
         {
             float3 Noise = get_blue_noise (TexCoords + poissonDisk_16[i] * 2.0f);

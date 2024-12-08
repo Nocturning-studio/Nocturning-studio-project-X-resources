@@ -21,7 +21,7 @@ vf _main (v_model v)
     o.hpos = mul (m_WVP, pos); // xform, input in world coords
     o.tc0 = v.tc.xy; // copy tc
     o.tc1 = calc_reflection (pos_w, norm_w);
-    o.position = mul (m_WV, pos);
+    o.position = float4(pos.xyz, 1.0f); //mul (m_WV, pos);
     o.c0 = calc_model_lq_lighting (norm_w);
 
     return o;

@@ -15,7 +15,7 @@ vf main (v_static v)
 	float3 N = unpack_normal (v.Nh);
     o.hpos = mul (m_VP, v.P);
     o.tc0 = unpack_tc_base (v.tc, v.T.w, v.B.w);
-    o.position = mul (m_WV, v.P);
+    o.position = mul(m_WV, v.P);
 
 	float3 L_rgb = v.color.xyz;
 	float3 L_hemi = v_hemi (N) * v.Nh.w;

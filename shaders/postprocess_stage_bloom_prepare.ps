@@ -18,6 +18,8 @@ OutputTextures main(float2 TexCoords : TEXCOORD0)
     
 	float4 ImageColor = tex2Dlod0(s_image, TexCoords);
     
+    ImageColor.rgb = saturate(ImageColor.rgb);
+    
     float Amount = GetBladesAmount(ImageColor.rgb);
     
     Output.BladesTexture = ImageColor * Amount;
