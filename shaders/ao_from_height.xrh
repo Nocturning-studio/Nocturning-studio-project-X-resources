@@ -9,6 +9,7 @@
 #define AO_RADIUS 0.1
 #define AO_POWER 4.4
 #define AO_RENDER_DISTANCE 25.0f
+#define AO_STEP_SIZE 1.0f / AO_SAMPLES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float AOfromHeight(float2 UV, float WorldSpaceDepth
 #ifdef USE_FOR_TERRAIN_MATERIAL
@@ -18,6 +19,7 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
 {
     float AO = 1.0f;
 
+/*
     if (WorldSpaceDepth < AO_RENDER_DISTANCE)
     {
 #ifdef USE_FOR_TERRAIN_MATERIAL
@@ -26,7 +28,7 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
         float height = GetHeight(UV);
 #endif
 
-        float result = 0.0;
+        AO = NULL;
         
         float c, s;
         sincos(PI, c, s);
@@ -35,29 +37,30 @@ float AOfromHeight(float2 UV, float WorldSpaceDepth
         sincos(5.0f * PI, dir.y, dir.x);
         
         [unroll]
-        for (float f = 0.0; f < 1.0; f += 1.0 / AO_SAMPLES)
+        for (float step = 0.0f; step < 1.0f; step += AO_STEP_SIZE)
         {
             dir = mul(dir, rot);
-            float noiseDirection = random(float2(f * 16524.56, f * 23532.43));
+            float noiseDirection = tex2D(s_blue_noise, UV + step); //random(float2(f * 16524.56f, f * 23532.43f));
             float2 noiseOffset = noiseDirection * dir * AO_RADIUS;
-            noiseOffset = noiseOffset * 2.0 - 1.0;
+            noiseOffset = noiseOffset * 2.0f - 1.0f;
 
 #ifdef USE_FOR_TERRAIN_MATERIAL
-            result += max(GetTerrainDetailHeight(BlendMask, UV + noiseOffset) - height, 0.0f);
+            AO += max(GetTerrainDetailHeight(BlendMask, UV + noiseOffset) - height, 0.0f);
 #else
-            result += max(GetHeight(UV + noiseOffset) - height, 0.0f);
+            AO += max(GetHeight(UV + noiseOffset) - height, 0.0f);
 #endif
         }
 
-        result /= AO_SAMPLES;
-        result = pow(1.0 - result, AO_POWER);
+        AO /= AO_SAMPLES;
+        AO = invert(AO);
+        AO = abs(AO);
+        AO = pow(AO, AO_POWER);
 
         // Create smooth render distance border
         float FarFadingFactor = smoothstep(AO_RENDER_DISTANCE * 0.75f, AO_RENDER_DISTANCE, WorldSpaceDepth);
-        result = lerp(result, 1.0f, FarFadingFactor);
-
-        AO = result;
+        AO = lerp(AO, 1.0f, FarFadingFactor);
     }
+*/
 
     return AO;
 }
