@@ -1,6 +1,6 @@
 function normal(shader, t_base, t_second, t_detail)
 
-	shader:begin("effects_sun", "effects_sun")
+	shader:begin("effects_lens_flare", "effects_lens_flare")
 			: blend(true, blend.srcalpha, blend.one)
 			: zb(true, false)
 
