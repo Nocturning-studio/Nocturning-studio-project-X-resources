@@ -3,12 +3,8 @@
 //	Author		: Deathman
 //  Nocturning studio for NS Project X
 ////////////////////////////////////////////////////////////////////////////
-#define USE_HEIGHT_FOG
-////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
 #include "gbuffer.xrh"
-#include "ambient_light.xrh"
-#include "reflection.xrh"
 #include "reflections_ssr.xrh"
 #include "BRDF.xrh"
 ////////////////////////////////////////////////////////////////////////////
@@ -18,14 +14,12 @@ uniform float4 ambient_color;
 float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer(TexCoords);
-    float4 LightAccumulator = tex2Dlod0(s_light_accumulator, TexCoords);
 
     // Get light context
-    float3 Albedo = GBuffer.Albedo;
     float NdotV = max(dot(GBuffer.Normal, normalize(-GBuffer.Position)), 0.00001f);
-    float3 WorldSpaceNormal = mul(m_v2w, GBuffer.Normal);
+    float3 WorldSpaceNormal = mul(m_v2w, float4(GBuffer.Normal, 0.0f));
     float3 v2pointL = normalize(GBuffer.Position);
-    float3 v2point = mul(m_v2w, v2pointL);
+    float3 v2point = mul(m_v2w, float4(v2pointL, 0.0f));
     float WorldSpaceNdotV = max(dot(WorldSpaceNormal, -v2point), 0.0f);
     float RoughnessSqr = pow2(GBuffer.Roughness);
     
@@ -35,9 +29,16 @@ float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
     float BackedAO = GBuffer.BackedAO;
     float Ambient = LightMapAO * RealTimeAO * BackedAO;
     
+    // Get coords for Irradiance
+    float3 IrradianceCoords = RemapCubeCoords(WorldSpaceNormal);
+    
+    // Get mip level, corellated with roughness
+    float MipLevel = getMipLevelFromRoughness(RoughnessSqr, 8.0f);
+    
+#ifdef USE_ADVANCED_SHADING
     // Get F0 
     float3 F0 = 0.04f;
-    F0 = lerp(F0, Albedo, GBuffer.Metallness);
+    F0 = lerp(F0, GBuffer.Albedo, GBuffer.Metallness);
 
     // Get Fresnel Coeff
     float3 kS = fresnelSchlickRoughness(F0, NdotV, RoughnessSqr) * GBuffer.Metallness;
@@ -47,79 +48,100 @@ float4 main(float2 TexCoords : TEXCOORD0, float2 Pos2D: VPOS): COLOR0
     float3 ReflectionColor = getSpecularDominantDir(v2point, WorldSpaceNormal, RoughnessSqr);
     ReflectionColor = RemapCubeCoords(ReflectionColor);
 
-    // Get coords for Irradiance
-    float3 IrradianceCoords = RemapCubeCoords(WorldSpaceNormal);
-
-    // Get mip level, corellated with roughness
-    float MipLevel = getMipLevelFromRoughness(RoughnessSqr, 8.0f);
-
     // Get irradiance
     float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
-    float3 IrradianceActualHour = texCUBElod(sky_s0, float4(IrradianceCoords, 8));
-    float3 IrradianceNextHour = texCUBElod(sky_s1, float4(IrradianceCoords, 8));
+    float3 IrradianceActualHour = texCUBElod(sky_s0, float4(IrradianceCoords, 8)).rgb;
+    float3 IrradianceNextHour = texCUBElod(sky_s1, float4(IrradianceCoords, 8)).rgb;
     float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
     Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
 
     // Get IBL specular
-    float3 ReflectedSkyActualHour = texCUBElod(sky_s0, float4(ReflectionColor, MipLevel));
-    float3 ReflectedSkyNextHour = texCUBElod(sky_s1, float4(ReflectionColor, MipLevel));
+    float3 ReflectedSkyActualHour = texCUBElod(sky_s0, float4(ReflectionColor, MipLevel)).rgb;
+    float3 ReflectedSkyNextHour = texCUBElod(sky_s1, float4(ReflectionColor, MipLevel)).rgb;
     float3 ReflectedSky = lerp(ReflectedSkyActualHour, ReflectedSkyNextHour, env_color.w);
     ReflectedSky = lerp(ReflectedSky, fog_color.rgb, fog_sky_influence);
 
     //float4 reflections = tex2Dlod0(s_reflections, TexCoords);
 	//reflections.rgb = lerp(ReflectedSky, reflections.rgb, reflections.a);
     
-    float3 IndirectDiffuse = Irradiance * Albedo * kD;
+    float3 IndirectDiffuse = Irradiance * GBuffer.Albedo * kD;
     float3 IndirectSpecular = ReflectedSky * kS;
     float3 IndirectLighting = (IndirectDiffuse + IndirectSpecular) * Ambient;
-    float3 DirectLighting = LightAccumulator.rgb;
-    float3 Emission = GBuffer.EmissionPower * Albedo;
-
+    
+    float3 Emission = GBuffer.EmissionPower * GBuffer.Albedo;
+    float3 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords).rgb;
     float3 SceneColor = IndirectLighting + DirectLighting + Emission;
+#else
+    // Get irradiance
+    float IrradianceMip = clamp(MipLevel, 2.0f, 8.0f);
+    float3 IrradianceActualHour = texCUBElod(sky_s0, float4(IrradianceCoords, 8)).rgb;
+    float3 IrradianceNextHour = texCUBElod(sky_s1, float4(IrradianceCoords, 8)).rgb;
+    float3 Irradiance = lerp(IrradianceActualHour, IrradianceNextHour, env_color.w);
+    Irradiance = lerp(Irradiance, fog_color.rgb, fog_sky_influence);
+    
+    float3 IndirectDiffuse = Irradiance * GBuffer.Albedo;
+    float3 IndirectLighting = IndirectDiffuse * Ambient;
+    float3 DirectLighting = tex2Dlod0(s_light_accumulator, TexCoords).rgb;
+    float3 SceneColor = IndirectLighting + DirectLighting;
+#endif
 
-    float3 Position = GBuffer.Position;
-    
-    //if (all(Position) == 0.0f)
-    //    Position.z = 150.0f;
-    
-    float Fog = CalcFogness(Position);
+    float Fog = CalcFogness(GBuffer.Position);
     SceneColor = ApplyFogness(SceneColor, Fog);
     float Opacity = pow(Fog, 2.2f);
-    
-    //SceneColor += LightAccumulator.a * sun_color;
-
-    //Pos2D += 0.5f;
-    //float3 Pos = NULL;
-    //Pos.z = GBuffer.Position.z;
-    //Pos.xy = Pos.z * (Pos2D * pos_decompression_params.zw - pos_decompression_params.xy);
-    //SceneColor = calc_ssr(TexCoords, Pos, GBuffer.Normal);
     
     if(debug_mode != 0)
     {
         if (debug_mode == GBUFFER_ALBEDO)
             SceneColor = GBuffer.Albedo;
         else if (debug_mode == GBUFFER_POSITION)
+        {
             SceneColor = GBuffer.Position;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_NORMAL)
+        {
             SceneColor = normalize(GBuffer.Normal * 0.5f + 0.5f);
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_ROUGHNESS)
+        {
             SceneColor = GBuffer.Roughness;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_METALLNESS)
+        {
             SceneColor = GBuffer.Metallness;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_SUBSURFACE)
+        {
             SceneColor = GBuffer.SubSurfacePower;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_EMISSIVE)
+        {
             SceneColor = GBuffer.EmissionPower;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_LIGHTMAP_AO)
+        {
             SceneColor = LightMapAO;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == GBUFFER_BAKED_AO)
+        {
             SceneColor = BackedAO;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
         else if (debug_mode == DIRECT_LIGHT)
             SceneColor = DirectLighting;
         else if (debug_mode == INDIRECT_LIGHT)
             SceneColor = IndirectLighting;
         else if (debug_mode == REAL_TIME_AO)
+        {
             SceneColor = RealTimeAO;
+            SceneColor = pow(abs(SceneColor), 2.2f);
+        }
     }
     
     return float4(SceneColor, Opacity);
