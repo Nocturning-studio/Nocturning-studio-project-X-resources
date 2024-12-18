@@ -34,7 +34,7 @@ float3 CalcProjection(float3 ViewSpaceData)
 	ProjectionSpaceData.xy = ProjectionSpaceData.xy * 0.5f + 0.5f;
 	ProjectionSpaceData.y = 1.0f - ProjectionSpaceData.y;
 
-	return ProjectionSpaceData;
+	return ProjectionSpaceData.xyz;
 }
 ///////////////////////////////////////////////////////////////////////////////////
 float TraceShadow(float3 LightDirection, float3 Position)

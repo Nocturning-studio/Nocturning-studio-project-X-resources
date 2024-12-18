@@ -45,11 +45,10 @@ Interpolators main (VertexData Input)
     norm.y = pos.y - m1.w + 0.75f; // avoid zero
     norm.z = pos.z - m2.w;
 
-	float4 Position = mul (m_WVP, pos);
     Output.Position = mul (m_WV, pos);
     Output.HomogeniousPosition = mul (m_WVP, pos);
-    Output.Normal = mul (m_WV, normalize (norm));
-    Output.UV = (Input.Misc * consts);
+    Output.Normal = mul(m_WV, float4(normalize(norm), 1.0f));
+    Output.UV = Input.Misc.xy * consts.xy;
 
     Output.Lighting.x = c0.w;
 

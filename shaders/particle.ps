@@ -15,9 +15,8 @@ struct v2p
 // Pixel
 float4 main (v2p I): COLOR
 {
-    float4 Albedo = tex2D(s_base, I.tc0);
-    //Albedo.rgb = sRgbToLinear(Albedo.rgb);
-    float4 result = I.c * Albedo;
+    float4 result = I.c * tex2D(s_base, I.tc0);
+    result.rgb = sRgbToLinear(result.rgb);
 
 	//	Igor: additional depth test
 	float Depth = GetPosition(I.tctexgen.xy/I.tctexgen.w).z;
@@ -27,14 +26,12 @@ float4 main (v2p I): COLOR
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness(I.position);
-    //Fixit when original particle textures with no alpha will be replaced
-    //result.rgb = ApplyFogness(result.rgb, Fog);
     float FogOpacity = invert(pow(Fog, 4.4f));
     
 //#ifdef USE_INV_ALPHA
 //#endif
     
     float Opacity = result.a * FogOpacity;
-	
+    
     return float4(result.rgb, Opacity);
 }

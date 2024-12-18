@@ -30,7 +30,7 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR0
     {
         float2 SampleCoords = TexCoords + float2(0, i) * RaySize;
         
-        float3 SampleColor = tex2Dlod0(s_image, SampleCoords);
+        float3 SampleColor = tex2Dlod0(s_image, SampleCoords).rgb;
 
         float SampleContribution = pow(CalcFogness(GetPositionWithSky(SampleCoords)), EXP);
         

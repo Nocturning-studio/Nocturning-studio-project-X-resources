@@ -35,7 +35,7 @@ GBufferPacked main (Interpolators Input)
     float4 BlendMask = GetTerrainDetailMask(Input.UV);
 
 	// levels//$current_level$//terrain//$terrain_texture_name$.dds - rgb = color map, a = AO
-	float3 DiffuseTextureData = tex2D (s_base, Input.UV);
+	float3 Albedo = tex2D (s_base, Input.UV).rgb;
 
 	// Combine transform matrix for displacement and normal mapping
 	float3x3 TBN = float3x3 (Input.TBN0, Input.TBN1, Input.TBN2);
@@ -53,7 +53,7 @@ GBufferPacked main (Interpolators Input)
 
 	// details albedo data, multiplicated by detail map
     float3 DetailAlbedo = GetTerrainDetailAlbedo(BlendMask, DetailUV);
-    GBuffer.Albedo = 2.0f * DiffuseTextureData.rgb * DetailAlbedo;
+    GBuffer.Albedo = 2.0f * Albedo * DetailAlbedo;
 
 	// Get DXT comressed normals + AO + Roughness for all details in 4 textures set
     float4 DetailBumpData = GetTerrainDetailBump(BlendMask, DetailUV);

@@ -7,10 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0) : COLOR
 {
-    float3 ImageColor = tex2Dlod0(s_image, TexCoords);
+    float3 ImageColor = tex2Dlod0(s_image, TexCoords).rgb;
     
-    //Volumetric Sun Rays
-    ImageColor += tex2Dlod0(s_light_accumulator, TexCoords).a * sun_color.rgb;
+    float VolumetricLight = tex2Dlod0(s_light_accumulator, TexCoords).a;
+
+    ImageColor += VolumetricLight * sun_color.rgb;
     
     return float4(ImageColor, 1.0f);
 }

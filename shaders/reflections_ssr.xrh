@@ -48,7 +48,7 @@ float3 calc_vreflect(float3 P, float3 N)
     S_m_point.z = V_m_point.z;
     s_pixel_pos.xy *= s_pixel_pos.z;
     S_m_point.xy *= S_m_point.z;
-    return S_m_point - s_pixel_pos;
+    return S_m_point.xyz - s_pixel_pos.xyz;
 }
 	
 void mirror_tc(inout float2 tc)
@@ -140,7 +140,7 @@ float4 calc_ssr(float2 tc, float3 P, float3 N)
         if (intersected && is_in_quad(tc_step.xy))
         {
             factor = 1 - smoothstep(0.1, 0.0, tc_step.y);
-            ssr = tex2Dlod0(s_gbuffer_1, tc_step.xy);
+            ssr = tex2Dlod0(s_gbuffer_1, tc_step.xy).rgb;
         }
 
         return float4(ssr, factor);

@@ -7,10 +7,13 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 float4 main(float2 TexCoords : TEXCOORD0) : COLOR
 {
-    float ao = tex2D (s_ao, TexCoords + screen_res.zw * float2 (1.5f, -0.5f)).r;
-    ao += tex2D (s_ao, TexCoords + screen_res.zw * float2 (1.5f, 1.5f)).r;
-    ao += tex2D (s_ao, TexCoords + screen_res.zw * float2 (-0.5f, -0.5f)).r;
-    ao += tex2D (s_ao, TexCoords + screen_res.zw * float2 (-0.5f, 1.5f)).r;
+    float ao = NULL;
+    
+    ao += tex2Dlod0(s_ao, TexCoords + screen_res.zw * float2(1.5f, -0.5f)).r;
+    ao += tex2Dlod0(s_ao, TexCoords + screen_res.zw * float2(1.5f, 1.5f)).r;
+    ao += tex2Dlod0(s_ao, TexCoords + screen_res.zw * float2(-0.5f, -0.5f)).r;
+    ao += tex2Dlod0(s_ao, TexCoords + screen_res.zw * float2(-0.5f, 1.5f)).r;
+    
     return ao * 0.25f;
 }
 //////////////////////////////////////////////////////////////////////////////////////////

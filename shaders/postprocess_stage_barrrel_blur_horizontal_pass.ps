@@ -4,23 +4,24 @@
 // Nocturning studio for NS Project X
 ///////////////////////////////////////////////////////////////////////////////////
 #include "common.xrh"
-#include "filters.xrh"
 ///////////////////////////////////////////////////////////////////////////////////
 #define SAMPLES_COUNT 2
+#define SAMPLES_COUNT_HALF SAMPLES_COUNT / 2
 ///////////////////////////////////////////////////////////////////////////////////
 float4 main (float2 TexCoords: TEXCOORD0): COLOR0
 {
     // Create blurring map, based on vignette
 	//https://www.xrhadertoy.com/view/ms3GDs
-    float Vignette = pow(16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y), EXP);
+    float f = 16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y);
+    float Vignette = pow(abs(f), EXP);
 
     // Separated blur
     float4 BlurredImageColor = NULL;
     
     [unroll]
-    for (int i = -(SAMPLES_COUNT / 2); i < SAMPLES_COUNT / 2; i++)
+    for (int i = -SAMPLES_COUNT_HALF; i < SAMPLES_COUNT_HALF; i++)
     {
-        BlurredImageColor += tex2Dlod0 (s_image, TexCoords + (i, 0.0f) * screen_res.zw);
+        BlurredImageColor += tex2Dlod0 (s_image, TexCoords + float2(i, 0.0f) * screen_res.zw);
     }
     BlurredImageColor /= SAMPLES_COUNT;
     

@@ -158,7 +158,7 @@ float3 calc_model_hemi_r1(float3 norm_w)
 
 float3 calc_model_lq_lighting(float3 norm_w)
 {
-    return L_material.x * calc_model_hemi_r1(norm_w) + L_ambient + L_material.y * calc_sun_r1(norm_w);
+    return L_material.x * calc_model_hemi_r1(norm_w) + L_ambient.rgb + L_material.y * calc_sun_r1(norm_w);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 float3 v_hemi(float3 n)
@@ -183,8 +183,8 @@ float3 v_sun_wrap(float3 n, float w)
 
 float3 p_hemi(float2 tc)
 {
-    float3 t_lmh = tex2D(s_hemi, tc);
-    return dot(t_lmh, 1.h / 3.h);
+    float3 t_lmh = tex2D(s_hemi, tc).rgb;
+    return dot(t_lmh, 1.0f / 3.0f);
 }
 
 //	contrast function
@@ -249,7 +249,7 @@ float2 projection_to_screen(float4 proj)
 //TODO Deathman to all - replace with more faster noise
 float random(float2 st)
 {
-    return frac(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
+    return frac(sin(dot(st.xy, float2(12.9898f, 78.233f))) * 43758.5453123f);
 }
 ////////////////////////////////////////////////////////////////////////////
 // https://www.xrhadertoy.com/view/3dGfzh
@@ -292,7 +292,6 @@ float random(float income)
 
 float3 hash33(float2 uv)
 {
-    uv *= 0.5f;
     float3 result = NULL;
     result.r = sin(random(uv.x * (timers.x + 250.0f) - uv.y * (timers.x + 2125.0f)));
     result.g = sin(random(uv.x * (timers.x + 80.0f) + uv.y * (timers.x + 1.0f)));

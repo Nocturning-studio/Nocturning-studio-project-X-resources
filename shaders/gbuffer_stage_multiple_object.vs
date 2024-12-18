@@ -49,7 +49,7 @@ Interpolators main (VertexData Input)
 
     float3 Tangent = unpack_bx4 (Input.Tangent);
     float3 Bitangent = unpack_bx4 (Input.Binormal);
-    float3 Normal = unpack_bx4 (Input.Normal);
+    float3 Normal = unpack_bx4 (Input.Normal.xyz);
     float3x3 TBN = mul ((float3x3)m_xform_v, float3x3 (Tangent.x, Bitangent.x, Normal.x,
 													   Tangent.y, Bitangent.y, Normal.y,
 													   Tangent.z, Bitangent.z, Normal.z));

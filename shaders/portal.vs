@@ -17,7 +17,6 @@ vf main (v_vert v)
 
     o.hpos = mul (m_VP, v.pos); // xform, input in world coords
     o.c = v.color;
-    o.c.rgb = o.c;
 
     return o;
 }

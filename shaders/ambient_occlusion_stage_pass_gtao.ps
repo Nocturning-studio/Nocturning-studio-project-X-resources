@@ -69,6 +69,7 @@ float4 main(float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR0
             float n = sgnN * fast_acos(cosN);
             float sinN2 = 2.0f * sinapprox(n);
 
+            [unroll (2)]
             for (int side = 0; side < 2; side++)
             {
                 float cHorizonCos = -1.0f;

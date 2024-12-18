@@ -17,17 +17,17 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR
     float4 Offset = screen_res.zwzw * float4(-1, -1, +1, +1);
     
     float3 BloomColor = NULL;
-    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy);
-    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy);
-    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw);
-    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw);
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xy).rgb;
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zy).rgb;
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.xw).rgb;
+    BloomColor += tex2Dlod0(s_bloom, TexCoords + Offset.zw).rgb;
     ImageColor.rgb += BloomColor * 0.25f;
     
     float3 BloomBladesColor = NULL;
-    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xy);
-    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zy);
-    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xw);
-    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zw);
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xy).rgb;
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zy).rgb;
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.xw).rgb;
+    BloomBladesColor += tex2Dlod0(s_bloom_blades, TexCoords + Offset.zw).rgb;
     ImageColor.rgb += BloomBladesColor * 0.25f;
     
 #ifdef USE_CHROMATIC_ABBERATION
@@ -41,7 +41,8 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR
     float VignettePower = vignette_power;
 #endif
 	//https://www.xrhadertoy.com/view/ms3GDs
-    float Vignette = pow(16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y), VignettePower);//0.1f);
+    float f = 16.0f * TexCoords.x * TexCoords.y * (1.0f - TexCoords.x) * (1.0f - TexCoords.y);
+    float Vignette = pow(abs(f), VignettePower);//0.1f);
     ImageColor.rgb *= Vignette;// + (1.0f - Vignette) * (1.0f - VignettePower);
 #endif    
 

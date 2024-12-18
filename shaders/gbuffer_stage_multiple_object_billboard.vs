@@ -45,8 +45,8 @@ Interpolators main (VertexData Input)
 
     Output.HomogeniousPosition = mul (m_VP, VertexPosition);
     Output.Position = mul (m_V, VertexPosition);
-    Output.TexCoords0 = Input.UV0;
-    Output.TexCoords1 = Input.UV1;
+    Output.TexCoords0 = Input.UV0.xy;
+    Output.TexCoords1 = Input.UV1.xy;
     Output.TransitionFactor = HightToLowQualityTransitionFactor;
     Output.Ambient = Ambient;
     Output.SunOcclusion = SunOcclusion;

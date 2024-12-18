@@ -21,20 +21,17 @@ GBufferPacked main (Interpolators Input)
     GBuffer GBuffer;
 	
 	// Diffuse color
-	float4 Albedo = tex2D (s_base, Input.UV);
-    GBuffer.Albedo = 2 * Albedo * tex2D (s_detail, Input.DetailUV);
+	float4 BaseTextureData = tex2D (s_base, Input.UV);
+    GBuffer.Albedo = 2.0f * BaseTextureData.rgb * tex2D(s_detail, Input.DetailUV).rgb;
 
-    GBuffer.AO = (Albedo.a + avg3 (tex2D (s_lmap, Input.UV).rgb)) * AO_BRIGHTNESS;
+    GBuffer.AO = BaseTextureData.a * AO_BRIGHTNESS;
 
     GBuffer.BackedAO = 1.0f;
 
-	// Normal for Geometry Buffer
     GBuffer.Normal = normalize (Input.Normal);
 
-	// Position for Geometry Buffer
     GBuffer.Position = Input.Position;
 	
-	// Out glossiness
     GBuffer.Roughness = 1.0f;
 	
 	GBuffer.Metallness = 0.0f;

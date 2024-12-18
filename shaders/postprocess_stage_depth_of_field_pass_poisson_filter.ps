@@ -28,7 +28,7 @@ float4 main (float2 TexCoords: TEXCOORD0): COLOR0
         {
             float2 SampleCoords = TexCoords + poisson25_round[i] * RaySize;
         
-            float3 SampleColor = tex2Dlod0 (s_image, SampleCoords);
+            float3 SampleColor = tex2Dlod0(s_image, SampleCoords).rgb;
 
             float SampleContribution = DOFFactor (GetDepth (SampleCoords));
         

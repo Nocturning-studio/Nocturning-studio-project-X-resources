@@ -24,10 +24,10 @@ float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Directio
 {
     float OutputColor = 0.0f;
 
-    if (sun_shafts_intensity.x >= 0.01f)
+    if (sun_shafts_intensity.x > 0.01f)
     {
         //	Variable ray length, variable step dencity, use jittering
-		float4 Jitter = tex2Dlod0(s_blue_noise, float4(screen_res.x / JITTER_TEXTURE_SIZE * TexCoords.xy / TexCoords.w, 0.0f, 0.0f));
+		float4 Jitter = tex2Dlod0(s_blue_noise, screen_res.x / JITTER_TEXTURE_SIZE * TexCoords.xy / TexCoords.w);
 		float coeff = (RAY_SAMPLES - 1.0f * Jitter.x) / (RAY_SAMPLES * RAY_SAMPLES);
         float3 direction = Position * coeff;
 
@@ -37,13 +37,14 @@ float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Directio
         float4 current = mul(m_shadow, float4(Position, 1.0f));
         float4 delta = mul(m_shadow, float4(direction, 0.0f));
 
-        float max_density = sun_shafts_intensity;
+        float max_density = sun_shafts_intensity.x;
         float density = max_density / RAY_SAMPLES;
 
         if (depth < 0.0001f)
 			OutputColor = max_density;
 
-        [unroll (RAY_SAMPLES)]
+        //[unroll (RAY_SAMPLES)]
+        [loop]
         for (int i = 0; i < RAY_SAMPLES; ++i)
         {
             if (current.x >= 0 && current.x <= 1 && current.y >= 0 && current.y <= 1)
@@ -53,9 +54,9 @@ float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Directio
             current -= delta;
         }
 
-        float fSturation = 1.0f; //-Light_Direction.z;
+        float fSturation = -Light_Direction.z;
 
-        //	Normalize dot product to
+        //Normalize dot product to
         fSturation = 0.5f * fSturation + 0.5f;
 
         //	Map saturation to 0.2..1
@@ -64,5 +65,5 @@ float CalcVolumetricSun(float4 TexCoords, float3 Position, float3 Light_Directio
 		OutputColor *= fSturation;
 	}
 
-    return sRgbToLinear(OutputColor);
+    return sRgbToLinear(OutputColor.xxx).x;
 }

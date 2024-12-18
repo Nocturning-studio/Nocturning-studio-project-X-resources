@@ -606,7 +606,7 @@
     <None Include="scene_combine_stage_pass_postprocess.ps">
       <Filter>Deffered rendering pipeline\Scene combine stage\Combining stages</Filter>
     </None>
-    <None Include="effects_rain.s">
+    <None Include="effects_rain-.s">
       <Filter>Forward rendering\Effects\Rain</Filter>
     </None>
     <None Include="effects_rain.ps">
@@ -653,6 +653,18 @@
     </None>
     <None Include="postprocess_stage_pass_resolve_gamma.ps">
       <Filter>Postprocess\Effectors</Filter>
+    </None>
+    <None Include="effects_lens_flare.ps">
+      <Filter>Forward rendering\Effects\Lens flares</Filter>
+    </None>
+    <None Include="effects_lens_flare.vs">
+      <Filter>Forward rendering\Effects\Lens flares</Filter>
+    </None>
+    <None Include="debug_console.s">
+      <Filter>Forward rendering\Debug</Filter>
+    </None>
+    <None Include="debug_console.ps">
+      <Filter>Forward rendering\Debug</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -898,6 +910,9 @@
     </Filter>
     <Filter Include="Deffered rendering pipeline\GBuffer stage\Helpers\Alpha test">
       <UniqueIdentifier>{5dae007b-6590-4763-9968-577b7d86a00b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Forward rendering\Debug">
+      <UniqueIdentifier>{0a762b9a-d29f-441f-adcb-f6e1082d1ded}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

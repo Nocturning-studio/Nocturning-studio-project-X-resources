@@ -164,11 +164,15 @@
     <ClInclude Include="chromatic_abberations.xrh" />
     <ClInclude Include="depth_of_field_common.xrh" />
     <None Include="common_effects.xrh" />
+    <None Include="debug_console.ps" />
+    <None Include="debug_console.s" />
     <None Include="effects_bullet_tracer.s" />
     <None Include="effects_flare.s" />
+    <None Include="effects_lens_flare.ps" />
+    <None Include="effects_lens_flare.vs" />
     <None Include="effects_lightning.s" />
     <None Include="effects_rain.ps" />
-    <None Include="effects_rain.s" />
+    <None Include="effects_rain-.s" />
     <None Include="effects_rain.vs" />
     <None Include="effects_sun.ps" />
     <None Include="effects_sun.s" />

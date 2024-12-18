@@ -51,7 +51,7 @@ MaterialComponents UnpackBumpMaterial(float2 UV)
     // DecompressionData = Decompress data + 0.5f
     float3 DecompressedNormal = NULL;
     
-    DecompressedNormal.xy = CompressedNormal + (DecompressionData - 1.0f);
+    DecompressedNormal.xy = CompressedNormal.xy + (DecompressionData.xy - 1.0f);
     
     DecompressedNormal.z = sqrt(1.0f - dot(DecompressedNormal.xy, DecompressedNormal.xy));
     
@@ -198,7 +198,7 @@ MaterialComponents UnpackDetailBumpMaterial(float2 UV)
     // DecompressionData = Decompress data + 0.5f
     float3 DecompressedNormal = NULL;
     
-    DecompressedNormal.xy = CompressedNormal + (DecompressionData - 1.0f);
+    DecompressedNormal.xy = CompressedNormal.xy + (DecompressionData.xy - 1.0f);
     
     DecompressedNormal.z = sqrt(1.0f - dot(DecompressedNormal.xy, DecompressedNormal.xy));
     
@@ -275,10 +275,10 @@ float4 GetTerrainDetailMask(float2 UV)
 
 float3 GetTerrainDetailAlbedo(float4 BlendMask, float2 UV)
 {
-    float3 RedChannelAlbedo = tex2D(s_dt_r, UV) * BlendMask.r;
-    float3 GreenChannelAlbedo = tex2D(s_dt_g, UV) * BlendMask.g;
-    float3 BlueChannelAlbedo = tex2D(s_dt_b, UV) * BlendMask.b;
-    float3 AlphaChannelAlbedo = tex2D(s_dt_a, UV) * BlendMask.a;
+    float3 RedChannelAlbedo = tex2D(s_dt_r, UV).rgb * BlendMask.r;
+    float3 GreenChannelAlbedo = tex2D(s_dt_g, UV).rgb * BlendMask.g;
+    float3 BlueChannelAlbedo = tex2D(s_dt_b, UV).rgb * BlendMask.b;
+    float3 AlphaChannelAlbedo = tex2D(s_dt_a, UV).rgb * BlendMask.a;
     return RedChannelAlbedo + GreenChannelAlbedo + BlueChannelAlbedo + AlphaChannelAlbedo;
 }
 

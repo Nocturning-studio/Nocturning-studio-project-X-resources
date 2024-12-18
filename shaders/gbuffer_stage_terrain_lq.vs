@@ -33,7 +33,7 @@ Interpolators main (VertexData Input)
 	float3 Position = mul (m_WV, Input.Position);
     Output.Position = Position;
 
-    Output.Normal = mul (m_WV, unpack_bx2 (Input.Normal));
+    Output.Normal = mul(m_WV, float4(unpack_bx2(Input.Normal), 1.0f));
 
 	float2 UV = unpack_tc_base (Input.UV, Input.Tangent.w, Input.Binormal.w);
     Output.UV = UV;

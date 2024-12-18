@@ -26,8 +26,6 @@ PixelShaderOutputStruct main (v2p I)
 	float spaceDepth = Depth - I.tctexgen.z;
 	alphaDistort = saturate(1.3*spaceDepth);
 	distort.xy = lerp  ( zero, distort.xy, alphaDistort);
-
-    distort.rgb = float3(0, 0, 1);
 	
 	// Deathman - считаем туман второй раз, но теперь специально для этого конкретного объекта
     float Fog = CalcFogness (I.position);

@@ -22,15 +22,15 @@ GBufferPacked main (Interpolators Input)
 {
     GBuffer GBuffer;
 	
-	float4 Albedo0 = tex2D (s_base, Input.TexCoords0);
-	float4 Albedo1 = tex2D (s_base, Input.TexCoords1);
-	float4 Albedo = lerp (Albedo0, Albedo1, Input.TransitionFactor);
+    float4 BaseTextureData0 = tex2D(s_base, Input.TexCoords0);
+    float4 BaseTextureData1 = tex2D(s_base, Input.TexCoords1);
+    float4 BaseTextureData = lerp(BaseTextureData0, BaseTextureData1, Input.TransitionFactor);
 
-    Albedo.a *= Input.OpacityFactor;
+    BaseTextureData.a *= Input.OpacityFactor;
 
-    clip (Albedo.a - 0.8f);
+    clip(BaseTextureData.a - 0.8f);
 
-    GBuffer.Albedo = Albedo;
+    GBuffer.Albedo = BaseTextureData.rgb;
 	
 	float4 NormalAndAO0 = tex2D (s_hemi, Input.TexCoords0);
 	float4 NormalAndAO1 = tex2D (s_hemi, Input.TexCoords1);

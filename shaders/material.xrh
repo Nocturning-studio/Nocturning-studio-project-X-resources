@@ -64,7 +64,7 @@ MaterialParams GetMaterial(float2 UV, float3x3 TBN, float3 Position)
 
 #ifdef USE_TDETAIL
     // Create detail UV - dt_params is scaler
-    float2 DetailUV = UV * dt_params;
+    float2 DetailUV = UV * dt_params.xy;
 
     // Calculate displacement for detail texture only if we have good quality for materials
 #if USE_DETAIL_BUMP && MATERIAL_QUALITY >= MIDDLE_QUALITY

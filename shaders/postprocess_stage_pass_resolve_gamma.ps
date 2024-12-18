@@ -12,7 +12,7 @@ float4 main(float2 TexCoords : TEXCOORD0) : COLOR
     float4 ImageColor = tex2Dlod0(s_image, TexCoords);
     
     //Gamma correction
-    ImageColor.rgb = pow(ImageColor.rgb, hdr_params.y);
+    ImageColor.rgb = pow(abs(ImageColor.rgb), hdr_params.y);
     
     //Brightness correction
     ImageColor.rgb *= hdr_params.z * 2.0f;

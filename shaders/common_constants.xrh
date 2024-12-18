@@ -3,7 +3,7 @@
 //	Author		: Deathman
 //	Basic idea 	: xRay engine 2.0 sm 4.0
 ////////////////////////////////////////////////////////////////////////////
-#define NULL float4(0.0f, 0.0f, 0.0f, 0.0f)
+#define NULL 0.0f
 #define EXP 2.7182818284f
 #define PI 3.14159265358979323846f
 #define INV_PI 1.0f / PI

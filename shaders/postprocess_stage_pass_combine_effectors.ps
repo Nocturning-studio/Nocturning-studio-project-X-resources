@@ -25,14 +25,14 @@ uniform float4 c_colormap;
 float4 main (v2p I): COLOR
 {
     //Duality
-    float3 ImageColor0 = tex2Dlod0(s_image, I.tc0);
-    float3 ImageColor1 = tex2Dlod0(s_image, I.tc1);
+    float3 ImageColor0 = tex2Dlod0(s_image, I.tc0).rgb;
+    float3 ImageColor1 = tex2Dlod0(s_image, I.tc1).rgb;
     float3 ImageColor = (ImageColor0 + ImageColor1) * 0.5f;
     
     //Gradient LUT
     float grad_i = dot(ImageColor, (0.3333h).xxx);
-    float3 Grad0 = tex2Dlod0(s_grad0, float2(grad_i, 0.5f));
-    float3 Grad1 = tex2Dlod0(s_grad1, float2(grad_i, 0.5f));
+    float3 Grad0 = tex2Dlod0(s_grad0, float2(grad_i, 0.5f)).rgb;
+    float3 Grad1 = tex2Dlod0(s_grad1, float2(grad_i, 0.5f)).rgb;
     float3 Colormap = lerp(Grad0, Grad1, c_colormap.y);
     ImageColor = lerp(ImageColor, Colormap, c_colormap.x);
     
