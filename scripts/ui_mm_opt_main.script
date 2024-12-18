@@ -76,7 +76,7 @@ function options_dialog:InitControls()
 	
 	self.message_box = CUIMessageBoxEx()
 	
-	self.b_r2_restart_shown		= false
+	self.b_need_restart_shown		= false
 	
 	self.cap_download				= xml:InitStatic		("download_static",self)
 	self.text_download				= xml:InitStatic		("download_text",self)
@@ -121,8 +121,9 @@ function options_dialog:InitCallBacks()
 	self:AddCallback("btn_accept", ui_events.BUTTON_CLICKED,	self.OnBtnAccept, self)
 	self:AddCallback("btn_cancel", ui_events.BUTTON_CLICKED,	self.OnBtnCancel, self)
 	self:AddCallback("btn_default_graphic",	ui_events.BUTTON_CLICKED,	self.OnBtnDefGraph, self)	
-	self:AddCallback("btn_default_sound",	ui_events.BUTTON_CLICKED,	self.OnBtnDefSound, self)	
-	self:AddCallback("combo_r2", ui_events.LIST_ITEM_SELECT,	self.OnR2changed, self)	
+	self:AddCallback("btn_default_sound",	ui_events.BUTTON_CLICKED,	self.OnBtnDefSound, self)
+	self:AddCallback("list_need_restart", ui_events.LIST_ITEM_SELECT,	self.OnNeedRestart, self)
+	self:AddCallback("btn_need_restart", ui_events.BUTTON_CLICKED,	self.OnNeedRestart, self)
 	self:AddCallback("combo_preset",		ui_events.LIST_ITEM_SELECT,	self.OnPresetChanged, self)	
 	self:AddCallback("btn_simply_graphic",	ui_events.BUTTON_CLICKED,	self.OnSimplyGraphic, self)	
 	self:AddCallback("btn_keyb_default",	ui_events.BUTTON_CLICKED,	self.OnBtnDefault, self)
@@ -153,12 +154,12 @@ function options_dialog:OnPresetChanged()
 	opt:SetCurrentValues		("mm_opt_video_adv")
 end
 
-function options_dialog:OnR2changed()	
+function options_dialog:OnNeedRestart()	
 
 	self:UpdateDependControls				()
 	
-	if false==self.b_r2_restart_shown then
-		self.b_r2_restart_shown			 = true
+	if false==self.b_need_restart_shown then
+		self.b_need_restart_shown			 = true
 		self.message_box:Init			("message_box_restart_game")
 		self:GetHolder():start_stop_menu(self.message_box,true)
 	end
