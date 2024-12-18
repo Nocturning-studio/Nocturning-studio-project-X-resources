@@ -23,7 +23,7 @@ float4 main (Interpolators Input): COLOR0
 {
     GBuffer GBuffer = UnpackGBuffer (Input.TexCoords.xy/Input.TexCoords.w);
 
-    LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
+    LightComponents Light = Calculate_Lighting_Model(GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, Ldynamic_dir.xyz);
     
     float4 Position = float4 (GBuffer.Position + GBuffer.Normal * 0.01575f, 1.0f);
     float4 ShadowMapTexCoords = mul (m_shadow, Position);
@@ -38,7 +38,7 @@ float4 main (Interpolators Input): COLOR0
     // Weapon shadowing
     float NdotL = abs(dot(normalize(GBuffer.Normal), Ldynamic_dir.rgb));
     if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
-        ShadowMap *= TraceShadow(Ldynamic_dir, Position);
+        ShadowMap *= TraceShadow(Ldynamic_dir.xyz, Position.xyz);
 
     float3 SunColor = Ldynamic_color.rgb;
 
@@ -49,7 +49,7 @@ float4 main (Interpolators Input): COLOR0
     float Volumetric = 0.0f;
     
 #if SUN_SHAFTS_ENABLED == 1 && FAR_CASCADE == 0
-    Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir);
+    Volumetric = CalcVolumetricSun(Input.TexCoords, GBuffer.Position, Ldynamic_dir.xyz);
 #endif
     
     return float4(Light.Diffuse + Light.Specular + Light.Subsurface, Volumetric);

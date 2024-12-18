@@ -28,6 +28,11 @@ float4 main (Interpolators Input): COLOR0
   
 #ifdef USE_SHADOW_MAPPING
     float ShadowMap = get_shadow_map (ShadowMapTexCoords);
+    
+    float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
+    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
+        ShadowMap *= TraceShadow(LightDirection, Position.xyz);
+    
     LightComponents Light = Calculate_Lighting_Model (GBuffer.Roughness, GBuffer.Metallness, GBuffer.Albedo, GBuffer.Position, GBuffer.Normal, LightDirection);
 #else
     float ShadowMap = 1.0f;
@@ -39,21 +44,17 @@ float4 main (Interpolators Input): COLOR0
     ShadowMapTexCoords.x = dot (Position, m_lmap[0]);
     ShadowMapTexCoords.y = dot (Position, m_lmap[1]);
 #endif
-    float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords);
+    float3 LightMap = tex2Dproj (s_lmap, ShadowMapTexCoords).rgb;
 #else
     float3 LightMap = float3 (1.0f, 1.0f, 1.0f);
 #endif
-    
-    float NdotL = abs(dot(normalize(GBuffer.Normal), LightDirection.rgb));
-    if((NdotL * ShadowMap > 0.1f) && (length(GBuffer.Position) < 1.5f))
-        ShadowMap *= TraceShadow(LightDirection, Position);
 
     LightMap *= ShadowMap * AttenuationFactor;
       
-    Light.Diffuse *= Ldynamic_color.rgb * LightMap;
-    Light.Specular *= Ldynamic_color.rgb * LightMap;
-    Light.Subsurface *= Ldynamic_color.rgb * LightMap * GBuffer.SubSurfacePower * GBuffer.Albedo;
+    Light.Diffuse *= LightMap;
+    Light.Specular *= LightMap;
+    Light.Subsurface *= LightMap * GBuffer.SubSurfacePower * GBuffer.Albedo;
     
-    return float4(Light.Diffuse + Light.Specular + Light.Subsurface, 0.0f);
+    return float4(Ldynamic_color.rgb * (Light.Diffuse + Light.Specular + Light.Subsurface), 0.0f);
 }
 ///////////////////////////////////////////////////////////////////////////////////
