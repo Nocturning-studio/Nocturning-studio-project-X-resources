@@ -9,7 +9,8 @@
 // Options
 #define POWER 4.4f
 #define	RADIUS 2.0f
-#define BIAS 0.0f//0.007f
+#define BIAS 0.01f
+#define SAMPLES_COUNT 8
 #define STEPS 4
 #define RENDER_DISTANCE 75.0f
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -33,8 +34,9 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
         }
         else
         {
-            float occ = 0;
-
+            float occ = NULL;
+            float dirSum = NULL;
+            
             // RotationCosSin is (cos(alpha),sin(alpha)) where alpha is the rotation angle
 	        // A 2D rotation matrix is applied (see https://en.wikipedia.org/wiki/Rotation_matrix)
             float c, s;
@@ -54,13 +56,11 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
 		    // Divide by Steps+1 so that the farthest samples are not fully attenuated
             float stepSizePixels = (radiusPixels * 0.25f) / (STEPS + 1.0f);
 		
-            [unroll (4)]
-            for (int i = 0; i < 4; ++i)
+            [unroll (SAMPLES_COUNT)]
+            for (int i = 0; i < SAMPLES_COUNT; ++i)
             {
                 float negInvR2 = -1.0f / (RADIUS * RADIUS);
                 float rayPixels = 0.5f * stepSizePixels + 1.0f;
-
-                float dirSum = 0.0f;
 		
                 dir = mul (dir, rot);
                 
@@ -88,6 +88,29 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
                         float falloff = saturate (VdotV * negInvR2 + 1.0f);
                         float occluder = saturate (NdotV);
                         
+#if USE_INDIRECT
+			            if(occluder < 0.05f)
+				            continue;
+
+			            float3 indirectDir = normalize(V);
+
+			            float3 normHit = GetNormal(tcHit);
+
+			            float indirectIrradiance = saturate(dot(indirectDir, normHit)) * occluder;
+			
+			            float3 indirectColor = tex2Dlod0(s_gbuffer_1, tcHit).rgb;//BackBuffer(tcHit);
+			            float3 light = indirectColor * indirectIrradiance * 1.0f;//LightIntensity;
+
+                        float3 reflectedColor = tex2Dlod0(s_ao, tcHit).rgb * 0.99;
+                        float3 reflectedDir = normalize(reflect(indirectDir, Normal));
+
+			            float reflectedIrradiance = saturate(dot(reflectedDir, normHit));
+
+			            light += reflectedColor * reflectedIrradiance * 1.0f;//ReflectedIntensity;
+			
+			            dirSum.xyz += light * falloff;
+#endif
+                        
                         dirSum += occluder * falloff;
                     }
                 }
@@ -97,13 +120,16 @@ float4 main (float2 TexCoords: TEXCOORD0, int2 Position2D: VPOS): COLOR
                 occ += dirSum;
             }
 
-            occ = saturate (pow (1.0f - occ * 0.25f, POWER));
-
+            occ = occ / SAMPLES_COUNT;
+            occ = invert(occ);
+            occ = pow (occ, POWER);
+            occ = saturate(occ);
+            
             // Create smooth render distance border
             float FarFadingFactor = smoothstep (RENDER_DISTANCE * 0.75f, RENDER_DISTANCE, length (Position));
             occ = lerp (occ, 1.0f, FarFadingFactor);
             
-            return occ.xxxx;
+            return occ;
         }
     }
 }
